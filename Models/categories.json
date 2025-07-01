@@ -1,0 +1,154 @@
+[
+  {
+    "id": "cutfilescategory",
+    "title": "Cutfiles",
+    "subcategories": [
+      {
+        "id": "food",
+        "title": "Food",
+        "itemCount": 2
+      },
+      {
+        "id": "games",
+        "title": "Games",
+        "itemCount": 10
+      }
+    ]
+  },
+  {
+    "id": "monogramcategory",
+    "title": "Monograms",
+    "subcategories": [
+      {
+        "id": "butterfly",
+        "title": "Butterfly",
+        "itemCount": 6
+      },
+      {
+        "id": "cat",
+        "title": "Cat",
+        "itemCount": 6
+      },
+      {
+        "id": "christmas",
+        "title": "Christmas",
+        "itemCount": 6
+      },
+      {
+        "id": "dance",
+        "title": "Dance",
+        "itemCount": 6
+      },
+      {
+        "id": "fishlover",
+        "title": "Fish Lover",
+        "itemCount": 6
+      },
+      {
+        "id": "foryou",
+        "title": "For You",
+        "itemCount": 6
+      },
+      {
+        "id": "heart",
+        "title": "Heart",
+        "itemCount": 6
+      },
+      {
+        "id": "watercolornumber",
+        "title": "Watercolor Number",
+        "itemCount": 6
+      },
+      
+      
+      ]
+    
+  },
+  {
+    "id": "shapescategory",
+    "title": "Shapes",
+    "subcategories": [
+      {
+        "id": "abstract",
+        "title": "Abstract",
+        "itemCount": 6
+      },
+      {
+        "id": "baby",
+        "title": "Baby",
+        "itemCount": 6
+      },
+      {
+        "id": "doodles",
+        "title": "Doodles",
+        "itemCount": 6
+      },
+      
+    ]
+  },
+  
+  {
+    "id": "stickercategory",
+    "title": "Stickers",
+    "subcategories": [
+      {
+        "id": "animal",
+        "title": "Animal",
+        "itemCount": 6
+      },
+      {
+        "id": "christmas",
+        "title": "Christmas",
+        "itemCount": 6
+      },
+      {
+        "id": "fathersday",
+        "title": "Fathers Day",
+        "itemCount": 6
+      },
+      {
+        "id": "love",
+        "title": "Love",
+        "itemCount": 6
+      },
+      {
+        "id": "motivational",
+        "title": "Motivational",
+        "itemCount": 6
+      },
+      {
+        "id": "sale",
+        "title": "Sale",
+        "itemCount": 6
+      },
+      
+    ]
+  },
+  {
+    "id": "watercolorcategory",
+    "title": "Watercolor",
+    "subcategories": [
+      {
+        "id": "jarflowers",
+        "title": "Jar Flowers",
+        "itemCount": 6
+      },
+      {
+        "id": "love",
+        "title": "love",
+        "itemCount": 6
+      },
+      {
+        "id": "mountain",
+        "title": "Mountain",
+        "itemCount": 6
+      },
+      {
+        "id": "sarcastic",
+        "title": "Sarcastic",
+        "itemCount": 6
+      },
+      
+    ]
+  }
+]
