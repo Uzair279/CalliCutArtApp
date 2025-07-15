@@ -25,8 +25,21 @@ struct Item: Identifiable {
 }
 struct LayerItem: Identifiable {
     let id = UUID()
+    var layer: CALayer
     var title: String
     var isEyeSelected: Bool
     var isLockSelected: Bool
-    var isDeleteSelected: Bool
 }
+
+class SVGLayerModel: NSObject, Identifiable {
+    let id = UUID()
+    var type: SVGElementType?
+    var pathData: String?
+    var text: String?
+
+    var position: CGPoint = .zero
+    var rotation: CGFloat = 0
+    var scale: CGFloat = 1.0
+}
+
+

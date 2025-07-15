@@ -8,6 +8,7 @@ struct UndoManagerView: View {
             action()
         }) {
             Image(image)
+                .foregroundStyle(.black)
         }
         .buttonStyle(.plain)
     }
@@ -51,23 +52,34 @@ struct CanvasSidemenuItem: View {
     }
 }
 struct ListItem: View {
+    @State var vm : CategoryViewModel
     let title: String
     @Binding var isEyeSelected: Bool
     @Binding var isLockSelected: Bool
-    @Binding var isDeleteSelected: Bool
-    
+    @Binding var listItem : [LayerItem]
+    var thumbnail: NSImage?
+    var layer : CALayer
+
     var body: some View {
-        HStack {
-            Image("dots")
+        HStack(spacing: 10) {
             ZStack {
                 Image("layerBg")
-                Text(title)
+                if let nsImage = thumbnail {
+                    Image(nsImage: nsImage)
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                } else {
+                    Image("dots")
+                }
             }
+
             Spacer()
+
             HStack(spacing: 9.03) {
-                // Eye Button
                 Button(action: {
                     isEyeSelected.toggle()
+                    vm.svgVM?.toggleLayerVisibility(layer)
                 }) {
                     Image("eye")
                         .foregroundStyle(isEyeSelected ? .white : .black)
@@ -76,10 +88,10 @@ struct ListItem: View {
                         .cornerRadius(1.77)
                 }
                 .buttonStyle(.plain)
-                
-                // Lock Button
+
                 Button(action: {
                     isLockSelected.toggle()
+                    vm.svgVM?.toggleLayerLock(layer)
                 }) {
                     Image("lock")
                         .foregroundStyle(isLockSelected ? .white : .black)
@@ -88,15 +100,16 @@ struct ListItem: View {
                         .cornerRadius(1.77)
                 }
                 .buttonStyle(.plain)
-                
-                // Delete Button
+
                 Button(action: {
-                    isDeleteSelected.toggle()
+                    if let layers =  vm.svgVM?.svgRootLayer?.sublayers?.first?.sublayers {
+                        if let matchedIndex = layers.firstIndex(where: { $0 === layer }) {
+                            vm.svgVM?.deleteLayer(layer)
+                        }
+                    }
                 }) {
                     Image("delete")
-                        .foregroundStyle(isDeleteSelected ? .white : .black)
                         .frame(width: 21.66, height: 21.66)
-                        .background(isDeleteSelected ? Color("selectedColor") : Color("grey"))
                         .cornerRadius(1.77)
                 }
                 .buttonStyle(.plain)

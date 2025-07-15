@@ -14,6 +14,7 @@ struct CanvasView: View {
 }
 
 struct TopBarView: View {
+    @StateObject var sideBarVM = CategoryViewModel()
     @Binding var svgURL : URL?
     let backAction: () -> Void
     var body: some View {
@@ -31,13 +32,17 @@ struct TopBarView: View {
                 Spacer()
                 HStack(spacing: 32) {
                     UndoManagerView(image: "undo", action: {
-                        //Add action
+                        if sideBarVM.svgVM?.undoManager?.canUndo ?? false {
+                            sideBarVM.svgVM?.undoManager?.undo()
+                        }
                     })
                     UndoManagerView(image: "resetAll", action: {
-                        //Add action
+                        sideBarVM.svgVM?.undoManager?.removeAllActions()
                     })
                     UndoManagerView(image: "redo", action: {
-                        //Add action
+                        if sideBarVM.svgVM?.undoManager?.canRedo ?? false {
+                            sideBarVM.svgVM?.undoManager?.redo()
+                        }
                     })
                 }
                 Spacer()
@@ -70,9 +75,15 @@ struct TopBarView: View {
                     
                     // SVG Layer
                     if let svgPath = svgURL {
-                        SVGView(svgURL: svgPath, size: CGSize(width: 400, height: 400)) // SVG fixed size
-                            .frame(width: 400, height: 400)
+                       SVGCanvasView(svgURL: svgPath, onCreateView: { view in
+                           DispatchQueue.main.async {
+                               sideBarVM.svgVM = view
+                               
+                           }
+                       })
+                            .frame(width: 500, height: 400)
                             .clipped()
+
                     } else {
                         Text("No SVG selected")
                             .foregroundColor(.gray)
@@ -81,7 +92,9 @@ struct TopBarView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 Spacer()
-                LayersView()
+                if sideBarVM.svgVM != nil {
+                    LayersView(vm: sideBarVM)
+                }
                     
             }
             .background(.white)
@@ -116,11 +129,8 @@ struct CanvasSidemenu: View {
     }
 }
 struct LayersView: View {
-    @State private var layerItems: [LayerItem] = [
-        LayerItem(title: "Layer 1", isEyeSelected: true, isLockSelected: false, isDeleteSelected: false),
-        LayerItem(title: "Layer 2", isEyeSelected: false, isLockSelected: true, isDeleteSelected: false),
-        LayerItem(title: "Layer 3", isEyeSelected: false, isLockSelected: false, isDeleteSelected: true)
-    ]
+    @StateObject var vm: CategoryViewModel
+    @State var layerItems: [LayerItem] = []
 
     var body: some View {
         VStack(spacing: 20) {
@@ -132,21 +142,44 @@ struct LayersView: View {
                 Spacer()
             }
             .padding(.leading, 10)
+
             ScrollView {
                 VStack {
                     ForEach($layerItems) { $item in
                         ListItem(
+                            vm: vm,
                             title: item.title,
                             isEyeSelected: $item.isEyeSelected,
                             isLockSelected: $item.isLockSelected,
-                            isDeleteSelected: $item.isDeleteSelected
+                            listItem: $layerItems,
+                            thumbnail: item.layer.snapshotImage(size: CGSize(width: 30, height: 30)),
+                            layer: item.layer
                         )
                     }
                 }
-               
             }
         }
         .padding(.vertical, 20)
         .frame(width: 289)
+
+        .onAppear {
+            generateLayerItems()
+        }
+        .onChange(of: vm.svgVM?.svgRootLayer?.sublayers?.first?.sublayers?.count) { _ in
+            generateLayerItems()
+        }
+    }
+
+    func generateLayerItems() {
+         let sublayers = vm.svgSublayers
+        layerItems = sublayers.enumerated().map { index, layer in
+            LayerItem(
+                layer: layer,
+                title: "Layer \(index + 1)",
+                isEyeSelected: false,
+                isLockSelected: false
+            )
+        }
     }
 }
+
