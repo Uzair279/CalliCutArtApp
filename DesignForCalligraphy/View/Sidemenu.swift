@@ -13,10 +13,10 @@ struct Sidemenu: View {
                     if let title = category.title {
                         SidebarItem(
                             iconAndLabel: title,
-                            isSelected: selectedCategoryID == category.id
+                            isSelected: selectedCategoryID == category.title
                         )
                         .onTapGesture {
-                            selectedCategoryID = category.id
+                            selectedCategoryID = category.title
                         }
                     }
                 }

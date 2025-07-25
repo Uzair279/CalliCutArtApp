@@ -1,13 +1,18 @@
 import Foundation
 
+let isAppfree : Bool = false
+let privacyPolicyLink = "https://yourdomain.com/privacyPolicy"
+let termsOfUseLink = "https://yourdomain.com/terms"
+
 func generatePNGURL(for categoryID: String, subcategoryID: String, itemID: String) -> String {
-    let baseURL = "https://designs-files.s3.us-east-1.amazonaws.com/templates"
+    let baseURL = "https://stepbystepcricut.s3.us-east-1.amazonaws.com/templates"
     return "\(baseURL)/\(categoryID)/\(subcategoryID)/png/\(itemID).png"
 }
 func generateSVGURL(for categoryID: String, subcategoryID: String, itemID: String) -> String {
-    let baseURL = "https://designs-files.s3.us-east-1.amazonaws.com/templates"
-    let formattedItemID = itemID.prefix(1).uppercased() + itemID.dropFirst()
-    return "\(baseURL)/\(categoryID)/\(subcategoryID)/\(formattedItemID)_20-01.svg"
+    let baseURL = "https://stepbystepcricut.s3.us-east-1.amazonaws.com/templates"
+    let cat = categoryID.lowercased()
+    let subCat = subcategoryID.lowercased()
+    return "\(baseURL)/\(cat)/svg/\(subCat)/design\(itemID).svg"
 }
 
 

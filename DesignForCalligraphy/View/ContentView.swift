@@ -8,7 +8,7 @@ struct ContentView: View {
         case .home:
             HomeView(viewModel: viewModel, svgURL: $svgURL, screenType: $screenType)
         case .canvas:
-            CanvasView(screenType: $screenType, svgURL: $svgURL)
+            CanvasView(sideBarVM: viewModel, screenType: $screenType, svgURL: $svgURL)
         }
    
     }

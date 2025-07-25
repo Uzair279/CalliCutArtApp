@@ -1,153 +1,175 @@
 [
   {
-    "id": "cutfilescategory",
+    "id": "cutfiles",
     "title": "Cutfiles",
     "subcategories": [
       {
-        "id": "food",
-        "title": "Food",
-        "itemCount": 2
+        "id": "camping",
+        "title": "Camping",
+        "itemCount": 10
       },
       {
-        "id": "games",
-        "title": "Games",
+        "id": "cat",
+        "title": "Cat",
+        "itemCount": 10
+      },
+      {
+        "id": "food",
+        "title": "Food",
+        "itemCount": 10
+      },
+      {
+        "id": "inspirational",
+        "title": "Inspirational",
+        "itemCount": 10
+      },
+      {
+        "id": "kitchen",
+        "title": "Kitchen",
+        "itemCount": 10
+      },
+      {
+        "id": "plantLover",
+        "title": "Plant Lover",
+        "itemCount": 10
+      },
+      {
+        "id": "valentine",
+        "title": "Valentine",
+        "itemCount": 10
+      },
+      {
+        "id": "wedding",
+        "title": "Wedding",
         "itemCount": 10
       }
     ]
   },
   {
-    "id": "monogramcategory",
+    "id": "monograms",
     "title": "Monograms",
     "subcategories": [
       {
+        "id": "Autism",
+        "title": "Autism",
+        "itemCount": 10
+      },
+      {
         "id": "butterfly",
         "title": "Butterfly",
-        "itemCount": 6
+        "itemCount": 10
       },
       {
-        "id": "cat",
-        "title": "Cat",
-        "itemCount": 6
+        "id": "games",
+        "title": "Games",
+        "itemCount": 10
       },
       {
-        "id": "christmas",
-        "title": "Christmas",
-        "itemCount": 6
+        "id": "spring",
+        "title": "Spring",
+        "itemCount": 10
       },
       {
-        "id": "dance",
-        "title": "Dance",
-        "itemCount": 6
+        "id": "summer",
+        "title": "Summer",
+        "itemCount": 10
       },
       {
-        "id": "fishlover",
-        "title": "Fish Lover",
-        "itemCount": 6
-      },
-      {
-        "id": "foryou",
-        "title": "For You",
-        "itemCount": 6
-      },
-      {
-        "id": "heart",
-        "title": "Heart",
-        "itemCount": 6
-      },
-      {
-        "id": "watercolornumber",
-        "title": "Watercolor Number",
-        "itemCount": 6
-      },
-      
-      
+        "id": "unicorn",
+        "title": "Unicorn",
+        "itemCount": 10
+      }
       ]
     
   },
   {
-    "id": "shapescategory",
+    "id": "shapes",
     "title": "Shapes",
     "subcategories": [
       {
         "id": "abstract",
         "title": "Abstract",
-        "itemCount": 6
+        "itemCount": 10
       },
       {
         "id": "baby",
         "title": "Baby",
-        "itemCount": 6
+        "itemCount": 10
+      },
+      {
+        "id": "basic",
+        "title": "Basic",
+        "itemCount": 10
       },
       {
         "id": "doodles",
         "title": "Doodles",
-        "itemCount": 6
+        "itemCount": 10
       },
+      {
+        "id": "dragons",
+        "title": "Dragons",
+        "itemCount": 10
+      },
+      {
+        "id": "heartbeat",
+        "title": "Heartbeat",
+        "itemCount": 10
+      }
       
     ]
   },
   
   {
-    "id": "stickercategory",
+    "id": "stickers",
     "title": "Stickers",
     "subcategories": [
       {
-        "id": "animal",
-        "title": "Animal",
-        "itemCount": 6
-      },
-      {
-        "id": "christmas",
-        "title": "Christmas",
-        "itemCount": 6
-      },
-      {
-        "id": "fathersday",
-        "title": "Fathers Day",
-        "itemCount": 6
+        "id": "baby",
+        "title": "Baby",
+        "itemCount": 10
       },
       {
         "id": "love",
         "title": "Love",
-        "itemCount": 6
+        "itemCount": 10
       },
       {
         "id": "motivational",
         "title": "Motivational",
-        "itemCount": 6
+        "itemCount": 10
       },
       {
         "id": "sale",
         "title": "Sale",
-        "itemCount": 6
-      },
-      
+        "itemCount": 10
+      }
     ]
   },
   {
-    "id": "watercolorcategory",
+    "id": "watercolor",
     "title": "Watercolor",
     "subcategories": [
       {
         "id": "jarflowers",
         "title": "Jar Flowers",
-        "itemCount": 6
+        "itemCount": 10
       },
       {
         "id": "love",
         "title": "love",
-        "itemCount": 6
+        "itemCount": 10
       },
       {
-        "id": "mountain",
-        "title": "Mountain",
-        "itemCount": 6
+        "id": "mountains",
+        "title": "Mountains",
+        "itemCount": 10
       },
       {
-        "id": "sarcastic",
-        "title": "Sarcastic",
-        "itemCount": 6
-      },
+        "id": "splash",
+        "title": "Splash",
+        "itemCount": 10
+      }
       
     ]
   }

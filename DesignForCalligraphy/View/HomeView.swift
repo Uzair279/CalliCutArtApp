@@ -2,8 +2,8 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel : CategoryViewModel
-    @State private var selectedCategoryID: String?
-    @State private var selectedSubcategoryID: String?
+    @State var selectedCategoryID: String?
+    @State var selectedSubcategoryID: String?
     @State var showLoader: Bool = false
     @Binding var svgURL : URL?
     @Binding var screenType : screen
@@ -17,7 +17,7 @@ struct HomeView: View {
             .frame(width: 230)
             .background(Color("screenBg"))
             if let selectedCategoryID = selectedCategoryID,
-               let selectedCategory = viewModel.categories.first(where: { $0.id == selectedCategoryID }),
+               let selectedCategory = viewModel.categories.first(where: { $0.title == selectedCategoryID }),
                let subcategories = selectedCategory.subcategories {
                 SubSidemenu(
                     subcategories: subcategories,
@@ -33,12 +33,12 @@ struct HomeView: View {
             }
             if let selectedCategoryID = selectedCategoryID,
                let selectedSubcategoryID = selectedSubcategoryID,
-               let selectedCategory = viewModel.categories.first(where: { $0.id == selectedCategoryID }),
-               let selectedSubcategory = selectedCategory.subcategories?.first(where: { $0.id == selectedSubcategoryID }) {
+               let selectedCategory = viewModel.categories.first(where: { $0.title == selectedCategoryID }),
+               let selectedSubcategory = selectedCategory.subcategories?.first(where: { $0.title == selectedSubcategoryID }) {
                 MainView(itemCount: selectedSubcategory.itemCount ?? 0, categoryID: selectedCategoryID, subcategoryID: selectedSubcategoryID, addNew: {
                     //Add new Action
                 }, grdiAction: { item in
-                    let svgURL = generateSVGURL(for: selectedCategory.id ?? "", subcategoryID: selectedSubcategory.id ?? "", itemID: item)
+                    let svgURL = generateSVGURL(for: selectedCategory.title ?? "", subcategoryID: selectedSubcategory.title ?? "", itemID: item)
                    let url = checkIfFileExists(fileURL: URL(string: svgURL) ?? URL(fileURLWithPath: ""))
                     if let url {
                         self.svgURL = url
@@ -71,15 +71,15 @@ struct HomeView: View {
         .onAppear {
             // Set default selection on first load
             if let firstCategory = viewModel.categories.first {
-                selectedCategoryID = firstCategory.id
-                selectedSubcategoryID = firstCategory.subcategories?.first?.id
+                selectedCategoryID = firstCategory.title
+                selectedSubcategoryID = firstCategory.subcategories?.first?.title
             }
         }
         .onChange(of: selectedCategoryID) { newCategoryID in
             // Automatically select the first subcategory when the category changes
             if let newCategoryID = newCategoryID,
-               let newCategory = viewModel.categories.first(where: { $0.id == newCategoryID }) {
-                selectedSubcategoryID = newCategory.subcategories?.first?.id
+               let newCategory = viewModel.categories.first(where: { $0.title == newCategoryID }) {
+                selectedSubcategoryID = newCategory.subcategories?.first?.title
             }
         }
          if showLoader {

@@ -103,7 +103,7 @@ struct ListItem: View {
 
                 Button(action: {
                     if let layers =  vm.svgVM?.svgRootLayer?.sublayers?.first?.sublayers {
-                        if let matchedIndex = layers.firstIndex(where: { $0 === layer }) {
+                        if let _ = layers.firstIndex(where: { $0 === layer }) {
                             vm.svgVM?.deleteLayer(layer)
                         }
                     }

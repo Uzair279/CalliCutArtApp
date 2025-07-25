@@ -7,12 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D7187912E2D53270050799B /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 4D7187902E2D53270050799B /* categories.json */; };
+		4D7187932E2D56900050799B /* PremiumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187922E2D56900050799B /* PremiumView.swift */; };
 		4DCD49592E100518009F4986 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD49582E100518009F4986 /* Constants.swift */; };
 		4DCD495B2E10103C009F4986 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD495A2E10103C009F4986 /* CanvasView.swift */; };
 		4DCD495D2E10105D009F4986 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD495C2E10105D009F4986 /* HomeView.swift */; };
 		4DCD495F2E1014F8009F4986 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD495E2E1014F8009F4986 /* Components.swift */; };
 		4DED96882E1126FB00A68B86 /* SVGView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DED96872E1126FB00A68B86 /* SVGView.swift */; };
-		4DED968F2E1129FC00A68B86 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 4DED968E2E1129FC00A68B86 /* categories.json */; };
 		4DED96972E119A1C00A68B86 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DED96962E119A1C00A68B86 /* SVGKit */; };
 		4DF4A7842E0EFF1C00C269C4 /* DesignForCalligraphyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7832E0EFF1C00C269C4 /* DesignForCalligraphyApp.swift */; };
 		4DF4A7862E0EFF1C00C269C4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7852E0EFF1C00C269C4 /* ContentView.swift */; };
@@ -27,12 +28,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D7187902E2D53270050799B /* categories.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
+		4D7187922E2D56900050799B /* PremiumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumView.swift; sourceTree = "<group>"; };
+		4D7187942E2D63DA0050799B /* store.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = store.storekit; sourceTree = "<group>"; };
 		4DCD49582E100518009F4986 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4DCD495A2E10103C009F4986 /* CanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		4DCD495C2E10105D009F4986 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		4DCD495E2E1014F8009F4986 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		4DED96872E1126FB00A68B86 /* SVGView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVGView.swift; sourceTree = "<group>"; };
-		4DED968E2E1129FC00A68B86 /* categories.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
 		4DF4A7802E0EFF1C00C269C4 /* DesignForCalligraphy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DesignForCalligraphy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DF4A7832E0EFF1C00C269C4 /* DesignForCalligraphyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignForCalligraphyApp.swift; sourceTree = "<group>"; };
 		4DF4A7852E0EFF1C00C269C4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -85,6 +88,7 @@
 				4DF4A7872E0EFF1E00C269C4 /* Assets.xcassets */,
 				4DF4A7912E0EFF1E00C269C4 /* DesignForCalligraphy.entitlements */,
 				4DF4A7892E0EFF1E00C269C4 /* Preview Content */,
+				4D7187942E2D63DA0050799B /* store.storekit */,
 			);
 			path = DesignForCalligraphy;
 			sourceTree = "<group>";
@@ -107,6 +111,7 @@
 				4DCD495A2E10103C009F4986 /* CanvasView.swift */,
 				4DCD495C2E10105D009F4986 /* HomeView.swift */,
 				4DED96872E1126FB00A68B86 /* SVGView.swift */,
+				4D7187922E2D56900050799B /* PremiumView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -118,7 +123,7 @@
 				4DF4A7A02E0F0C3900C269C4 /* Models.swift */,
 				4DCD49582E100518009F4986 /* Constants.swift */,
 				4DCD495E2E1014F8009F4986 /* Components.swift */,
-				4DED968E2E1129FC00A68B86 /* categories.json */,
+				4D7187902E2D53270050799B /* categories.json */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -196,7 +201,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DF4A78B2E0EFF1E00C269C4 /* Preview Assets.xcassets in Resources */,
-				4DED968F2E1129FC00A68B86 /* categories.json in Resources */,
+				4D7187912E2D53270050799B /* categories.json in Resources */,
 				4DF4A7882E0EFF1E00C269C4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -220,6 +225,7 @@
 				4DF4A7A12E0F0C3900C269C4 /* Models.swift in Sources */,
 				4DF4A7842E0EFF1C00C269C4 /* DesignForCalligraphyApp.swift in Sources */,
 				4DF4A79D2E0F091F00C269C4 /* Sidemenu.swift in Sources */,
+				4D7187932E2D56900050799B /* PremiumView.swift in Sources */,
 				4DCD49592E100518009F4986 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

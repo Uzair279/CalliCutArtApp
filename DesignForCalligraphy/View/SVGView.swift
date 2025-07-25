@@ -84,7 +84,8 @@ class SVGCanvasNSView: NSView {
         // Center the layer in the view
         svgRootLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         svgRootLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-
+        let flip = CGAffineTransform(scaleX: 1, y: -1)
+        svgRootLayer.setAffineTransform(flip)
         layer?.sublayers?.removeAll()
         layer?.addSublayer(svgRootLayer)
 
@@ -285,6 +286,93 @@ class SVGCanvasNSView: NSView {
 
         undoManager?.setActionName(wasLocked ? "Unlock Layer" : "Lock Layer")
     }
+    func addTextLayer(_ text: String) {
+        guard let undoManager = undoManager else { return }
+        guard let parent = layer?.superlayer else { return }
+        let textLayer = CATextLayer()
+        textLayer.string = text
+        textLayer.fontSize = 18
+        textLayer.foregroundColor = NSColor.labelColor.cgColor
+        textLayer.alignmentMode = .left
+        textLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
+        textLayer.frame = CGRect(x: 50, y: 50, width: 200, height: 40)
 
+        parent.addSublayer(textLayer)
+
+        // Register undo
+        undoManager.registerUndo(withTarget: self) { targetSelf in
+            textLayer.removeFromSuperlayer()
+
+            // Register redo
+            targetSelf.undoManager?.registerUndo(withTarget: targetSelf) { redoSelf in
+                parent.addSublayer(textLayer)
+            }
+        }
+
+        undoManager.setActionName("Add Text Layer")
+    }
+
+    
+
+    func addImageLayerFromFinder() {
+        let panel = NSOpenPanel()
+        panel.title = "Choose an Image"
+        panel.allowedFileTypes = ["png", "jpg", "jpeg", "tiff", "bmp", "gif", "heic"]
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+
+        panel.begin { [weak self] response in
+            guard response == .OK,
+                  let url = panel.url,
+                  let self = self,
+                  let image = NSImage(contentsOf: url),
+                  let rotatedImage = self.rotateImage180(image),
+                  let undoManager = self.undoManager else {
+                return
+            }
+
+            let imageLayer = CALayer()
+            imageLayer.contents = rotatedImage
+            imageLayer.frame = CGRect(x: 100, y: 100, width: rotatedImage.size.width, height: rotatedImage.size.height)
+            imageLayer.contentsGravity = .resizeAspect
+            imageLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
+
+            self.svgRootLayer?.addSublayer(imageLayer)
+
+            // Undo support
+            undoManager.registerUndo(withTarget: self) { targetSelf in
+                imageLayer.removeFromSuperlayer()
+
+                // Redo support
+                targetSelf.undoManager?.registerUndo(withTarget: targetSelf) { redoSelf in
+                    redoSelf.svgRootLayer?.addSublayer(imageLayer)
+                }
+            }
+
+            undoManager.setActionName("Add Rotated Image Layer")
+        }
+    }
+
+    func rotateImage180(_ image: NSImage) -> NSImage? {
+        let newSize = image.size
+        let rotatedImage = NSImage(size: newSize)
+
+        rotatedImage.lockFocus()
+        let context = NSGraphicsContext.current
+        context?.imageInterpolation = .high
+
+        let transform = NSAffineTransform()
+        transform.translateX(by: newSize.width, yBy: newSize.height)
+        transform.rotate(byDegrees: 180) // Only rotation, no flipping
+        transform.concat()
+
+        image.draw(in: NSRect(origin: .zero, size: newSize),
+                   from: NSRect(origin: .zero, size: newSize),
+                   operation: .copy,
+                   fraction: 1.0)
+
+        rotatedImage.unlockFocus()
+        return rotatedImage
+    }
 
 }
