@@ -24,6 +24,7 @@ struct MainView: View {
                     .cornerRadius(100)
                 }
                 .buttonStyle(.plain)
+                .opacity(0)
             }
             GridView(itemCount: itemCount, categoryID: categoryID, subcategoryID: subcategoryID) { str in
                 grdiAction(str)
