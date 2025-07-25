@@ -85,7 +85,7 @@ struct GridView: View {
         }
         .sheet(isPresented: $showSubscriptionSheet) {
                     // Present your SubscriptionView
-                    SubscriptionView()
+                    SubscriptionView(showPremium: $showSubscriptionSheet)
                         .frame(width: 819, height: 622)
                 }
     }

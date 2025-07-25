@@ -7,12 +7,14 @@ struct HomeView: View {
     @State var showLoader: Bool = false
     @Binding var svgURL : URL?
     @Binding var screenType : screen
+    @State var showPremiumScreen: Bool = false
     var body: some View {
      ZStack {
         HStack(spacing: 0){
             Sidemenu(
                 categories: viewModel.categories,
-                selectedCategoryID: $selectedCategoryID
+                selectedCategoryID: $selectedCategoryID,
+                showPremium: $showPremiumScreen
             )
             .frame(width: 230)
             .background(Color("screenBg"))
@@ -82,6 +84,11 @@ struct HomeView: View {
                 selectedSubcategoryID = newCategory.subcategories?.first?.title
             }
         }
+        .sheet(isPresented: $showPremiumScreen) {
+                    // Present your SubscriptionView
+                    SubscriptionView(showPremium: $showPremiumScreen)
+                        .frame(width: 819, height: 622)
+                }
          if showLoader {
              ProgressView()
                  .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -3,11 +3,14 @@ import SwiftUI
 struct Sidemenu: View {
     let categories: [Category]
     @Binding var selectedCategoryID: String?
-
+    @Binding var showPremium : Bool
     var body: some View {
         
         VStack(spacing: 50) {
             Image("goToProImage")
+                .onTapGesture {
+                    showPremium = true
+                }
             ScrollView {
                 ForEach(categories) { category in
                     if let title = category.title {

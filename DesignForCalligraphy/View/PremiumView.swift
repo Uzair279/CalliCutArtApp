@@ -4,6 +4,7 @@ import StoreKit
 struct SubscriptionView: View {
     @StateObject private var viewModel = SubscriptionViewModel()
     @State var selectedPlanID = "Monthly"
+    @Binding var showPremium : Bool
     var body: some View {
         HStack(spacing: 0) {
             // Left Side Features
@@ -12,7 +13,22 @@ struct SubscriptionView: View {
                     .resizable()
                     .scaledToFill()
                 
-                FeaturesListView()
+                FeaturesListView() {
+                    
+                }
+      
+                    Image("cross")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .offset(x: -180, y: -280)
+                        .onTapGesture {
+                            showPremium = false
+                        }
+//                            }
+//                        Spacer()
+//                    }
+//                    Spacer()
+//                }
             }
             .frame(width: 409.5)
 
@@ -36,10 +52,13 @@ struct FeaturesListView: View {
         "Sublimation Graphics",
         "Unlimited SVGs"
     ]
-
+    let action: () -> Void
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 30) {
             Spacer()
+            Text("What will you get?")
+                .foregroundColor(.white)
+                .font(.system(size: 16, weight: .medium))
             ForEach(features, id: \.self) { feature in
                 FeatureRow(text: feature)
             }
