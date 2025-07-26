@@ -1,99 +1,103 @@
 import SwiftUI
-
 struct HomeView: View {
-    @StateObject var viewModel : CategoryViewModel
+    @StateObject var viewModel: CategoryViewModel
     @State var selectedCategoryID: String?
     @State var selectedSubcategoryID: String?
     @State var showLoader: Bool = false
-    @Binding var svgURL : URL?
-    @Binding var screenType : screen
+    @Binding var svgURL: URL?
+    @Binding var screenType: screen
     @State var showPremiumScreen: Bool = false
+    
     var body: some View {
-     ZStack {
-        HStack(spacing: 0){
-            Sidemenu(
-                categories: viewModel.categories,
-                selectedCategoryID: $selectedCategoryID,
-                showPremium: $showPremiumScreen
-            )
-            .frame(width: 230)
-            .background(Color("screenBg"))
-            if let selectedCategoryID = selectedCategoryID,
-               let selectedCategory = viewModel.categories.first(where: { $0.title == selectedCategoryID }),
-               let subcategories = selectedCategory.subcategories {
+        ZStack {
+            HStack(spacing: 0) {
+                Sidemenu(
+                    categories: viewModel.categories,
+                    selectedCategoryID: $selectedCategoryID,
+                    showPremium: $showPremiumScreen
+                )
+                .frame(width: 230)
+                .background(Color("screenBg"))
+                
                 SubSidemenu(
-                    subcategories: subcategories,
+                    subcategories: viewModel.categories.first(where: { $0.title == selectedCategoryID })?.subcategories ?? [],
                     selectedSubcategoryID: $selectedSubcategoryID
                 )
+                .id(selectedCategoryID ?? "")
                 .frame(width: 190)
                 .background(Color.white)
                 
-            } else {
-                Text("Select a category")
-                    .frame(width: 190)
-                    .foregroundColor(.gray)
-            }
-            if let selectedCategoryID = selectedCategoryID,
-               let selectedSubcategoryID = selectedSubcategoryID,
-               let selectedCategory = viewModel.categories.first(where: { $0.title == selectedCategoryID }),
-               let selectedSubcategory = selectedCategory.subcategories?.first(where: { $0.title == selectedSubcategoryID }) {
-                MainView(itemCount: selectedSubcategory.itemCount ?? 0, categoryID: selectedCategoryID, subcategoryID: selectedSubcategoryID, addNew: {
-                    //Add new Action
-                }, grdiAction: { item in
-                    let svgURL = generateSVGURL(for: selectedCategory.title ?? "", subcategoryID: selectedSubcategory.title ?? "", itemID: item)
-                   let url = checkIfFileExists(fileURL: URL(string: svgURL) ?? URL(fileURLWithPath: ""))
-                    if let url {
-                        self.svgURL = url
-                        screenType = .canvas
-                    }
-                    else {
-                        print("Show Loader")
-                        showLoader = true
-                        downloadSVG(from: svgURL) { result in
-                            switch result {
-                            case .success(let fileURL):
-                                print("SVG downloaded to: \(fileURL.path)")
-                                self.svgURL = fileURL
-                                showLoader = false
+                if let selectedCategoryID,
+                   let selectedCategory = viewModel.categories.first(where: { $0.title == selectedCategoryID }),
+                   let selectedSubcategoryID,
+                   let selectedSubcategory = selectedCategory.subcategories?.first(where: { $0.id == selectedSubcategoryID }) {
+                    
+                    MainView(
+                        itemCount: selectedSubcategory.itemCount ?? 0,
+                        categoryID: selectedCategoryID,
+                        subcategoryID: selectedSubcategoryID,
+                        addNew: {
+                            // Add new Action
+                        },
+                        grdiAction: { item in
+                            let svgPath = generateSVGURL(for: selectedCategoryID, subcategoryID: selectedSubcategoryID, itemID: item)
+                            let url = checkIfFileExists(fileURL: URL(string: svgPath) ?? URL(fileURLWithPath: ""))
+                            
+                            if let url {
+                                self.svgURL = url
                                 screenType = .canvas
-                            case .failure(let error):
-                                print("Failed to download SVG: \(error.localizedDescription)")
-                                showLoader =  false
+                            } else {
+                                showLoader = true
+                                downloadSVG(from: svgPath) { result in
+                                    switch result {
+                                    case .success(let fileURL):
+                                        self.svgURL = fileURL
+                                        screenType = .canvas
+                                    case .failure(let error):
+                                        print("Download failed: \(error)")
+                                    }
+                                    showLoader = false
+                                }
                             }
                         }
-                    }
-                    
-                })
-            } else {
-                Text("Select a subcategory")
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.gray)
-            }
-        }
-        .onAppear {
-            // Set default selection on first load
-            if let firstCategory = viewModel.categories.first {
-                selectedCategoryID = firstCategory.title
-                selectedSubcategoryID = firstCategory.subcategories?.first?.title
-            }
-        }
-        .onChange(of: selectedCategoryID) { newCategoryID in
-            // Automatically select the first subcategory when the category changes
-            if let newCategoryID = newCategoryID,
-               let newCategory = viewModel.categories.first(where: { $0.title == newCategoryID }) {
-                selectedSubcategoryID = newCategory.subcategories?.first?.title
-            }
-        }
-        .sheet(isPresented: $showPremiumScreen) {
-                    // Present your SubscriptionView
-                    SubscriptionView(showPremium: $showPremiumScreen)
-                        .frame(width: 819, height: 622)
+                    )
+                } else {
+                    Text("Select a subcategory")
+                        .frame(maxWidth: .infinity)
+                        .foregroundColor(.gray)
                 }
-         if showLoader {
-             ProgressView()
-                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-         }
-      }
+            }
+            
+            .onAppear {
+                if let firstCategory = viewModel.categories.first {
+                    selectedCategoryID = firstCategory.title
+                    selectedSubcategoryID = firstCategory.subcategories?.first?.id
+                }
+            }
+            
+            .onChange(of: viewModel.categories.count) { _ in
+                if let firstCategory = viewModel.categories.first {
+                    selectedCategoryID = firstCategory.title
+                    selectedSubcategoryID = firstCategory.subcategories?.first?.id
+                }
+            }
+            
+            .onChange(of: selectedCategoryID) { newCategoryID in
+                if let newCategoryID = newCategoryID,
+                   let newCategory = viewModel.categories.first(where: { $0.title == newCategoryID }) {
+                    selectedSubcategoryID = newCategory.subcategories?.first?.id
+                }
+            }
+            
+            .sheet(isPresented: $showPremiumScreen) {
+                SubscriptionView(showPremium: $showPremiumScreen)
+                    .frame(width: 819, height: 622)
+            }
+            
+            if showLoader {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
     }
 }
-
