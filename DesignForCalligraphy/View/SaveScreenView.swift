@@ -68,6 +68,12 @@ struct ExportTemplateView: View {
                                     showSaveScreen = false
                                 }
                             exportButton(title: "Share", isPrimary: false)
+                                .opacity(previewImage != nil ? 1 : 0.5)
+                                    .onTapGesture {
+                                        if let image = previewImage {
+                                            shareImage(image)
+                                        }
+                                    }
                         }
                     }
                     .frame(width: 420)
@@ -81,7 +87,7 @@ struct ExportTemplateView: View {
                     Spacer()
                     Image(systemName: "xmark")
                         .frame(width: 24, height: 24)
-                        .foregroundColor(Color("screenBg"))
+                        .foregroundColor(Color.black)
                         .padding(.trailing, 20)
                         .padding(.top, 20)
                         .onTapGesture {
@@ -92,6 +98,13 @@ struct ExportTemplateView: View {
             }
         }
         .frame(width: 914, height: 525)
+    }
+    func shareImage(_ image: NSImage) {
+        let picker = NSSharingServicePicker(items: [image])
+        if let window = NSApplication.shared.keyWindow,
+           let contentView = window.contentView {
+            picker.show(relativeTo: .zero, of: contentView, preferredEdge: .minY)
+        }
     }
 
     func formatButton(title: String, selected: Bool) -> some View {
