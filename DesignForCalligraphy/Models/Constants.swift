@@ -17,28 +17,28 @@ func generateSVGURL(for categoryID: String, subcategoryID: String, itemID: Strin
 
 
 
-func downloadSVG(from url: String, completion: @escaping (Result<URL, Error>) -> Void) {
-    guard let fileURL = URL(string: url) else {
+func downloadSVG(from url: String, categoryID: String, subcategoryID: String, itemID: String, completion: @escaping (Result<URL, Error>) -> Void) {
+    guard let remoteURL = URL(string: url) else {
         completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
         return
     }
 
-    // Construct the destination path
-    let libraryPath = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
-    let folderPath = libraryPath.appendingPathComponent("SVGs")
-    
+    // Construct the destination path using your custom logic
+    let fileManager = FileManager.default
+    let libraryDir = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first!
+    let folderPath = libraryDir.appendingPathComponent("SVGs/\(categoryID)/\(subcategoryID)")
+    let destinationURL = folderPath.appendingPathComponent("svg_\(itemID).svg")
+
     // Create the folder if it doesn't exist
     do {
-        try FileManager.default.createDirectory(at: folderPath, withIntermediateDirectories: true, attributes: nil)
+        try fileManager.createDirectory(at: folderPath, withIntermediateDirectories: true, attributes: nil)
     } catch {
         completion(.failure(error))
         return
     }
-    
-    let destinationURL = folderPath.appendingPathComponent(fileURL.lastPathComponent)
 
     // Start the download
-    let task = URLSession.shared.downloadTask(with: fileURL) { tempURL, response, error in
+    let task = URLSession.shared.downloadTask(with: remoteURL) { tempURL, response, error in
         if let error = error {
             completion(.failure(error))
             return
@@ -50,8 +50,12 @@ func downloadSVG(from url: String, completion: @escaping (Result<URL, Error>) ->
         }
 
         do {
-            // Move the file to the destination folder
-            try FileManager.default.moveItem(at: tempURL, to: destinationURL)
+            // If file already exists, remove it before moving
+            if fileManager.fileExists(atPath: destinationURL.path) {
+                try fileManager.removeItem(at: destinationURL)
+            }
+
+            try fileManager.moveItem(at: tempURL, to: destinationURL)
             completion(.success(destinationURL))
         } catch {
             completion(.failure(error))
@@ -59,15 +63,4 @@ func downloadSVG(from url: String, completion: @escaping (Result<URL, Error>) ->
     }
 
     task.resume()
-}
-func checkIfFileExists(fileURL: URL) -> URL? {
-    let libraryPath = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
-    let folderPath = libraryPath.appendingPathComponent("SVGs")
-    
-    let destinationURL = folderPath.appendingPathComponent(fileURL.lastPathComponent)
-    // Use destinationURL.path instead of destinationURL.absoluteString
-    if FileManager.default.fileExists(atPath: destinationURL.path) {
-        return destinationURL
-    }
-    return nil
 }

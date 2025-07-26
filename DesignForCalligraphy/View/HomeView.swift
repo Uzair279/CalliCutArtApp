@@ -40,25 +40,26 @@ struct HomeView: View {
                             // Add new Action
                         },
                         grdiAction: { item in
-                            let svgPath = generateSVGURL(for: selectedCategoryID, subcategoryID: selectedSubcategoryID, itemID: item)
-                            let url = checkIfFileExists(fileURL: URL(string: svgPath) ?? URL(fileURLWithPath: ""))
-                            
-                            if let url {
-                                self.svgURL = url
+                            let svgDownloadURL = generateSVGURL(for: selectedCategoryID, subcategoryID: selectedSubcategoryID, itemID: item)
+                            let localSVGURL = localSVGPath(categoryID: selectedCategoryID, subcategoryID: selectedSubcategoryID, itemID: item)
+
+                            if checkIfFileExists(at: localSVGURL) {
+                                self.svgURL = localSVGURL
                                 screenType = .canvas
                             } else {
                                 showLoader = true
-                                downloadSVG(from: svgPath) { result in
+                                downloadSVG(from: svgDownloadURL, categoryID: selectedCategoryID, subcategoryID: selectedSubcategoryID, itemID: item) { result in
                                     switch result {
                                     case .success(let fileURL):
                                         self.svgURL = fileURL
                                         screenType = .canvas
                                     case .failure(let error):
-                                        print("Download failed: \(error)")
+                                        print("Failed to download SVG: \(error.localizedDescription)")
                                     }
-                                    showLoader = false
                                 }
+
                             }
+
                         }
                     )
                 } else {
@@ -100,4 +101,21 @@ struct HomeView: View {
             }
         }
     }
+
+
+    func localSVGPath(categoryID: String, subcategoryID: String, itemID: String) -> URL {
+        let fileManager = FileManager.default
+        let baseDir = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first!
+        let svgDir = baseDir.appendingPathComponent("SVGs/\(categoryID)/\(subcategoryID)")
+        
+        // Ensure the directory exists
+        try? fileManager.createDirectory(at: svgDir, withIntermediateDirectories: true)
+        
+        return svgDir.appendingPathComponent("svg_\(itemID).svg")
+    }
+    func checkIfFileExists(at url: URL) -> Bool {
+        FileManager.default.fileExists(atPath: url.path)
+    }
+
+
 }
