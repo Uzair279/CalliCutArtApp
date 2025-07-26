@@ -56,7 +56,7 @@ struct TopBarView: View {
                     Spacer()
                     HStack (spacing: 20) {
                         ImportExportView(text: "Import", textColor: .black, bgColor: "grey", action: {
-                            sideBarVM.svgVM?.`addImageLayerFromFinder`()
+                            sideBarVM.svgVM?.addImageLayerFromFinder()
                         })
                         ImportExportView(text: "Export", textColor: .white, bgColor: "selectedColor", action: {
                            showSaveScreen = true

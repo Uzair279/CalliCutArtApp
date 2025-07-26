@@ -326,53 +326,55 @@ class SVGCanvasNSView: NSView {
                   let url = panel.url,
                   let self = self,
                   let image = NSImage(contentsOf: url),
-                  let rotatedImage = self.rotateImage180(image),
+                  let fixedImage = self.rotateAndFixImage(image),
                   let undoManager = self.undoManager else {
                 return
             }
 
             let imageLayer = CALayer()
-            imageLayer.contents = rotatedImage
-            imageLayer.frame = CGRect(x: 100, y: 100, width: rotatedImage.size.width, height: rotatedImage.size.height)
+            imageLayer.contents = fixedImage
+            imageLayer.frame = CGRect(x: 100, y: 100, width: fixedImage.size.width, height: fixedImage.size.height)
             imageLayer.contentsGravity = .resizeAspect
             imageLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
 
             self.svgRootLayer?.addSublayer(imageLayer)
 
-            // Undo support
             undoManager.registerUndo(withTarget: self) { targetSelf in
                 imageLayer.removeFromSuperlayer()
-
-                // Redo support
                 targetSelf.undoManager?.registerUndo(withTarget: targetSelf) { redoSelf in
                     redoSelf.svgRootLayer?.addSublayer(imageLayer)
                 }
             }
-
-            undoManager.setActionName("Add Rotated Image Layer")
         }
     }
 
-    func rotateImage180(_ image: NSImage) -> NSImage? {
-        let newSize = image.size
-        let rotatedImage = NSImage(size: newSize)
+    func rotateAndFixImage(_ image: NSImage) -> NSImage? {
+        let size = image.size
+        let newImage = NSImage(size: size)
 
-        rotatedImage.lockFocus()
-        let context = NSGraphicsContext.current
-        context?.imageInterpolation = .high
+        newImage.lockFocus()
 
         let transform = NSAffineTransform()
-        transform.translateX(by: newSize.width, yBy: newSize.height)
-        transform.rotate(byDegrees: 180) // Only rotation, no flipping
+        
+        // Translate to image center
+        transform.translateX(by: size.width / 2, yBy: size.height / 2)
+        
+        // Rotate 180 degrees
+        transform.rotate(byDegrees: 180)
+        
+        // Flip horizontally by scaling X
+        transform.scaleX(by: -1.0, yBy: 1.0)
+        
+        // Move back after transform
+        transform.translateX(by: -size.width / 2, yBy: -size.height / 2)
+        
         transform.concat()
 
-        image.draw(in: NSRect(origin: .zero, size: newSize),
-                   from: NSRect(origin: .zero, size: newSize),
-                   operation: .copy,
-                   fraction: 1.0)
+        image.draw(at: .zero, from: NSRect(origin: .zero, size: size), operation: .copy, fraction: 1.0)
 
-        rotatedImage.unlockFocus()
-        return rotatedImage
+        newImage.unlockFocus()
+        return newImage
     }
+
 
 }
