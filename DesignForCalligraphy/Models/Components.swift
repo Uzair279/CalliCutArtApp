@@ -52,13 +52,13 @@ struct CanvasSidemenuItem: View {
     }
 }
 struct ListItem: View {
-    @State var vm : CategoryViewModel
+    @State var vm: CategoryViewModel
     let title: String
-    @Binding var isEyeSelected: Bool
-    @Binding var isLockSelected: Bool
-    @Binding var listItem : [LayerItem]
     var thumbnail: NSImage?
-    var layer : CALayer
+    var layer: CALayer
+
+    @State private var isEyeSelected: Bool = false
+    @State private var isLockSelected: Bool = false
 
     var body: some View {
         HStack(spacing: 10) {
@@ -102,11 +102,7 @@ struct ListItem: View {
                 .buttonStyle(.plain)
 
                 Button(action: {
-                    if let layers =  vm.svgVM?.svgRootLayer?.sublayers?.first?.sublayers {
-                        if let _ = layers.firstIndex(where: { $0 === layer }) {
-                            vm.svgVM?.deleteLayer(layer)
-                        }
-                    }
+                    vm.svgVM?.deleteLayer(layer)
                 }) {
                     Image("delete")
                         .frame(width: 21.66, height: 21.66)
@@ -119,5 +115,11 @@ struct ListItem: View {
         .frame(width: 269, height: 67)
         .background(Color("screenBg"))
         .cornerRadius(7.08)
+        .onAppear {
+            isEyeSelected = layer.isHidden
+            isLockSelected = layer.name == "locked"
+        }
     }
 }
+
+

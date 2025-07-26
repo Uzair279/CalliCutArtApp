@@ -255,8 +255,6 @@ struct CanvasSidemenu: View {
 }
 struct LayersView: View {
     @StateObject var vm: CategoryViewModel
-    @State var layerItems: [LayerItem] = []
-
     var body: some View {
         VStack(spacing: 20) {
             HStack(spacing: 12) {
@@ -270,41 +268,28 @@ struct LayersView: View {
 
             ScrollView {
                 VStack {
-                    ForEach($layerItems) { $item in
-                        ListItem(
-                            vm: vm,
-                            title: item.title,
-                            isEyeSelected: $item.isEyeSelected,
-                            isLockSelected: $item.isLockSelected,
-                            listItem: $layerItems,
-                            thumbnail: item.layer.snapshotImage(size: CGSize(width: 30, height: 30)),
-                            layer: item.layer
-                        )
+                    // Access the actual sublayers directly
+                    if let layers = vm.svgVM?.svgRootLayer?.sublayers {
+                        ForEach(Array(layers.enumerated()), id: \.element) { index, layer in
+                            ListItem(
+                                vm: vm,
+                                title: "Layer \(index + 1)",
+                                thumbnail: layer.snapshotImage(size: CGSize(width: 30, height: 30)),
+                                layer: layer
+                            )
+                        }
+                    }
+                     else {
+                        Text("No layers available")
+                            .foregroundColor(.gray)
+                            .padding()
                     }
                 }
             }
         }
         .padding(.vertical, 20)
         .frame(width: 289)
-
-        .onAppear {
-            generateLayerItems()
-        }
-        .onChange(of: vm.svgVM?.svgRootLayer?.sublayers?.first?.sublayers?.count) { _ in
-            generateLayerItems()
-        }
-    }
-
-    func generateLayerItems() {
-         let sublayers = vm.svgSublayers
-        layerItems = sublayers.enumerated().map { index, layer in
-            LayerItem(
-                layer: layer,
-                title: "Layer \(index + 1)",
-                isEyeSelected: false,
-                isLockSelected: false
-            )
-        }
     }
 }
+
 

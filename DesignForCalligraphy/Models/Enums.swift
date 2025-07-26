@@ -21,21 +21,33 @@ extension SVGKImage {
 extension CALayer {
     func snapshotImage(size: CGSize) -> NSImage? {
         let image = NSImage(size: size)
-        image.lockFocus()
-        let context = NSGraphicsContext.current?.cgContext
-        context?.saveGState()
+        image.lockFocusFlipped(true) // flip coordinates
+        guard let context = NSGraphicsContext.current?.cgContext else {
+            image.unlockFocus()
+            return nil
+        }
 
-        // Fit the layer into the image rect
+        context.saveGState()
+
+        // Center the layer in the image and fit it
         let scaleX = size.width / bounds.width
         let scaleY = size.height / bounds.height
-        context?.scaleBy(x: scaleX, y: scaleY)
-        render(in: context!)
+        let scale = min(scaleX, scaleY)
 
-        context?.restoreGState()
+        // Translate and scale to center and fit layer
+        context.translateBy(x: (size.width - bounds.width * scale) / 2,
+                            y: (size.height - bounds.height * scale) / 2)
+        context.scaleBy(x: scale, y: scale)
+
+        // Render the layer
+        render(in: context)
+
+        context.restoreGState()
         image.unlockFocus()
         return image
     }
 }
+
 extension CALayer {
     func snapshot(scale: CGFloat = 1.0) -> NSImage? {
         let width = Int(bounds.width * scale)
