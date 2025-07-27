@@ -6,7 +6,6 @@ import AppKit
 // MARK: - SwiftUI wrapper for NSView displaying SVG and handling gestures
 struct SVGCanvasView: NSViewRepresentable {
     let svgURL: URL
-//    @Environment(\.undoManager) var undoManager
     var onCreateView: ((SVGCanvasNSView) -> Void)?
 
     func makeNSView(context: Context) -> SVGCanvasNSView {
@@ -32,7 +31,14 @@ struct SVGCanvasView: NSViewRepresentable {
 }
 
 // MARK: - NSView displaying SVG and handling gestures & Undo
-class SVGCanvasNSView: NSView {
+class SVGCanvasNSView: NSView, ObservableObject {
+    @Published var sublayers: [CALayer] = []
+    func updateSublayers() {
+        let layers = svgRootLayer?.sublayers ?? []
+        print("Updating sublayers: count = \(layers.count)")
+        self.sublayers = layers
+    }
+
     var svgImage: SVGKImage?
     var svgRootLayer: CALayer?
 
@@ -78,6 +84,7 @@ class SVGCanvasNSView: NSView {
         svgImage.size = newSize
 
         svgRootLayer = svgImage.caLayerTree
+        self.updateSublayers()
         clearAllTransforms(in: svgRootLayer)
         guard let svgRootLayer = svgRootLayer else { return }
 
@@ -251,14 +258,16 @@ class SVGCanvasNSView: NSView {
 
         // Remove the layer
         layer.removeFromSuperlayer()
+        updateSublayers()
 
         // Register undo
         undoManager.registerUndo(withTarget: self) { targetSelf in
             parent.insertSublayer(layer, at: UInt32(index))
-
+            targetSelf.updateSublayers()
             // Register redo
             targetSelf.undoManager?.registerUndo(withTarget: targetSelf) { redoSelf in
                 layer.removeFromSuperlayer()
+                redoSelf.updateSublayers()
             }
         }
 
@@ -287,30 +296,51 @@ class SVGCanvasNSView: NSView {
         undoManager?.setActionName(wasLocked ? "Unlock Layer" : "Lock Layer")
     }
     func addTextLayer(_ text: String) {
-        guard let undoManager = undoManager else { return }
-        guard let parent = layer?.superlayer else { return }
+        guard let root = svgRootLayer else { return }
+
+        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedText.isEmpty else {
+            print("Empty text ignored")
+            return
+        }
+
         let textLayer = CATextLayer()
-        textLayer.string = text
-        textLayer.fontSize = 18
-        textLayer.foregroundColor = NSColor.labelColor.cgColor
-        textLayer.alignmentMode = .left
-        textLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
         textLayer.frame = CGRect(x: 50, y: 50, width: 200, height: 40)
 
-        parent.addSublayer(textLayer)
+        let font = NSFont.systemFont(ofSize: 18)
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: NSColor.labelColor
+        ]
+        textLayer.string = NSAttributedString(string: trimmedText, attributes: attributes)
+        textLayer.font = font
+        textLayer.fontSize = 18
+        textLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
+        textLayer.alignmentMode = .left
+        textLayer.isWrapped = true
 
-        // Register undo
-        undoManager.registerUndo(withTarget: self) { targetSelf in
+        // ✅ Fix flipped text caused by flipped root layer
+        textLayer.setAffineTransform(CGAffineTransform(scaleX: 1, y: -1))
+        textLayer.isGeometryFlipped = true
+
+        root.addSublayer(textLayer)
+        updateSublayers()
+        setNeedsDisplay(bounds)
+
+        // Undo support
+        undoManager?.registerUndo(withTarget: self) { targetSelf in
             textLayer.removeFromSuperlayer()
-
-            // Register redo
+            targetSelf.updateSublayers()
             targetSelf.undoManager?.registerUndo(withTarget: targetSelf) { redoSelf in
-                parent.addSublayer(textLayer)
+                root.addSublayer(textLayer)
+                redoSelf.updateSublayers()
             }
         }
 
-        undoManager.setActionName("Add Text Layer")
+        undoManager?.setActionName("Add Text Layer")
     }
+
+
 
     
 
@@ -338,11 +368,13 @@ class SVGCanvasNSView: NSView {
             imageLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
 
             self.svgRootLayer?.addSublayer(imageLayer)
-
+            self.updateSublayers()
             undoManager.registerUndo(withTarget: self) { targetSelf in
                 imageLayer.removeFromSuperlayer()
+                targetSelf.updateSublayers()
                 targetSelf.undoManager?.registerUndo(withTarget: targetSelf) { redoSelf in
                     redoSelf.svgRootLayer?.addSublayer(imageLayer)
+                    redoSelf.updateSublayers()
                 }
             }
         }

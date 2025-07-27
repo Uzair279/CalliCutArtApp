@@ -3,9 +3,6 @@ import Foundation
 class CategoryViewModel: ObservableObject {
     @Published var categories: [Category] = []
     @Published var svgVM: SVGCanvasNSView?
-    var svgSublayers: [CALayer] {
-        svgVM?.svgRootLayer?.sublayers?.first?.sublayers ?? []
-        }
     init() {
         loadCategories()
     }

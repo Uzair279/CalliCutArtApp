@@ -100,7 +100,7 @@ struct TopBarView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     Spacer()
                     if sideBarVM.svgVM != nil {
-                        LayersView(vm: sideBarVM)
+                        LayersView(vm: sideBarVM, svgView: sideBarVM.svgVM!)
                     }
                     
                 }
@@ -122,7 +122,7 @@ struct TopBarView: View {
                 }
                 
             }
-            if textEditor {
+            .sheet(isPresented: $textEditor) {
                 VStack(spacing: 8) {
                     TextEditor(text: $textEditorText)
                         .frame(width: 250, height: 100)
@@ -136,8 +136,8 @@ struct TopBarView: View {
                         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
 
                     Button("Done") {
-                        sideBarVM.svgVM?.addTextLayer(textEditorText)
                         textEditor = false
+                        sideBarVM.svgVM?.addTextLayer(textEditorText)
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 6)
@@ -145,8 +145,8 @@ struct TopBarView: View {
                     .foregroundColor(.white)
                     .cornerRadius(6)
                 }
-               
             }
+
                 
 
         }
@@ -254,7 +254,9 @@ struct CanvasSidemenu: View {
     }
 }
 struct LayersView: View {
-    @StateObject var vm: CategoryViewModel
+    @ObservedObject var vm: CategoryViewModel
+        @ObservedObject var svgView: SVGCanvasNSView
+
     var body: some View {
         VStack(spacing: 20) {
             HStack(spacing: 12) {
@@ -268,28 +270,28 @@ struct LayersView: View {
 
             ScrollView {
                 VStack {
-                    // Access the actual sublayers directly
-                    if let layers = vm.svgVM?.svgRootLayer?.sublayers {
-                        ForEach(Array(layers.enumerated()), id: \.element) { index, layer in
-                            ListItem(
-                                vm: vm,
-                                title: "Layer \(index + 1)",
-                                thumbnail: layer.snapshotImage(size: CGSize(width: 30, height: 30)),
-                                layer: layer
-                            )
-                        }
+                    ForEach(Array(svgView.sublayers.enumerated()), id: \.element) { index, layer in
+                        ListItem(
+                            vm: vm,
+                            title: "Layer \(index + 1)",
+                            thumbnail: layer.snapshotImage(size: CGSize(width: 30, height: 30)),
+                            layer: layer
+                        )
                     }
-                     else {
+
+                    if (vm.svgVM?.sublayers.isEmpty ?? true) {
                         Text("No layers available")
                             .foregroundColor(.gray)
                             .padding()
                     }
                 }
             }
+
         }
         .padding(.vertical, 20)
         .frame(width: 289)
     }
+        
 }
 
 
