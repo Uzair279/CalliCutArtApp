@@ -32,6 +32,7 @@ struct SVGCanvasView: NSViewRepresentable {
 
 // MARK: - NSView displaying SVG and handling gestures & Undo
 class SVGCanvasNSView: NSView, ObservableObject {
+    let BackgroundID = "DesignForCalligraphy.SVGCanvasNSView"
     @Published var sublayers: [CALayer] = []
     func updateSublayers() {
         let layers = svgRootLayer?.sublayers ?? []
@@ -41,7 +42,7 @@ class SVGCanvasNSView: NSView, ObservableObject {
     var svgImage: SVGKImage?
     var svgRootLayer: CALayer?
     
-    private var selectedLayer: CALayer? {
+    var selectedLayer: CALayer? {
         didSet {
             // Remove border from previously selected layer
             oldValue?.borderWidth = 0
@@ -133,27 +134,47 @@ class SVGCanvasNSView: NSView, ObservableObject {
             originalTransform = nil
             return
         }
-        selectedLayer = hitLayer
-        originalTransform = hitLayer.affineTransform()
-        
-        // Make sure anchorPoint is center for natural rotation/scaling
-        setAnchorPointToCenter(for: hitLayer)
+        if hitLayer.name != BackgroundID {
+            selectedLayer = hitLayer
+            originalTransform = hitLayer.affineTransform()
+            
+            // Make sure anchorPoint is center for natural rotation/scaling
+            setAnchorPointToCenter(for: hitLayer)
+        }
     }
     
     private func setAnchorPointToCenter(for layer: CALayer) {
-        let center = CGPoint(x: layer.bounds.midX, y: layer.bounds.midY)
+        let bounds = layer.bounds
+        let oldAnchorPoint = layer.anchorPoint
         let oldPosition = layer.position
-        let oldAnchor = layer.anchorPoint
-        
-        layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        
-        // Adjust position to keep visual position the same after changing anchor
-        let newPosition = CGPoint(
-            x: oldPosition.x + (center.x - layer.bounds.origin.x) * (oldAnchor.x - layer.anchorPoint.x),
-            y: oldPosition.y + (center.y - layer.bounds.origin.y) * (oldAnchor.y - layer.anchorPoint.y)
+
+        // Calculate new anchor point and the difference
+        let newAnchorPoint = CGPoint(x: 0.5, y: 0.5)
+        let anchorDelta = CGPoint(
+            x: newAnchorPoint.x - oldAnchorPoint.x,
+            y: newAnchorPoint.y - oldAnchorPoint.y
         )
-        layer.position = newPosition
+
+        // Convert the delta into position offset
+        let offset = CGPoint(
+            x: bounds.size.width * anchorDelta.x,
+            y: bounds.size.height * anchorDelta.y
+        )
+
+        // Apply transform if any
+        var transformedOffset = offset
+        if let presentation = layer.presentation(), layer.affineTransform() != .identity {
+            transformedOffset = offset.applying(layer.affineTransform())
+        }
+
+        // Adjust the position
+        layer.anchorPoint = newAnchorPoint
+        layer.position = CGPoint(
+            x: oldPosition.x + transformedOffset.x,
+            y: oldPosition.y + transformedOffset.y
+        )
     }
+
     
     // MARK: - Gesture Recognizers
     private func setupGestureRecognizers() {

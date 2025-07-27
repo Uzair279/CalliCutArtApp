@@ -59,6 +59,7 @@ struct TopBarView: View {
                             sideBarVM.svgVM?.addImageLayerFromFinder()
                         })
                         ImportExportView(text: "Export", textColor: .white, bgColor: "selectedColor", action: {
+                            sideBarVM.svgVM?.selectedLayer = nil
                            showSaveScreen = true
                         })
                     }
