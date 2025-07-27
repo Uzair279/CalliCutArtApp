@@ -136,9 +136,12 @@ struct TopBarView: View {
                         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
 
                     Button("Done") {
-                        textEditor = false
-                        sideBarVM.svgVM?.addTextLayer(textEditorText)
+                        if !textEditorText.isEmpty {
+                            textEditor = false
+                            sideBarVM.svgVM?.addTextLayer(textEditorText)
+                        }
                     }
+                    .disabled(textEditorText.isEmpty)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 6)
                     .background(Color.blue)

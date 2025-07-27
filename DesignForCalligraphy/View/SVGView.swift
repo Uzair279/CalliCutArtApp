@@ -7,21 +7,21 @@ import AppKit
 struct SVGCanvasView: NSViewRepresentable {
     let svgURL: URL
     var onCreateView: ((SVGCanvasNSView) -> Void)?
-
+    
     func makeNSView(context: Context) -> SVGCanvasNSView {
         let view = SVGCanvasNSView()
         onCreateView?(view)
         return view
     }
-
+    
     func updateNSView(_ nsView: SVGCanvasNSView, context: Context) {
         nsView.loadSVG(url: svgURL)
     }
-
+    
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-
+    
     class Coordinator: NSObject {
         var parent: SVGCanvasView
         init(_ parent: SVGCanvasView) {
@@ -35,59 +35,69 @@ class SVGCanvasNSView: NSView, ObservableObject {
     @Published var sublayers: [CALayer] = []
     func updateSublayers() {
         let layers = svgRootLayer?.sublayers ?? []
-        print("Updating sublayers: count = \(layers.count)")
         self.sublayers = layers
     }
-
+    
     var svgImage: SVGKImage?
     var svgRootLayer: CALayer?
-
-    private var selectedLayer: CALayer?
+    
+    private var selectedLayer: CALayer? {
+        didSet {
+            // Remove border from previously selected layer
+            oldValue?.borderWidth = 0
+            oldValue?.borderColor = nil
+            
+            // Apply blue border to new selection
+            selectedLayer?.borderWidth = 1
+            selectedLayer?.borderColor = NSColor.systemBlue.cgColor
+        }
+    }
+    
     private var originalTransform: CGAffineTransform?
-
+    
     var externalUndoManager: UndoManager?
-
+    
     override var undoManager: UndoManager? {
         externalUndoManager ?? super.undoManager
     }
-
+    
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         wantsLayer = true
         setupGestureRecognizers()
     }
-
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         wantsLayer = true
         setupGestureRecognizers()
     }
-
+    
     func loadSVG(url: URL) {
         svgRootLayer?.removeFromSuperlayer()
-
+        
         svgImage = SVGKImage(contentsOf: url)
         guard let svgImage = svgImage else { return }
-
+        
         // Set the SVG image size to fit the view
         let targetSize = bounds.size
         let aspectRatio = svgImage.size.width / svgImage.size.height
         var newSize = CGSize(width: targetSize.width, height: targetSize.height)
-
+        
         // Maintain aspect ratio
         if targetSize.width / targetSize.height > aspectRatio {
             newSize.width = targetSize.height * aspectRatio
         } else {
             newSize.height = targetSize.width / aspectRatio
         }
-
+        
         svgImage.size = newSize
-
+        
         svgRootLayer = svgImage.caLayerTree
         self.updateSublayers()
         clearAllTransforms(in: svgRootLayer)
         guard let svgRootLayer = svgRootLayer else { return }
-
+        
         // Center the layer in the view
         svgRootLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         svgRootLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
@@ -95,15 +105,15 @@ class SVGCanvasNSView: NSView, ObservableObject {
         svgRootLayer.setAffineTransform(flip)
         layer?.sublayers?.removeAll()
         layer?.addSublayer(svgRootLayer)
-
+        
         selectedLayer = nil
         originalTransform = nil
         setupLayerHitTesting(svgRootLayer)
         setNeedsDisplay(bounds)
     }
-
-
-
+    
+    
+    
     private func setupLayerHitTesting(_ layer: CALayer?) {
         guard let layer = layer else { return }
         layer.isGeometryFlipped = true
@@ -114,7 +124,7 @@ class SVGCanvasNSView: NSView, ObservableObject {
         layer.allowsGroupOpacity = false
         layer.sublayers?.forEach { setupLayerHitTesting($0) }
     }
-
+    
     // MARK: - Select layer on mouse down
     override func mouseDown(with event: NSEvent) {
         let point = convert(event.locationInWindow, from: nil)
@@ -125,18 +135,18 @@ class SVGCanvasNSView: NSView, ObservableObject {
         }
         selectedLayer = hitLayer
         originalTransform = hitLayer.affineTransform()
-
+        
         // Make sure anchorPoint is center for natural rotation/scaling
         setAnchorPointToCenter(for: hitLayer)
     }
-
+    
     private func setAnchorPointToCenter(for layer: CALayer) {
         let center = CGPoint(x: layer.bounds.midX, y: layer.bounds.midY)
         let oldPosition = layer.position
         let oldAnchor = layer.anchorPoint
-
+        
         layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-
+        
         // Adjust position to keep visual position the same after changing anchor
         let newPosition = CGPoint(
             x: oldPosition.x + (center.x - layer.bounds.origin.x) * (oldAnchor.x - layer.anchorPoint.x),
@@ -144,88 +154,108 @@ class SVGCanvasNSView: NSView, ObservableObject {
         )
         layer.position = newPosition
     }
-
+    
     // MARK: - Gesture Recognizers
     private func setupGestureRecognizers() {
         // Pan (drag) gesture
         let panGesture = NSPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         addGestureRecognizer(panGesture)
-
+        
         // Magnification (pinch zoom) gesture
         let magnifyGesture = NSMagnificationGestureRecognizer(target: self, action: #selector(handleMagnify(_:)))
         addGestureRecognizer(magnifyGesture)
-
+        
         // Rotation gesture
         let rotateGesture = NSRotationGestureRecognizer(target: self, action: #selector(handleRotate(_:)))
         addGestureRecognizer(rotateGesture)
     }
-
+    
     // MARK: - Gesture handlers
-
+    
     @objc private func handlePan(_ gesture: NSPanGestureRecognizer) {
         guard let layer = selectedLayer else { return }
-        let translation = gesture.translation(in: self)
-
+        
         if gesture.state == .began {
             originalTransform = layer.affineTransform()
         }
-
-        // Apply translation
+        
+        let translation = gesture.translation(in: self)
         var t = originalTransform ?? .identity
         t = t.translatedBy(x: translation.x, y: translation.y)
+        
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         layer.setAffineTransform(t)
-
+        CATransaction.commit()
+        
         if gesture.state == .ended || gesture.state == .cancelled {
-            registerUndo(for: layer, oldTransform: originalTransform ?? .identity, newTransform: layer.affineTransform())
+            registerUndo(for: layer,
+                         oldTransform: originalTransform ?? .identity,
+                         newTransform: layer.affineTransform())
             originalTransform = nil
         }
     }
-
+    
+    
     @objc private func handleMagnify(_ gesture: NSMagnificationGestureRecognizer) {
         guard let layer = selectedLayer else { return }
-
+        
         if gesture.state == .began {
             originalTransform = layer.affineTransform()
         }
-
+        
         let scale = 1 + gesture.magnification
         var t = originalTransform ?? .identity
         t = t.scaledBy(x: scale, y: scale)
+        
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         layer.setAffineTransform(t)
-
+        CATransaction.commit()
+        
         if gesture.state == .ended || gesture.state == .cancelled {
-            registerUndo(for: layer, oldTransform: originalTransform ?? .identity, newTransform: layer.affineTransform())
+            registerUndo(for: layer,
+                         oldTransform: originalTransform ?? .identity,
+                         newTransform: layer.affineTransform())
             originalTransform = nil
         }
     }
-
+    
+    
     @objc private func handleRotate(_ gesture: NSRotationGestureRecognizer) {
         guard let layer = selectedLayer else { return }
-
+        
         if gesture.state == .began {
             originalTransform = layer.affineTransform()
         }
-
+        
         let rotation = gesture.rotation
         var t = originalTransform ?? .identity
         t = t.rotated(by: rotation)
+        
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         layer.setAffineTransform(t)
-
+        CATransaction.commit()
+        
         if gesture.state == .ended || gesture.state == .cancelled {
-            registerUndo(for: layer, oldTransform: originalTransform ?? .identity, newTransform: layer.affineTransform())
+            registerUndo(for: layer,
+                         oldTransform: originalTransform ?? .identity,
+                         newTransform: layer.affineTransform())
             originalTransform = nil
         }
     }
-
+    
+    
     // MARK: - Undo registration
-
+    
     private func registerUndo(for layer: CALayer, oldTransform: CGAffineTransform, newTransform: CGAffineTransform) {
         guard let undoManager = undoManager else { return }
-
+        
         undoManager.registerUndo(withTarget: layer) { targetLayer in
             let currentTransform = targetLayer.affineTransform()
             targetLayer.setAffineTransform(oldTransform)
-
+            
             // Register redo
             self.undoManager?.registerUndo(withTarget: targetLayer) { redoLayer in
                 redoLayer.setAffineTransform(currentTransform)
@@ -233,7 +263,7 @@ class SVGCanvasNSView: NSView, ObservableObject {
         }
         undoManager.setActionName("Transform Change")
     }
-
+    
     // MARK: - Resize root layer on view resize
     override func layout() {
         super.layout()
@@ -255,11 +285,11 @@ class SVGCanvasNSView: NSView, ObservableObject {
               let index = parent.sublayers?.firstIndex(where: { $0 === layer }) else {
             return
         }
-
+        
         // Remove the layer
         layer.removeFromSuperlayer()
         updateSublayers()
-
+        
         // Register undo
         undoManager.registerUndo(withTarget: self) { targetSelf in
             parent.insertSublayer(layer, at: UInt32(index))
@@ -270,63 +300,56 @@ class SVGCanvasNSView: NSView, ObservableObject {
                 redoSelf.updateSublayers()
             }
         }
-
+        
         undoManager.setActionName("Delete Layer")
     }
     func toggleLayerVisibility(_ layer: CALayer) {
         let oldHidden = layer.isHidden
         layer.isHidden.toggle()
-
+        
         undoManager?.registerUndo(withTarget: self) { target in
             layer.isHidden = oldHidden
             target.toggleLayerVisibility(layer) // redo
         }
-
+        
         undoManager?.setActionName(layer.isHidden ? "Hide Layer" : "Show Layer")
     }
     func toggleLayerLock(_ layer: CALayer) {
         let wasLocked = layer.name == "locked"
         layer.name = wasLocked ? nil : "locked"
-
+        
         undoManager?.registerUndo(withTarget: self) { target in
             layer.name = wasLocked ? "locked" : nil
             target.toggleLayerLock(layer) // redo
         }
-
+        
         undoManager?.setActionName(wasLocked ? "Unlock Layer" : "Lock Layer")
     }
     func addTextLayer(_ text: String) {
         guard let root = svgRootLayer else { return }
-
-        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedText.isEmpty else {
-            print("Empty text ignored")
-            return
-        }
-
         let textLayer = CATextLayer()
         textLayer.frame = CGRect(x: 50, y: 50, width: 200, height: 40)
-
+        
         let font = NSFont.systemFont(ofSize: 18)
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .foregroundColor: NSColor.labelColor
         ]
-        textLayer.string = NSAttributedString(string: trimmedText, attributes: attributes)
+        textLayer.string = NSAttributedString(string: text, attributes: attributes)
         textLayer.font = font
         textLayer.fontSize = 18
         textLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
         textLayer.alignmentMode = .left
         textLayer.isWrapped = true
-
+        
         // ✅ Fix flipped text caused by flipped root layer
         textLayer.setAffineTransform(CGAffineTransform(scaleX: 1, y: -1))
         textLayer.isGeometryFlipped = true
-
+        
         root.addSublayer(textLayer)
         updateSublayers()
         setNeedsDisplay(bounds)
-
+        
         // Undo support
         undoManager?.registerUndo(withTarget: self) { targetSelf in
             textLayer.removeFromSuperlayer()
@@ -336,21 +359,21 @@ class SVGCanvasNSView: NSView, ObservableObject {
                 redoSelf.updateSublayers()
             }
         }
-
+        
         undoManager?.setActionName("Add Text Layer")
     }
-
-
-
     
-
+    
+    
+    
+    
     func addImageLayerFromFinder() {
         let panel = NSOpenPanel()
         panel.title = "Choose an Image"
         panel.allowedFileTypes = ["png", "jpg", "jpeg", "tiff", "bmp", "gif", "heic"]
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
-
+        
         panel.begin { [weak self] response in
             guard response == .OK,
                   let url = panel.url,
@@ -360,13 +383,13 @@ class SVGCanvasNSView: NSView, ObservableObject {
                   let undoManager = self.undoManager else {
                 return
             }
-
+            
             let imageLayer = CALayer()
             imageLayer.contents = fixedImage
             imageLayer.frame = CGRect(x: 100, y: 100, width: fixedImage.size.width, height: fixedImage.size.height)
             imageLayer.contentsGravity = .resizeAspect
             imageLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
-
+            
             self.svgRootLayer?.addSublayer(imageLayer)
             self.updateSublayers()
             undoManager.registerUndo(withTarget: self) { targetSelf in
@@ -379,13 +402,13 @@ class SVGCanvasNSView: NSView, ObservableObject {
             }
         }
     }
-
+    
     func rotateAndFixImage(_ image: NSImage) -> NSImage? {
         let size = image.size
         let newImage = NSImage(size: size)
-
+        
         newImage.lockFocus()
-
+        
         let transform = NSAffineTransform()
         
         // Translate to image center
@@ -401,12 +424,12 @@ class SVGCanvasNSView: NSView, ObservableObject {
         transform.translateX(by: -size.width / 2, yBy: -size.height / 2)
         
         transform.concat()
-
+        
         image.draw(at: .zero, from: NSRect(origin: .zero, size: size), operation: .copy, fraction: 1.0)
-
+        
         newImage.unlockFocus()
         return newImage
     }
-
-
+    
+    
 }
