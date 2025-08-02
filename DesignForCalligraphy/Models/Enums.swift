@@ -84,3 +84,9 @@ extension CALayer {
         return image
     }
 }
+enum Fonts : String {
+    case bold = "SFProText-Bold"
+    case medium = "SFProText-Medium"
+    case regular = "SFProText-Regular"
+}
+

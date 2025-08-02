@@ -40,7 +40,7 @@ struct SidebarItem: View {
                 .foregroundStyle(isSelected ? Color("selectedColor") : Color.black)
             Text(iconAndLabel)
                 .foregroundStyle(isSelected ? Color("selectedColor") : Color.black)
-                .font(.custom("Medium", size: 16))
+                .font(.custom(Fonts.medium.rawValue, size: 16))
             Spacer()
         }
         .padding(.leading,14)

@@ -1,5 +1,6 @@
 import SwiftUI
 import StoreKit
+import SDWebImageSwiftUI
 
 struct SubscriptionView: View {
     @StateObject private var viewModel = SubscriptionViewModel()
@@ -9,10 +10,10 @@ struct SubscriptionView: View {
         HStack(spacing: 0) {
             // Left Side Features
             ZStack {
-                Image("girl")
+                AnimatedImage(url: URL(string: "https://example.com/girl.gif"))
                     .resizable()
-                    .scaledToFill()
-                
+                    .scaledToFit()
+                    .frame(width: 301, height: 671)
                 FeaturesListView() {
                     
                 }
@@ -20,7 +21,7 @@ struct SubscriptionView: View {
                     Image("cross")
                         .resizable()
                         .frame(width: 20, height: 20)
-                        .offset(x: -180, y: -280)
+                        .offset(x: -120, y: -280)
                         .onTapGesture {
                             showPremium = false
                         }
@@ -30,13 +31,13 @@ struct SubscriptionView: View {
 //                    Spacer()
 //                }
             }
-            .frame(width: 409.5)
+            .frame(width: 301)
 
             // Right Side Subscription Options
             SubscriptionOptionsView(viewModel: viewModel, selectedPlanID: $selectedPlanID)
-                .frame(width: 409.5)
+                .frame(width: 518)
         }
-        .frame(width: 819, height: 622)
+        .frame(width: 819, height: 671)
          .onAppear {
             viewModel.loadProducts()
         }
@@ -58,7 +59,7 @@ struct FeaturesListView: View {
             Spacer()
             Text("What will you get?")
                 .foregroundColor(.white)
-                .font(.system(size: 16, weight: .medium))
+                .font(.custom(Fonts.bold.rawValue, size: 22))
             ForEach(features, id: \.self) { feature in
                 FeatureRow(text: feature)
             }
@@ -79,7 +80,7 @@ struct FeatureRow: View {
                 .frame(width: 20, height: 20)
             Text(text)
                 .foregroundColor(.white)
-                .font(.system(size: 16, weight: .medium))
+                .font(.custom(Fonts.medium.rawValue, size: 16))
         }
     }
 }
@@ -97,12 +98,13 @@ struct SubscriptionOptionsView: View {
     var body: some View {
         VStack(spacing: 20) {
             Text("Unlock Limitless Features")
-                .font(.title)
-                .fontWeight(.bold)
+                .foregroundStyle(.black)
+                .font(.custom(Fonts.bold.rawValue, size: 30))
+                
 
             Text("Unlock the full power of your creativity")
-                .foregroundColor(.gray)
-                .font(.subheadline)
+                .foregroundStyle(Color("premiumgrey"))
+                .font(.custom(Fonts.medium.rawValue, size: 18))
             if viewModel.products.isEmpty {
                 ForEach(options) { option in
                     SubscriptionRow(option: option, isSelected: selectedPlanID == option.title)
@@ -121,7 +123,8 @@ struct SubscriptionOptionsView: View {
             }
             if let selected = viewModel.selectedProduct {
                 Text("Try Free for 3 days then \(selected.displayPrice)")
-                    .font(.footnote)
+                    .foregroundStyle(.black)
+                    .font(.custom(Fonts.medium.rawValue, size: 16))
                     .foregroundColor(.gray)
                     .padding(.top, 10)
             }
@@ -129,7 +132,7 @@ struct SubscriptionOptionsView: View {
                 viewModel.purchaseSelected()
             }) {
                 Text("Continue")
-                    .fontWeight(.semibold)
+                    .font(.custom(Fonts.medium.rawValue, size: 16))
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(Color("selectedColor"))
@@ -140,8 +143,8 @@ struct SubscriptionOptionsView: View {
             .buttonStyle(.plain)
             ScrollView {
                 Text("Subscription automatically renew unless canceled before the end of the current period. You won't be charged if you cancel during the trial period.")
-                    .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(Color("premiumgrey"))
+                    .font(.custom(Fonts.regular.rawValue, size: 12))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
             }
@@ -159,8 +162,8 @@ struct SubscriptionOptionsView: View {
                     Link("Privacy Policy", destination: url)
                 }
             }
-            .font(.caption2)
-            .foregroundColor(.gray)
+            .foregroundStyle(Color("premiumgrey"))
+            .font(.custom(Fonts.regular.rawValue, size: 12))
             .padding(.top, 4)
         }
         .padding()
@@ -178,17 +181,18 @@ struct SubscriptionRowForProduct: View {
 
             VStack(alignment: .leading) {
                 Text(product.displayName)
-                    .fontWeight(.medium)
+                    .foregroundStyle(.black)
+                    .font(.custom(Fonts.medium.rawValue, size: 18))
                 Text(product.displayPrice)
-                    .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.black)
+                    .font(.custom(Fonts.bold.rawValue, size: 20))
             }
             Spacer()
 
             if let period = product.subscription?.subscriptionPeriod {
                 let label = localizedSubscriptionPeriod(period)
                 Text(label)
-                    .font(.caption)
+                    .font(.custom(Fonts.medium.rawValue, size: 16))
                     .padding(6)
                     .background(isSelected ? Color("orange"): Color("screenBg"))
                     .foregroundColor(.black)
@@ -236,10 +240,12 @@ struct SubscriptionRow: View {
 
             VStack(alignment: .leading) {
                 Text(option.title)
-                    .fontWeight(.medium)
+                    .foregroundStyle(.black)
+                    .font(.custom(Fonts.medium.rawValue, size: 18))
+                    
                 Text(option.price)
-                    .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.black)
+                    .font(.custom(Fonts.bold.rawValue, size: 20))
             }
             Spacer()
 
@@ -249,7 +255,7 @@ struct SubscriptionRow: View {
                     .padding(6)
                     .background(isSelected ? Color("orange"): Color("screenBg"))
                     .foregroundColor(.black)
-                    .cornerRadius(8)
+                    .font(.custom(Fonts.medium.rawValue, size: 16))
             }
         }
         .padding()

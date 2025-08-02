@@ -33,7 +33,7 @@ struct SidemenuItem: View {
             Spacer()
             Text(text)
                 .foregroundStyle(.black)
-                .font(.custom("", size: 14))
+                .font(.custom(Fonts.regular.rawValue, size: 14))
             Spacer()
         }
         

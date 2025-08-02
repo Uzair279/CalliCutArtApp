@@ -11,6 +11,9 @@
 		4D7187932E2D56900050799B /* PremiumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187922E2D56900050799B /* PremiumView.swift */; };
 		4D7187962E33F4470050799B /* SaveScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187952E33F4470050799B /* SaveScreenView.swift */; };
 		4D7187992E3E78BB0050799B /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7187982E3E78BB0050799B /* SDWebImageSwiftUI */; };
+		4D71879E2E3E7ADA0050799B /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4D71879B2E3E7ADA0050799B /* SF-Pro-Text-Regular.otf */; };
+		4D71879F2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4D71879C2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf */; };
+		4D7187A02E3E7ADA0050799B /* SF-Pro-Text-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4D71879D2E3E7ADA0050799B /* SF-Pro-Text-Medium.otf */; };
 		4DCD49592E100518009F4986 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD49582E100518009F4986 /* Constants.swift */; };
 		4DCD495B2E10103C009F4986 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD495A2E10103C009F4986 /* CanvasView.swift */; };
 		4DCD495D2E10105D009F4986 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD495C2E10105D009F4986 /* HomeView.swift */; };
@@ -34,6 +37,10 @@
 		4D7187922E2D56900050799B /* PremiumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumView.swift; sourceTree = "<group>"; };
 		4D7187942E2D63DA0050799B /* store.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = store.storekit; sourceTree = "<group>"; };
 		4D7187952E33F4470050799B /* SaveScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveScreenView.swift; sourceTree = "<group>"; };
+		4D71879B2E3E7ADA0050799B /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
+		4D71879C2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
+		4D71879D2E3E7ADA0050799B /* SF-Pro-Text-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Medium.otf"; sourceTree = "<group>"; };
+		4D7187A12E3E7E640050799B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4DCD49582E100518009F4986 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4DCD495A2E10103C009F4986 /* CanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		4DCD495C2E10105D009F4986 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -66,6 +73,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4D71879A2E3E7AA50050799B /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		4DF4A7772E0EFF1C00C269C4 = {
 			isa = PBXGroup;
 			children = (
@@ -85,6 +99,11 @@
 		4DF4A7822E0EFF1C00C269C4 /* DesignForCalligraphy */ = {
 			isa = PBXGroup;
 			children = (
+				4D71879C2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf */,
+				4D71879D2E3E7ADA0050799B /* SF-Pro-Text-Medium.otf */,
+				4D71879B2E3E7ADA0050799B /* SF-Pro-Text-Regular.otf */,
+				4D7187A12E3E7E640050799B /* Info.plist */,
+				4D71879A2E3E7AA50050799B /* Fonts */,
 				4DF4A7992E0F08F100C269C4 /* ViewModels */,
 				4DF4A7982E0F08EB00C269C4 /* Models */,
 				4DF4A7972E0F08E100C269C4 /* View */,
@@ -208,7 +227,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DF4A78B2E0EFF1E00C269C4 /* Preview Assets.xcassets in Resources */,
+				4D71879F2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf in Resources */,
+				4D7187A02E3E7ADA0050799B /* SF-Pro-Text-Medium.otf in Resources */,
 				4D7187912E2D53270050799B /* categories.json in Resources */,
+				4D71879E2E3E7ADA0050799B /* SF-Pro-Text-Regular.otf in Resources */,
 				4DF4A7882E0EFF1E00C269C4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -372,6 +394,7 @@
 				DEVELOPMENT_TEAM = 3PVLZ5R65F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DesignForCalligraphy/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -399,6 +422,7 @@
 				DEVELOPMENT_TEAM = 3PVLZ5R65F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DesignForCalligraphy/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

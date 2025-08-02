@@ -36,7 +36,7 @@ struct TopBarView: View {
                     .buttonStyle(.plain)
                     Text("Canvas")
                         .foregroundStyle(.black)
-                        .font(.custom("Bold", size: 18))
+                        .font(.custom(Fonts.bold.rawValue, size: 18))
                     Spacer()
                     HStack(spacing: 32) {
                         UndoManagerView(image: "undo", action: {
@@ -267,7 +267,7 @@ struct LayersView: View {
                 Image("layerIcon")
                 Text("Layers")
                     .foregroundStyle(.black)
-                    .font(.custom("Bold", size: 16))
+                    .font(.custom(Fonts.bold.rawValue, size: 16))
                 Spacer()
             }
             .padding(.leading, 10)

@@ -10,6 +10,8 @@ struct MainView: View {
         VStack {
             HStack {
                 Text("Designs for Calligraphy")
+                    .foregroundStyle(.black)
+                    .font(.custom(Fonts.bold.rawValue, size: 20))
                 Spacer()
                 Button(action: {
                     addNew()
@@ -17,7 +19,7 @@ struct MainView: View {
                     HStack {
                         Text("+ Create New")
                             .foregroundStyle(.white)
-                            .font(.custom("Medium", size: 16))
+                            .font(.custom(Fonts.medium.rawValue, size: 16))
                     }
                     .frame(width: 123, height: 42)
                     .background(Color("selectedColor"))
