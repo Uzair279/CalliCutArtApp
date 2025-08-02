@@ -163,7 +163,7 @@ class SVGCanvasNSView: NSView, ObservableObject {
 
         // Apply transform if any
         var transformedOffset = offset
-        if let presentation = layer.presentation(), layer.affineTransform() != .identity {
+        if let _ = layer.presentation(), layer.affineTransform() != .identity {
             transformedOffset = offset.applying(layer.affineTransform())
         }
 

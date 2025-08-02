@@ -10,6 +10,7 @@
 		4D7187912E2D53270050799B /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 4D7187902E2D53270050799B /* categories.json */; };
 		4D7187932E2D56900050799B /* PremiumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187922E2D56900050799B /* PremiumView.swift */; };
 		4D7187962E33F4470050799B /* SaveScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187952E33F4470050799B /* SaveScreenView.swift */; };
+		4D7187992E3E78BB0050799B /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7187982E3E78BB0050799B /* SDWebImageSwiftUI */; };
 		4DCD49592E100518009F4986 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD49582E100518009F4986 /* Constants.swift */; };
 		4DCD495B2E10103C009F4986 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD495A2E10103C009F4986 /* CanvasView.swift */; };
 		4DCD495D2E10105D009F4986 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD495C2E10105D009F4986 /* HomeView.swift */; };
@@ -57,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D7187992E3E78BB0050799B /* SDWebImageSwiftUI in Frameworks */,
 				4DED96972E119A1C00A68B86 /* SVGKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -157,6 +159,7 @@
 			name = DesignForCalligraphy;
 			packageProductDependencies = (
 				4DED96962E119A1C00A68B86 /* SVGKit */,
+				4D7187982E3E78BB0050799B /* SDWebImageSwiftUI */,
 			);
 			productName = DesignForCalligraphy;
 			productReference = 4DF4A7802E0EFF1C00C269C4 /* DesignForCalligraphy.app */;
@@ -188,6 +191,7 @@
 			mainGroup = 4DF4A7772E0EFF1C00C269C4;
 			packageReferences = (
 				4DED96952E119A1C00A68B86 /* XCRemoteSwiftPackageReference "SVGKit" */,
+				4D7187972E3E78BB0050799B /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = 4DF4A7812E0EFF1C00C269C4 /* Products */;
 			projectDirPath = "";
@@ -433,6 +437,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4D7187972E3E78BB0050799B /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.3;
+			};
+		};
 		4DED96952E119A1C00A68B86 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit.git";
@@ -444,6 +456,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4D7187982E3E78BB0050799B /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D7187972E3E78BB0050799B /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
 		4DED96962E119A1C00A68B86 /* SVGKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4DED96952E119A1C00A68B86 /* XCRemoteSwiftPackageReference "SVGKit" */;

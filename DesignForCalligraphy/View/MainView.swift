@@ -1,5 +1,5 @@
 import SwiftUI
-
+import SDWebImageSwiftUI
 struct MainView: View {
     let itemCount: Int
     let categoryID: String
@@ -61,7 +61,7 @@ struct GridView: View {
                     }) {
                         ZStack (alignment: .topTrailing){
                             let pngURL = generatePNGURL(for: categoryID, subcategoryID: subcategoryID, itemID: index)
-                            AsyncImage(url: URL(string: pngURL)) { image in
+                            WebImage(url: URL(string: pngURL)) { image in
                                 image
                                     .resizable()
                                     .scaledToFill()
