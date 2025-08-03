@@ -14,25 +14,16 @@ struct SubscriptionView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 301, height: 671)
-                FeaturesListView() {
-                    
-                }
-      
-                    Image("cross")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .offset(x: -120, y: -280)
-                        .onTapGesture {
-                            showPremium = false
-                        }
-//                            }
-//                        Spacer()
-//                    }
-//                    Spacer()
-//                }
+                FeaturesListView()
+                Image("cross")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .offset(x: -120, y: -280)
+                    .onTapGesture {
+                        showPremium = false
+                    }
             }
             .frame(width: 301)
-
             // Right Side Subscription Options
             SubscriptionOptionsView(viewModel: viewModel, selectedPlanID: $selectedPlanID)
                 .frame(width: 518)
@@ -53,7 +44,6 @@ struct FeaturesListView: View {
         "Sublimation Graphics",
         "Unlimited SVGs"
     ]
-    let action: () -> Void
     var body: some View {
         VStack(alignment: .leading, spacing: 30) {
             Spacer()
@@ -96,58 +86,68 @@ struct SubscriptionOptionsView: View {
     ]
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 0) {
             Text("Unlock Limitless Features")
                 .foregroundStyle(.black)
                 .font(.custom(Fonts.bold.rawValue, size: 30))
-                
-
             Text("Unlock the full power of your creativity")
                 .foregroundStyle(Color("premiumgrey"))
                 .font(.custom(Fonts.medium.rawValue, size: 18))
+                .padding(.top, 5)
             if viewModel.products.isEmpty {
-                ForEach(options) { option in
-                    SubscriptionRow(option: option, isSelected: selectedPlanID == option.title)
-                        .onTapGesture {
-                            selectedPlanID = option.title
-                        }
+                VStack(spacing: 5) {
+                    ForEach(options) { option in
+                        SubscriptionRow(option: option, isSelected: selectedPlanID == option.title)
+                            .onTapGesture {
+                                selectedPlanID = option.title
+                            }
+                    }
                 }
+                .padding(.top, 30)
             }
             else {
-                ForEach(viewModel.products) { product in
-                    SubscriptionRowForProduct(product: product, isSelected: viewModel.selectedProduct?.id == product.id)
-                        .onTapGesture {
-                            viewModel.select(product: product)
-                        }
+                VStack(spacing: 5) {
+                    ForEach(viewModel.products) { product in
+                        SubscriptionRowForProduct(product: product, isSelected: viewModel.selectedProduct?.id == product.id)
+                            .onTapGesture {
+                                viewModel.select(product: product)
+                            }
+                    }
                 }
+                .padding(.top, 30)
             }
             if let selected = viewModel.selectedProduct {
                 Text("Try Free for 3 days then \(selected.displayPrice)")
                     .foregroundStyle(.black)
                     .font(.custom(Fonts.medium.rawValue, size: 16))
                     .foregroundColor(.gray)
-                    .padding(.top, 10)
+                    .padding(.top, 30)
+            }
+            else {
+                Text("No Commitment, Cancel Any Time")
+                    .foregroundStyle(.black)
+                    .font(.custom(Fonts.medium.rawValue, size: 16))
+                    .foregroundColor(.gray)
+                    .padding(.top, 30)
             }
             Button(action: {
                 viewModel.purchaseSelected()
             }) {
                 Text("Continue")
                     .font(.custom(Fonts.medium.rawValue, size: 16))
-                    .padding()
-                    .frame(maxWidth: .infinity)
+                    .frame(width: 458, height: 42)
                     .background(Color("selectedColor"))
                     .foregroundColor(.white)
-                    .cornerRadius(12)
+                    .cornerRadius(100)
             }
-            .padding(.top, 10)
+            .padding(.top, 11)
             .buttonStyle(.plain)
-            ScrollView {
-                Text("Subscription automatically renew unless canceled before the end of the current period. You won't be charged if you cancel during the trial period.")
-                    .foregroundStyle(Color("premiumgrey"))
-                    .font(.custom(Fonts.regular.rawValue, size: 12))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-            }
+            Text("Subscription automatically renew unless canceled before the end of the current period. You won't be charged if you cancel during the trial period.")
+                .foregroundStyle(Color("premiumgrey"))
+                .font(.custom(Fonts.regular.rawValue, size: 12))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+                .padding(.top, 30)
             HStack(spacing: 15) {
                 if let url = URL(string: termsOfUseLink) {
                     Link("Terms of Use", destination: url)
@@ -162,11 +162,11 @@ struct SubscriptionOptionsView: View {
                     Link("Privacy Policy", destination: url)
                 }
             }
+            .padding(.top, 13)
             .foregroundStyle(Color("premiumgrey"))
             .font(.custom(Fonts.regular.rawValue, size: 12))
-            .padding(.top, 4)
+            
         }
-        .padding()
     }
 }
 struct SubscriptionRowForProduct: View {
@@ -174,12 +174,13 @@ struct SubscriptionRowForProduct: View {
     let isSelected: Bool
 
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             Image(isSelected ? "selectedCircle" : "circle")
                 .resizable()
+                .aspectRatio(contentMode: .fit)
                 .frame(width: 24, height: 24)
-
-            VStack(alignment: .leading) {
+                .padding(.leading, 18)
+            VStack(alignment: .leading, spacing: 10) {
                 Text(product.displayName)
                     .foregroundStyle(.black)
                     .font(.custom(Fonts.medium.rawValue, size: 18))
@@ -187,19 +188,22 @@ struct SubscriptionRowForProduct: View {
                     .foregroundStyle(.black)
                     .font(.custom(Fonts.bold.rawValue, size: 20))
             }
+            .padding(.leading, 20)
             Spacer()
 
             if let period = product.subscription?.subscriptionPeriod {
                 let label = localizedSubscriptionPeriod(period)
                 Text(label)
                     .font(.custom(Fonts.medium.rawValue, size: 16))
-                    .padding(6)
+                    .padding(8)
+                    .frame(width: 104, height: 42)
                     .background(isSelected ? Color("orange"): Color("screenBg"))
                     .foregroundColor(.black)
-                    .cornerRadius(8)
+                    .cornerRadius(100)
+                    .padding(.trailing, 18)
             }
         }
-        .padding()
+        .frame(width: 478, height: 70)
         .background(isSelected ? Color("selectionLight") : .white)
         .cornerRadius(12)
         .overlay {
@@ -232,13 +236,13 @@ struct SubscriptionRow: View {
     let isSelected: Bool
 
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             Image(isSelected ? "selectedCircle" : "circle")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 24, height: 24)
-
-            VStack(alignment: .leading) {
+                .padding(.leading, 18)
+            VStack(alignment: .leading, spacing: 10) {
                 Text(option.title)
                     .foregroundStyle(.black)
                     .font(.custom(Fonts.medium.rawValue, size: 18))
@@ -247,18 +251,22 @@ struct SubscriptionRow: View {
                     .foregroundStyle(.black)
                     .font(.custom(Fonts.bold.rawValue, size: 20))
             }
+            .padding(.leading, 20)
             Spacer()
 
             if let label = option.label {
                 Text(label)
-                    .font(.caption)
-                    .padding(6)
+                    .padding(8)
+                    .frame(width: 104, height: 42)
                     .background(isSelected ? Color("orange"): Color("screenBg"))
                     .foregroundColor(.black)
                     .font(.custom(Fonts.medium.rawValue, size: 16))
+                    .cornerRadius(100)
+                    .padding(.trailing, 18)
+                    
             }
         }
-        .padding()
+        .frame(width: 478, height: 70)
         .background(isSelected ? Color("selectionLight") : .white)
         .cornerRadius(12)
         .overlay {
