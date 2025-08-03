@@ -7,6 +7,17 @@ class CategoryViewModel: ObservableObject {
     init() {
         loadCategories()
         installFonts()
+        downloadJson()
+    }
+    func downloadJson() {
+        downloadJSON { result in
+                switch result {
+                case .success(let fileURL):
+                    self.loadJsonDataFromLibPath()
+                case .failure(let error):
+                    print("Failed to download SVG: \(error.localizedDescription)")
+                }
+        }
     }
     func installFonts() {
         registerFont(withName: "SF-Pro-Text-Bold", fileExtension: "otf")
@@ -28,7 +39,21 @@ class CategoryViewModel: ObservableObject {
             print("Error registering font: \(error.localizedDescription)")
         }
     }
-    
+    func loadJsonDataFromLibPath() {
+        let fileManager = FileManager.default
+        let libraryDir = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first!
+        let folderPath = libraryDir.appendingPathComponent("JSON")
+        let destinationURL = folderPath.appendingPathComponent("categories.json")
+        do {
+            let data = try Data(contentsOf: destinationURL)
+            let decodedCategories = try JSONDecoder().decode([Category].self, from: data)
+            DispatchQueue.main.async {
+                self.categories = decodedCategories
+            }
+        } catch {
+            print("Failed to decode JSON: \(error.localizedDescription)")
+        }
+    }
     private func loadCategories() {
         // Load the JSON file
         guard let url = Bundle.main.url(forResource: "categories", withExtension: "json") else {
