@@ -125,11 +125,19 @@ struct TopBarView: View {
             }
             .sheet(isPresented: $textEditor) {
                 VStack(spacing: 16) {
-                    Text("Add Text")
-                        .font(.title2.bold())
-                        .foregroundColor(.primary)
-                        .padding(.top)
-
+                    HStack {
+                        Spacer()
+                        Text("Add Text")
+                            .font(.title2.bold())
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Image(systemName: "multiply.circle")
+                            .onTapGesture {
+                                textEditor = false
+                            }
+                            .padding(.top, 5)
+                    }
+                    .padding(.top)
                     TextEditor(text: $textEditorText)
                         .frame(width: 280, height: 120)
                         .padding(12)
