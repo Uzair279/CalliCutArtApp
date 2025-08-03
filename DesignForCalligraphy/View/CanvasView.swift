@@ -124,32 +124,57 @@ struct TopBarView: View {
                 
             }
             .sheet(isPresented: $textEditor) {
-                VStack(spacing: 8) {
-                    TextEditor(text: $textEditorText)
-                        .frame(width: 250, height: 100)
-                        .padding(8)
-                        .background(Color.white)
-                        .cornerRadius(8)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.gray, lineWidth: 1)
-                        )
-                        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                VStack(spacing: 16) {
+                    Text("Add Text")
+                        .font(.title2.bold())
+                        .foregroundColor(.primary)
+                        .padding(.top)
 
-                    Button("Done") {
+                    TextEditor(text: $textEditorText)
+                        .frame(width: 280, height: 120)
+                        .padding(12)
+                        .background(Color(.grey))
+                        .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                        )
+                        .shadow(color: Color.black.opacity(0.05), radius: 3, x: 0, y: 1)
+
+                    Button(action: {
                         if !textEditorText.isEmpty {
                             textEditor = false
                             sideBarVM.svgVM?.addTextLayer(textEditorText)
                         }
+                    }) {
+                        Text("Done")
+                            .fontWeight(.semibold)
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 10)
+                            .frame(maxWidth: .infinity)
+                            .background(textEditorText.isEmpty ? Color.gray.opacity(0.4) : Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            .animation(.easeInOut(duration: 0.2), value: textEditorText)
                     }
+                    .buttonStyle(.plain)
                     .disabled(textEditorText.isEmpty)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 6)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(6)
+
+                    Spacer()
                 }
+                .onAppear() {
+                    textEditorText = ""
+                }
+                .padding()
+                .frame(width: 320, height: 240)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.white)
+                        .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 4)
+                )
+                .padding()
             }
+
 
                 
 
