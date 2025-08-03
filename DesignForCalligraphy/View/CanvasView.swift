@@ -155,13 +155,11 @@ struct TopBarView: View {
 
         }
     }
-   
     func exportLayerToFile(
         layer: CALayer,
         format: fileType,
         resolution: resolution
     ) {
-        // Determine size
         let baseSize = layer.bounds.size
         let scaleFactor: CGFloat
         switch resolution {
@@ -172,55 +170,72 @@ struct TopBarView: View {
 
         let scaledSize = CGSize(width: baseSize.width * scaleFactor, height: baseSize.height * scaleFactor)
 
-        // Begin bitmap context
-        let bitmapRep = NSBitmapImageRep(
-            bitmapDataPlanes: nil,
-            pixelsWide: Int(scaledSize.width),
-            pixelsHigh: Int(scaledSize.height),
-            bitsPerSample: 8,
-            samplesPerPixel: 4,
-            hasAlpha: true,
-            isPlanar: false,
-            colorSpaceName: .deviceRGB,
-            bytesPerRow: 0,
-            bitsPerPixel: 0
-        )
-
-        guard let context = NSGraphicsContext(bitmapImageRep: bitmapRep!) else {
-            print("Failed to create graphics context")
-            return
-        }
-
-        NSGraphicsContext.saveGraphicsState()
-        NSGraphicsContext.current = context
-
-        context.cgContext.scaleBy(x: scaleFactor, y: scaleFactor)
-        layer.render(in: context.cgContext)
-
-        NSGraphicsContext.restoreGraphicsState()
-
-        // Ask user where to save
         let panel = NSSavePanel()
         panel.nameFieldStringValue = "ExportedDesign"
-        panel.allowedFileTypes = [format == .jpg ? "jpg" : "png"]
+        panel.allowedFileTypes = [format == .jpg ? "jpg" : format == .pdf ? "pdf" : "png"]
         panel.canCreateDirectories = true
 
         panel.begin { response in
             if response == .OK, let url = panel.url {
-                let imageData: Data?
-                switch format {
-                case .png, .transparent:
-                    imageData = bitmapRep?.representation(using: .png, properties: [:])
-                case .jpg:
-                    imageData = bitmapRep?.representation(using: .jpeg, properties: [.compressionFactor: 0.9])
-                }
+                if format == .pdf {
+                    // Create PDF context
+                    guard let consumer = CGDataConsumer(url: url as CFURL),
+                          let pdfContext = CGContext(consumer: consumer, mediaBox: nil, nil) else {
+                        print("Failed to create PDF context")
+                        return
+                    }
 
-                if let data = imageData {
-                    do {
-                        try data.write(to: url)
-                        print("Exported successfully to \(url.path)")
-                    } catch {
-                        print("Failed to save image: \(error)")
+                    var mediaBox = CGRect(origin: .zero, size: scaledSize)
+                    pdfContext.beginPage(mediaBox: &mediaBox)
+                    pdfContext.saveGState()
+                    pdfContext.scaleBy(x: scaleFactor, y: scaleFactor)
+                    layer.render(in: pdfContext)
+                    pdfContext.restoreGState()
+                    pdfContext.endPage()
+                    pdfContext.closePDF()
+                    print("Exported PDF successfully to \(url.path)")
+                } else {
+                    let bitmapRep = NSBitmapImageRep(
+                        bitmapDataPlanes: nil,
+                        pixelsWide: Int(scaledSize.width),
+                        pixelsHigh: Int(scaledSize.height),
+                        bitsPerSample: 8,
+                        samplesPerPixel: 4,
+                        hasAlpha: true,
+                        isPlanar: false,
+                        colorSpaceName: .deviceRGB,
+                        bytesPerRow: 0,
+                        bitsPerPixel: 0
+                    )
+
+                    guard let context = NSGraphicsContext(bitmapImageRep: bitmapRep!) else {
+                        print("Failed to create graphics context")
+                        return
+                    }
+
+                    NSGraphicsContext.saveGraphicsState()
+                    NSGraphicsContext.current = context
+                    context.cgContext.scaleBy(x: scaleFactor, y: scaleFactor)
+                    layer.render(in: context.cgContext)
+                    NSGraphicsContext.restoreGraphicsState()
+
+                    let imageData: Data?
+                    switch format {
+                    case .png:
+                        imageData = bitmapRep?.representation(using: .png, properties: [:])
+                    case .jpg:
+                        imageData = bitmapRep?.representation(using: .jpeg, properties: [.compressionFactor: 0.9])
+                    default:
+                        imageData = nil
+                    }
+
+                    if let data = imageData {
+                        do {
+                            try data.write(to: url)
+                            print("Exported image successfully to \(url.path)")
+                        } catch {
+                            print("Failed to save image: \(error)")
+                        }
                     }
                 }
             }

@@ -12,7 +12,7 @@ class CategoryViewModel: ObservableObject {
     func downloadJson() {
         downloadJSON { result in
                 switch result {
-                case .success(let fileURL):
+                case .success(let _):
                     self.loadJsonDataFromLibPath()
                 case .failure(let error):
                     print("Failed to download SVG: \(error.localizedDescription)")

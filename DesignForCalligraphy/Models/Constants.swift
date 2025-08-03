@@ -54,7 +54,9 @@ func downloadJSON(completion: @escaping (Result<URL, Error>) -> Void) {
             }
 
             try fileManager.moveItem(at: tempURL, to: destinationURL)
-            completion(.success(destinationURL))
+            DispatchQueue.main.async {
+                completion(.success(destinationURL))
+            }
         } catch {
             completion(.failure(error))
         }

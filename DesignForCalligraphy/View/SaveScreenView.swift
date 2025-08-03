@@ -39,9 +39,9 @@ struct ExportTemplateView: View {
                                     .onTapGesture {
                                         fileType = .png
                                     }
-                                formatButton(title: "Transparent", selected: fileType == .transparent)
+                                formatButton(title: ".pdf", selected: fileType == .pdf)
                                     .onTapGesture {
-                                        fileType = .transparent
+                                        fileType = .pdf
                                     }
                             }
 
@@ -141,12 +141,12 @@ struct ExportTemplateView: View {
 
 
 enum fileType {
-  case png
+    case png
     case jpg
-    case transparent
+    case pdf
 }
 enum resolution {
-   case first
+    case first
     case second
     case third
 }
