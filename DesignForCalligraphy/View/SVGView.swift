@@ -274,7 +274,6 @@ class SVGCanvasNSView: NSView, ObservableObject {
         guard let undoManager = undoManager else { return }
         
         undoManager.registerUndo(withTarget: layer) { targetLayer in
-            let currentTransform = targetLayer.affineTransform()
             targetLayer.setAffineTransform(oldTransform)
             
             // Register redo

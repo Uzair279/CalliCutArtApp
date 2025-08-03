@@ -5,14 +5,15 @@ class CategoryViewModel: ObservableObject {
     @Published var categories: [Category] = []
     @Published var svgVM: SVGCanvasNSView?
     init() {
-        loadCategories()
-        installFonts()
-        downloadJson()
+        self.loadCategories()
+        self.installFonts()
+        self.downloadJson()
     }
+    
     func downloadJson() {
         downloadJSON { result in
                 switch result {
-                case .success(let _):
+                case .success( _):
                     self.loadJsonDataFromLibPath()
                 case .failure(let error):
                     print("Failed to download SVG: \(error.localizedDescription)")
@@ -41,26 +42,41 @@ class CategoryViewModel: ObservableObject {
     }
     func loadJsonDataFromLibPath() {
         let fileManager = FileManager.default
-        let libraryDir = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first!
-        let folderPath = libraryDir.appendingPathComponent("JSON")
-        let destinationURL = folderPath.appendingPathComponent("categories.json")
-        do {
-            let data = try Data(contentsOf: destinationURL)
-            let decodedCategories = try JSONDecoder().decode([Category].self, from: data)
-            DispatchQueue.main.async {
-                self.categories = decodedCategories
-            }
-        } catch {
-            print("Failed to decode JSON: \(error.localizedDescription)")
+        let destinationURL = loadJsonFromLib()
+        if fileManager.fileExists(atPath: destinationURL.path) {
+            parseJson(destinationURL)
+        }
+        else  {
+            // Load the JSON file
+            loadFromBundle()
         }
     }
     private func loadCategories() {
-        // Load the JSON file
+        let fileManager = FileManager.default
+        let destinationURL = loadJsonFromLib()
+        if fileManager.fileExists(atPath: destinationURL.path) {
+            parseJson(destinationURL)
+        }
+        else  {
+            // Load the JSON file
+            loadFromBundle()
+        }
+    }
+    func loadJsonFromLib() -> URL{
+        let fileManager = FileManager.default
+        let libraryDir = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first!
+        let folderPath = libraryDir.appendingPathComponent("JSON")
+        return folderPath.appendingPathComponent("categories.json")
+    }
+    func loadFromBundle() {
         guard let url = Bundle.main.url(forResource: "categories", withExtension: "json") else {
             print("JSON file not found")
             return
         }
 
+        parseJson(url)
+    }
+    func parseJson(_ url : URL) {
         do {
             let data = try Data(contentsOf: url)
             let decodedCategories = try JSONDecoder().decode([Category].self, from: data)
@@ -68,7 +84,8 @@ class CategoryViewModel: ObservableObject {
                 self.categories = decodedCategories
             }
         } catch {
-            print("Failed to decode JSON: \(error.localizedDescription)")
+            loadFromBundle()
         }
     }
 }
+

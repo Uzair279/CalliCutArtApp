@@ -10,11 +10,18 @@ struct SubscriptionView: View {
         HStack(spacing: 0) {
             // Left Side Features
             ZStack {
-//                AnimatedImage(url: URL(string: "https://example.com/girl.gif"))
-                Image("girl")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 301, height: 671)
+                if let gifURL = viewModel.gifURL {
+                    AnimatedImage(url: gifURL)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 301, height: 671)
+                        .clipped()
+                } else {
+                    Image("girl")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 301, height: 671)
+                }
                 FeaturesListView()
                 Image("cross")
                     .resizable()
@@ -35,7 +42,7 @@ struct SubscriptionView: View {
             }
         }
         .frame(width: 819, height: 671)
-         .onAppear {
+        .onAppear {
             viewModel.loadProducts()
         }
     }

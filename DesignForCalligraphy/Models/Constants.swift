@@ -31,7 +31,7 @@ func generateSVGURL(for categoryID: String, subcategoryID: String, itemID: Strin
 
 
 func downloadJSON(completion: @escaping (Result<URL, Error>) -> Void) {
-    let jsonPath = ""
+    let jsonPath = "https://stepbystepcricut.s3.us-east-1.amazonaws.com/categories.json"
     guard let remoteURL = URL(string: jsonPath) else {
         completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
         return
@@ -78,6 +78,61 @@ func downloadJSON(completion: @escaping (Result<URL, Error>) -> Void) {
 
     task.resume()
     
+}
+func downloadGIF(completion: @escaping (Result<URL, Error>) -> Void) {
+    let gifURL = "https://stepbystepcricut.s3.us-east-1.amazonaws.com/provideo/provid.gif"
+    guard let remoteURL = URL(string: gifURL) else {
+        completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
+        return
+    }
+
+    let fileManager = FileManager.default
+    let libraryDir = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first!
+    let gifFolder = libraryDir.appendingPathComponent("GIFs")
+    let localURL = gifFolder.appendingPathComponent("provid.gif")
+
+    do {
+        try fileManager.createDirectory(at: gifFolder, withIntermediateDirectories: true, attributes: nil)
+    } catch {
+        completion(.failure(error))
+        return
+    }
+
+    URLSession.shared.downloadTask(with: remoteURL) { tempURL, _, error in
+        if let error = error {
+            completion(.failure(error))
+            return
+        }
+
+        guard let tempURL = tempURL else {
+            completion(.failure(NSError(domain: "Download failed", code: 0, userInfo: nil)))
+            return
+        }
+
+        do {
+            if fileManager.fileExists(atPath: localURL.path) {
+                try fileManager.removeItem(at: localURL)
+            }
+            try fileManager.moveItem(at: tempURL, to: localURL)
+            DispatchQueue.main.async {
+                completion(.success(localURL))
+            }
+        } catch {
+            completion(.failure(error))
+        }
+    }.resume()
+}
+func ensureGIFExists(completion: @escaping (Result<URL, Error>) -> Void) {
+    let fileManager = FileManager.default
+    let libraryDir = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first!
+    let gifFolder = libraryDir.appendingPathComponent("GIFs")
+    let localURL = gifFolder.appendingPathComponent("provid.gif")
+
+    if fileManager.fileExists(atPath: localURL.path) {
+        completion(.success(localURL))
+    } else {
+        downloadGIF(completion: completion)
+    }
 }
 func downloadSVG(from url: String, categoryID: String, subcategoryID: String, itemID: String, completion: @escaping (Result<URL, Error>) -> Void) {
     guard let remoteURL = URL(string: url) else {

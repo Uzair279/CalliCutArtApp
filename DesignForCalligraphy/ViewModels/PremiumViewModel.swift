@@ -5,11 +5,26 @@ class SubscriptionViewModel: ObservableObject {
     @Published var products: [Product] = []
     @Published var selectedProduct: Product?
     @Published var isProductPurchased: Bool = false
+    @Published var gifURL: URL? = nil
     init() {
+        self.downloadGif()
         Task {
             await checkPurchaseStatus()
         }
     }
+    func downloadGif() {
+        ensureGIFExists { result in
+            switch result {
+            case .success(let localPath):
+                DispatchQueue.main.async {
+                    self.gifURL = localPath
+                }
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+            }
+        }
+    }
+
     func checkPurchaseStatus() async {
         for await result in Transaction.currentEntitlements {
             guard case .verified(let transaction) = result else { continue }
