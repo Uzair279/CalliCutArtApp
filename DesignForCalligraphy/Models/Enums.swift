@@ -160,3 +160,11 @@ extension Product {
     }
 }
 
+extension CALayer {
+    var isLocked: Bool {
+        return (self.value(forKey: "isLocked") as? Bool) ?? false
+    }
+    var isHiddenLayer: Bool {
+        return self.isHidden
+    }
+}

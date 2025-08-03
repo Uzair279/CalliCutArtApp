@@ -30,7 +30,7 @@ struct ExportTemplateView: View {
 
                     VStack(alignment: .leading, spacing: 60) {
                         VStack(spacing: 20) {
-                            HStack(spacing: 3) {
+                            HStack(spacing: 0) {
                                 formatButton(title: ".jpg", selected: fileType == .jpg)
                                     .onTapGesture {
                                         fileType = .jpg
@@ -45,7 +45,7 @@ struct ExportTemplateView: View {
                                     }
                             }
 
-                            HStack(spacing: 3) {
+                            HStack(spacing: 0) {
                                 resolutionButton(title: "1024/1024", selected: resolutionType == .first)
                                     .onTapGesture {
                                         resolutionType = .first

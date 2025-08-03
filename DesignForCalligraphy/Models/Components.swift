@@ -78,8 +78,13 @@ struct ListItem: View {
 
             HStack(spacing: 9.03) {
                 Button(action: {
-                    isEyeSelected.toggle()
-                    vm.svgVM?.toggleLayerVisibility(layer)
+                    if layer.isLocked {
+                        showAlert(title: "Error", message: "Layer is Locked")
+                    }
+                    else  {
+                        isEyeSelected.toggle()
+                        vm.svgVM?.toggleLayerVisibility(layer)
+                    }
                 }) {
                     Image("eye")
                         .foregroundStyle(isEyeSelected ? .white : .black)
@@ -102,7 +107,12 @@ struct ListItem: View {
                 .buttonStyle(.plain)
 
                 Button(action: {
-                    vm.svgVM?.deleteLayer(layer)
+                    if layer.isLocked {
+                        showAlert(title: "Error", message: "Layer is Locked")
+                    }
+                    else  {
+                        vm.svgVM?.deleteLayer(layer)
+                    }
                 }) {
                     Image("delete")
                         .frame(width: 21.66, height: 21.66)

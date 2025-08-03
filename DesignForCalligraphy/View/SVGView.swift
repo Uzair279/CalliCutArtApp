@@ -278,9 +278,7 @@ class SVGCanvasNSView: NSView, ObservableObject {
             targetLayer.setAffineTransform(oldTransform)
             
             // Register redo
-            self.undoManager?.registerUndo(withTarget: targetLayer) { redoLayer in
-                redoLayer.setAffineTransform(currentTransform)
-            }
+            self.registerUndo(for: layer, oldTransform: newTransform, newTransform: oldTransform)
         }
         undoManager.setActionName("Transform Change")
     }
@@ -316,9 +314,9 @@ class SVGCanvasNSView: NSView, ObservableObject {
             parent.insertSublayer(layer, at: UInt32(index))
             targetSelf.updateSublayers()
             // Register redo
+           
             targetSelf.undoManager?.registerUndo(withTarget: targetSelf) { redoSelf in
-                layer.removeFromSuperlayer()
-                redoSelf.updateSublayers()
+                self.deleteLayer(layer)
             }
         }
         
@@ -326,24 +324,38 @@ class SVGCanvasNSView: NSView, ObservableObject {
     }
     func toggleLayerVisibility(_ layer: CALayer) {
         let oldHidden = layer.isHidden
-        layer.isHidden.toggle()
-        
+        if oldHidden == false {
+            layer.isHidden = true
+        }
+        else {
+            layer.isHidden = false
+        }
         undoManager?.registerUndo(withTarget: self) { target in
             layer.isHidden = oldHidden
-            target.toggleLayerVisibility(layer) // redo
+            target.undoManager?.registerUndo(withTarget: target) { redSelf in
+                self.toggleLayerVisibility(layer)
+            }
         }
         
         undoManager?.setActionName(layer.isHidden ? "Hide Layer" : "Show Layer")
     }
     func toggleLayerLock(_ layer: CALayer) {
-        let wasLocked = layer.name == "locked"
-        layer.name = wasLocked ? nil : "locked"
-        
-        undoManager?.registerUndo(withTarget: self) { target in
-            layer.name = wasLocked ? "locked" : nil
-            target.toggleLayerLock(layer) // redo
+        let wasLocked = (layer.value(forKey: "isLocked") as? Bool) ?? false
+        layer.setValue(!wasLocked, forKey: "isLocked")
+
+        undoManager?.registerUndo(withTarget: self) { [wasLocked] target in
+            layer.setValue(wasLocked, forKey: "isLocked")
+
+            target.undoManager?.registerUndo(withTarget: target) { [wasLocked] redoTarget in
+                layer.setValue(!wasLocked, forKey: "isLocked")
+
+                // Register again for infinite undo/redo
+                redoTarget.undoManager?.registerUndo(withTarget: redoTarget) { finalTarget in
+                    finalTarget.toggleLayerLock(layer)
+                }
+            }
         }
-        
+
         undoManager?.setActionName(wasLocked ? "Unlock Layer" : "Lock Layer")
     }
     func addTextLayer(_ text: String) {
@@ -376,18 +388,12 @@ class SVGCanvasNSView: NSView, ObservableObject {
             textLayer.removeFromSuperlayer()
             targetSelf.updateSublayers()
             targetSelf.undoManager?.registerUndo(withTarget: targetSelf) { redoSelf in
-                root.addSublayer(textLayer)
-                redoSelf.updateSublayers()
+                self.addTextLayer(text)
             }
         }
         
         undoManager?.setActionName("Add Text Layer")
     }
-    
-    
-    
-    
-    
     func addImageLayerFromFinder() {
         let panel = NSOpenPanel()
         panel.title = "Choose an Image"
@@ -407,23 +413,23 @@ class SVGCanvasNSView: NSView, ObservableObject {
             
             let imageLayer = CALayer()
             imageLayer.contents = fixedImage
-            imageLayer.frame = CGRect(x: 100, y: 100, width: fixedImage.size.width, height: fixedImage.size.height)
+            imageLayer.frame = CGRect(x: 100, y: 100, width: fixedImage.size.width / 2, height: fixedImage.size.height / 2)
             imageLayer.contentsGravity = .resizeAspect
             imageLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
-            
-            self.svgRootLayer?.addSublayer(imageLayer)
-            self.updateSublayers()
-            undoManager.registerUndo(withTarget: self) { targetSelf in
-                imageLayer.removeFromSuperlayer()
-                targetSelf.updateSublayers()
-                targetSelf.undoManager?.registerUndo(withTarget: targetSelf) { redoSelf in
-                    redoSelf.svgRootLayer?.addSublayer(imageLayer)
-                    redoSelf.updateSublayers()
-                }
+            addImageLayerToCanvas(imageLayer)
+        }
+    }
+    func addImageLayerToCanvas(_ layer: CALayer) {
+        self.svgRootLayer?.addSublayer(layer)
+        self.updateSublayers()
+        undoManager?.registerUndo(withTarget: self) { targetSelf in
+            layer.removeFromSuperlayer()
+            targetSelf.updateSublayers()
+            targetSelf.undoManager?.registerUndo(withTarget: targetSelf) { redoSelf in
+                self.addImageLayerToCanvas(layer)
             }
         }
     }
-    
     func rotateAndFixImage(_ image: NSImage) -> NSImage? {
         let size = image.size
         let newImage = NSImage(size: size)
