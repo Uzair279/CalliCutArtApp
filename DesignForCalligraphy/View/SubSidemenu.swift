@@ -38,6 +38,7 @@ struct SidemenuItem: View {
         }
         
         .frame(width: 160, height: 39)
+        .background(Color.white)
         .cornerRadius(8.0)
         .overlay(
             RoundedRectangle(cornerRadius: 8.0)

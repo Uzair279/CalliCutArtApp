@@ -46,12 +46,12 @@ struct GridView: View {
     let action: (String) -> Void
     @State private var showSubscriptionSheet = false
     let columns = [
-        GridItem(.adaptive(minimum: 148), spacing: 16)
+        GridItem(.adaptive(minimum: 148, maximum: 148), spacing: 12)
     ]
 
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 16) {
+            LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(0..<itemCount, id: \.self) { index in
                     Button(action: {
                         if index > 2 && !isAppfree {
