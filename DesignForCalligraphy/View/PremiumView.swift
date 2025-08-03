@@ -3,7 +3,7 @@ import StoreKit
 import SDWebImageSwiftUI
 
 struct SubscriptionView: View {
-    @StateObject private var viewModel = SubscriptionViewModel()
+    @EnvironmentObject var viewModel : SubscriptionViewModel
     @State var selectedPlanID = "Monthly"
     @Binding var showPremium : Bool
     var body: some View {
@@ -28,6 +28,11 @@ struct SubscriptionView: View {
             // Right Side Subscription Options
             SubscriptionOptionsView(viewModel: viewModel, selectedPlanID: $selectedPlanID)
                 .frame(width: 518)
+        }
+        .onChange(of: viewModel.isProductPurchased) { newVal in
+            if newVal {
+                showPremium = false
+            }
         }
         .frame(width: 819, height: 671)
          .onAppear {
@@ -275,50 +280,6 @@ struct SubscriptionRow: View {
         .overlay {
             RoundedRectangle(cornerRadius: 12)
                 .strokeBorder(isSelected ? Color("selectedColor") : Color("border"), lineWidth: 1)
-        }
-    }
-}
-class SubscriptionViewModel: ObservableObject {
-    @Published var products: [Product] = []
-    @Published var selectedProduct: Product?
-
-    func loadProducts() {
-        Task {
-            do {
-                let storeProducts = try await Product.products(for: ["com.newapp.weekly", "com.newapp.monthly", "com.newapp.yearly", "com.newapp.lifetime"])
-                await MainActor.run {
-                    self.products = storeProducts
-                    self.selectedProduct = storeProducts.first
-                }
-            } catch {
-                print("Failed to load products: \(error)")
-            }
-        }
-    }
-
-    func select(product: Product) {
-        selectedProduct = product
-    }
-
-    func purchaseSelected() {
-        guard let product = selectedProduct else { return }
-        Task {
-            do {
-                let result = try await product.purchase()
-                print("Purchase result: \(result)")
-            } catch {
-                print("Purchase failed: \(error)")
-            }
-        }
-    }
-
-    func restorePurchases() {
-        Task {
-            do {
-                try await AppStore.sync()
-            } catch {
-                print("Restore failed: \(error)")
-            }
         }
     }
 }

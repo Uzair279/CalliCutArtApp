@@ -3,6 +3,19 @@ import Foundation
 let isAppfree : Bool = false
 let privacyPolicyLink = "https://yourdomain.com/privacyPolicy"
 let termsOfUseLink = "https://yourdomain.com/terms"
+let productIDs = ["com.newapp.weekly", "com.newapp.monthly", "com.newapp.yearly", "com.newapp.lifetime"]
+var isProuctPro : Bool {
+    if isAppfree {
+        return true
+    }
+    else {
+        return isUserPro()
+    }
+}
+func isUserPro() -> Bool {
+    let models = CoreDataManager.shared.fetchUserModels()
+    return models.first?.isPro ?? false
+}
 
 func generatePNGURL(for categoryID: String, subcategoryID: String, itemID: String) -> String {
     let baseURL = "https://stepbystepcricut.s3.us-east-1.amazonaws.com/templates"

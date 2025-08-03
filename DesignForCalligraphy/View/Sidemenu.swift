@@ -1,16 +1,21 @@
 import SwiftUI
 
 struct Sidemenu: View {
+    @EnvironmentObject var premiumVM: SubscriptionViewModel
     let categories: [Category]
     @Binding var selectedCategoryID: String?
     @Binding var showPremium : Bool
     var body: some View {
         
         VStack(spacing: 50) {
-            Image("goToProImage")
-                .onTapGesture {
-                    showPremium = true
+            if !isProuctPro {
+                if !premiumVM.isProductPurchased {
+                    Image("goToProImage")
+                        .onTapGesture {
+                            showPremium = true
+                        }
                 }
+            }
             ScrollView {
                 ForEach(categories) { category in
                     if let title = category.title {
@@ -24,6 +29,7 @@ struct Sidemenu: View {
                     }
                 }
             }
+            .padding(.top, isProuctPro || premiumVM.isProductPurchased ? 20 : 0)
             Spacer()
         }
         

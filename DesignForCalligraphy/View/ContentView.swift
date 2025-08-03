@@ -1,6 +1,6 @@
 import SwiftUI
 struct ContentView: View {
-    @StateObject private var viewModel = CategoryViewModel()
+    @StateObject var viewModel = CategoryViewModel()
     @State var screenType : screen = .home
     @State var svgURL : URL?
     var body: some View {

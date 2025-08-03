@@ -40,6 +40,7 @@ struct MainView: View {
 
 
 struct GridView: View {
+    @EnvironmentObject var premiumVM : SubscriptionViewModel
     let itemCount: Int
     let categoryID: String
     let subcategoryID: String
@@ -54,8 +55,14 @@ struct GridView: View {
             LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(0..<itemCount, id: \.self) { index in
                     Button(action: {
-                        if index > 2 && !isAppfree {
-                            showSubscriptionSheet = true
+                        
+                        if index > 2 && !isProuctPro {
+                            if !premiumVM.isProductPurchased {
+                                showSubscriptionSheet = true
+                            }
+                            else{
+                                action("\(index)")
+                            }
                         }
                         else {
                             action("\(index)")
@@ -75,9 +82,11 @@ struct GridView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
                             .clipped()
-                            if index > 2 && !isAppfree {
-                                Image("premiumIcon")
-                                    .padding([.top, .trailing], 10)
+                            if index > 2 && !isProuctPro {
+                                if !premiumVM.isProductPurchased {
+                                    Image("premiumIcon")
+                                        .padding([.top, .trailing], 10)
+                                }
                             }
                         }
                     }
