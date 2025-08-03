@@ -10,7 +10,8 @@ struct SubscriptionView: View {
         HStack(spacing: 0) {
             // Left Side Features
             ZStack {
-                AnimatedImage(url: URL(string: "https://example.com/girl.gif"))
+//                AnimatedImage(url: URL(string: "https://example.com/girl.gif"))
+                Image("girl")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 301, height: 671)
@@ -45,17 +46,19 @@ struct FeaturesListView: View {
         "Unlimited SVGs"
     ]
     var body: some View {
-        VStack(alignment: .leading, spacing: 30) {
+        VStack(alignment: .leading, spacing: 40) {
             Spacer()
             Text("What will you get?")
                 .foregroundColor(.white)
                 .font(.custom(Fonts.bold.rawValue, size: 22))
-            ForEach(features, id: \.self) { feature in
-                FeatureRow(text: feature)
+            VStack(alignment: .leading, spacing: 30) {
+                ForEach(features, id: \.self) { feature in
+                    FeatureRow(text: feature)
+                }
             }
             Spacer()
         }
-        .padding(.leading, 40)
+        .padding(.leading, 30)
         .padding(.trailing, 20)
     }
 }
