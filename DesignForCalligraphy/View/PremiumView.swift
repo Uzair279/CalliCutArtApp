@@ -87,10 +87,10 @@ struct SubscriptionOptionsView: View {
     @ObservedObject var viewModel: SubscriptionViewModel
     @Binding var selectedPlanID: String
     let options: [SubscriptionOption] = [
-        .init(title: "Weekly", price: "$68.63", label: "Basic"),
-        .init(title: "Monthly", price: "$68.63", label: "Free trial"),
-        .init(title: "Yearly", price: "$68.63", label: "35% Off"),
-        .init(title: "Lifetime", price: "$68.63", label: "74% Off")
+        .init(title: "Weekly", price: "$___", label: "Basic"),
+        .init(title: "Monthly", price: "$___", label: "Free trial"),
+        .init(title: "Yearly", price: "$___", label: "35% Off"),
+        .init(title: "Lifetime", price: "$___", label: "74% Off")
     ]
 
     var body: some View {
@@ -116,7 +116,7 @@ struct SubscriptionOptionsView: View {
             else {
                 VStack(spacing: 5) {
                     ForEach(viewModel.products) { product in
-                        SubscriptionRowForProduct(product: product, isSelected: viewModel.selectedProduct?.id == product.id)
+                        SubscriptionRowForProduct(prodcutName: product.planName(from: productIDs),product: product, isSelected: viewModel.selectedProduct?.id == product.id, planType: product.planType(comparedTo: viewModel.products))
                             .onTapGesture {
                                 viewModel.select(product: product)
                             }
@@ -124,22 +124,34 @@ struct SubscriptionOptionsView: View {
                 }
                 .padding(.top, 30)
             }
+           
             if let selected = viewModel.selectedProduct {
-                Text("Try Free for 3 days then \(selected.displayPrice)")
-                    .foregroundStyle(.black)
-                    .font(.custom(Fonts.medium.rawValue, size: 16))
-                    .foregroundColor(.gray)
-                    .padding(.top, 30)
+                if let trialText = selected.trialDescription {
+                    Text(trialText)
+                        .font(.custom(Fonts.medium.rawValue, size: 16))
+                        .foregroundStyle(.black)
+                        .padding(.top, 30)
+                } else {
+                    Text("No Commitment, Cancel Any Time")
+                        .font(.custom(Fonts.medium.rawValue, size: 16))
+                        .foregroundStyle(.black)
+                        .padding(.top, 30)
+                }
             }
             else {
                 Text("No Commitment, Cancel Any Time")
-                    .foregroundStyle(.black)
                     .font(.custom(Fonts.medium.rawValue, size: 16))
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.black)
                     .padding(.top, 30)
             }
+
             Button(action: {
-                viewModel.purchaseSelected()
+                if viewModel.products.isEmpty {
+                    showAlert(title: "Error!", message: "There is some issue with the product please try again")
+                }
+                else {
+                    viewModel.purchaseSelected()
+                }
             }) {
                 Text("Continue")
                     .font(.custom(Fonts.medium.rawValue, size: 16))
@@ -178,9 +190,10 @@ struct SubscriptionOptionsView: View {
     }
 }
 struct SubscriptionRowForProduct: View {
+    let prodcutName: String
     let product: Product
     let isSelected: Bool
-
+    let planType: String
     var body: some View {
         HStack(spacing: 0) {
             Image(isSelected ? "selectedCircle" : "circle")
@@ -189,7 +202,7 @@ struct SubscriptionRowForProduct: View {
                 .frame(width: 24, height: 24)
                 .padding(.leading, 18)
             VStack(alignment: .leading, spacing: 10) {
-                Text(product.displayName)
+                Text(product.displayName == "" ? prodcutName : product.displayName)
                     .foregroundStyle(.black)
                     .font(.custom(Fonts.medium.rawValue, size: 18))
                 Text(product.displayPrice)
@@ -198,10 +211,7 @@ struct SubscriptionRowForProduct: View {
             }
             .padding(.leading, 20)
             Spacer()
-
-            if let period = product.subscription?.subscriptionPeriod {
-                let label = localizedSubscriptionPeriod(period)
-                Text(label)
+                Text(planType)
                     .font(.custom(Fonts.medium.rawValue, size: 16))
                     .padding(8)
                     .frame(width: 104, height: 42)
@@ -209,7 +219,6 @@ struct SubscriptionRowForProduct: View {
                     .foregroundColor(.black)
                     .cornerRadius(100)
                     .padding(.trailing, 18)
-            }
         }
         .frame(width: 478, height: 70)
         .background(isSelected ? Color("selectionLight") : .white)

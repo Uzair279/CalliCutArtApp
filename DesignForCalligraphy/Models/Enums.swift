@@ -2,6 +2,7 @@
 import Foundation
 import AppKit
 import SVGKit
+import StoreKit
 
 enum screen{
     case home
@@ -90,3 +91,65 @@ enum Fonts : String {
     case regular = "SFProText-Regular"
 }
 
+extension Product {
+    func planType(comparedTo products: [Product]) -> String {
+        guard let baseProduct = products.first else {
+            return "Unknown"
+        }
+
+        // 1. Check for free trial
+        if let intro = subscription?.introductoryOffer,
+           intro.paymentMode == .freeTrial {
+            return "Free Trial"
+        }
+
+        // 2. Check if this is base product
+        if self.id == baseProduct.id {
+            return "Basic"
+        }
+
+        // 3. Calculate % off compared to base plan
+        let basePrice = (baseProduct.price as NSDecimalNumber).doubleValue
+        let thisPrice = (self.price as NSDecimalNumber).doubleValue
+
+        
+
+        let discount = (1 - (thisPrice / basePrice)) * 100
+        let formatted = String(format: "%.0f%% Off", -discount)
+        return formatted
+    }
+    func planName(from productIDs: [String]) -> String {
+        guard let index = productIDs.firstIndex(of: self.id) else {
+            return "Unknown"
+        }
+        
+        switch index {
+        case 0: return "Weekly"
+        case 1: return "Monthly"
+        case 2: return "Yearly"
+        case 3: return "Lifetime"
+        default: return "Unknown"
+        }
+    }
+    var trialDescription: String? {
+        guard let intro = self.subscription?.introductoryOffer,
+              intro.paymentMode == .freeTrial else {
+            return nil
+        }
+
+        let period = intro.period
+        let value = period.value
+
+        let unitString: String = {
+            switch period.unit {
+            case .day: return value == 1 ? "day" : "days"
+            case .week: return value == 1 ? "week" : "weeks"
+            case .month: return value == 1 ? "month" : "months"
+            case .year: return value == 1 ? "year" : "years"
+            @unknown default: return "days"
+            }
+        }()
+
+        return "Try Free for \(value) \(unitString) then \(self.displayPrice)"
+    }
+}

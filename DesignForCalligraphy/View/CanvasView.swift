@@ -274,16 +274,7 @@ struct TopBarView: View {
             }
         }
     }
-    func showAlert(title: String, message: String, style: NSAlert.Style = .informational) {
-        DispatchQueue.main.async {
-            let alert = NSAlert()
-            alert.messageText = title
-            alert.informativeText = message
-            alert.alertStyle = style
-            alert.addButton(withTitle: "OK")
-            alert.runModal()
-        }
-    }
+   
 
 
 }

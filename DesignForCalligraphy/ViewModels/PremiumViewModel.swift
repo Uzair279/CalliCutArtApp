@@ -34,9 +34,15 @@ class SubscriptionViewModel: ObservableObject {
         Task {
             do {
                 let storeProducts = try await Product.products(for: productIDs)
+
+                // Sort products in the same order as `productIDs`
+                let sorted = productIDs.compactMap { id in
+                    storeProducts.first(where: { $0.id == id })
+                }
+
                 await MainActor.run {
-                    self.products = storeProducts
-                    self.selectedProduct = storeProducts.first
+                    self.products = sorted
+                    self.selectedProduct = sorted[1]
                 }
             } catch {
                 print("Failed to load products: \(error)")

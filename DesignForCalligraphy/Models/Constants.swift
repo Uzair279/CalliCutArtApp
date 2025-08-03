@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 
 let isAppfree : Bool = false
 let privacyPolicyLink = "https://yourdomain.com/privacyPolicy"
@@ -124,4 +125,14 @@ func downloadSVG(from url: String, categoryID: String, subcategoryID: String, it
     }
 
     task.resume()
+}
+func showAlert(title: String, message: String, style: NSAlert.Style = .informational) {
+    DispatchQueue.main.async {
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        alert.alertStyle = style
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
 }
