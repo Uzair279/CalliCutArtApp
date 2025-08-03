@@ -42,7 +42,9 @@ class SubscriptionViewModel: ObservableObject {
 
                 await MainActor.run {
                     self.products = sorted
-                    self.selectedProduct = sorted[1]
+                    if !self.products.isEmpty {
+                        self.selectedProduct = sorted[1]
+                    }
                 }
             } catch {
                 print("Failed to load products: \(error)")

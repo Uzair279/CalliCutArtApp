@@ -93,30 +93,36 @@ enum Fonts : String {
 
 extension Product {
     func planType(comparedTo products: [Product]) -> String {
-        guard let baseProduct = products.first else {
-            return "Unknown"
-        }
-
-        // 1. Check for free trial
-        if let intro = subscription?.introductoryOffer,
+        if let intro = self.subscription?.introductoryOffer,
            intro.paymentMode == .freeTrial {
             return "Free Trial"
         }
-
-        // 2. Check if this is base product
-        if self.id == baseProduct.id {
-            return "Basic"
+        guard let index = products.firstIndex(where: { $0.id == self.id }),
+              let baseProduct = products.first,
+              let basePrice = (baseProduct.price as NSDecimalNumber?)?.doubleValue else {
+            return "Unknown"
         }
 
-        // 3. Calculate % off compared to base plan
-        let basePrice = (baseProduct.price as NSDecimalNumber).doubleValue
         let thisPrice = (self.price as NSDecimalNumber).doubleValue
 
-        
-
-        let discount = (1 - (thisPrice / basePrice)) * 100
-        let formatted = String(format: "%.0f%% Off", -discount)
-        return formatted
+        switch index {
+        case 0:
+            return "Basic"
+        case 1:
+            // Monthly (~4 weeks)
+            let costPerWeek = thisPrice / 4
+            let discount = (1 - (costPerWeek / basePrice)) * 100
+            return String(format: "%.0f%% Off", max(discount, 0))
+        case 2:
+            // Yearly (~52 weeks)
+            let costPerWeek = thisPrice / 52
+            let discount = (1 - (costPerWeek / basePrice)) * 100
+            return String(format: "%.0f%% Off", max(discount, 0))
+        case 3:
+            return "One Time"
+        default:
+            return "Standard"
+        }
     }
     func planName(from productIDs: [String]) -> String {
         guard let index = productIDs.firstIndex(of: self.id) else {
@@ -153,3 +159,4 @@ extension Product {
         return "Try Free for \(value) \(unitString) then \(self.displayPrice)"
     }
 }
+
