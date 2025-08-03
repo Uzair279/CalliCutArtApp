@@ -232,13 +232,23 @@ struct TopBarView: View {
                     if let data = imageData {
                         do {
                             try data.write(to: url)
-                            print("Exported image successfully to \(url.path)")
+                            showAlert(title: "Export Successful", message: "File saved to:\n\(url.path)")
                         } catch {
-                            print("Failed to save image: \(error)")
+                            showAlert(title: "Export Failed", message: error.localizedDescription, style: .warning)
                         }
                     }
                 }
             }
+        }
+    }
+    func showAlert(title: String, message: String, style: NSAlert.Style = .informational) {
+        DispatchQueue.main.async {
+            let alert = NSAlert()
+            alert.messageText = title
+            alert.informativeText = message
+            alert.alertStyle = style
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
         }
     }
 
