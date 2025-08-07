@@ -51,6 +51,7 @@ class SVGCanvasNSView: NSView, ObservableObject {
             // Apply blue border to new selection
             selectedLayer?.borderWidth = 1
             selectedLayer?.borderColor = NSColor.systemBlue.cgColor
+            self.updateSublayers()
         }
     }
     

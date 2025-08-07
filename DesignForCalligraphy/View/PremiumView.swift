@@ -13,7 +13,7 @@ struct SubscriptionView: View {
                 if let gifURL = viewModel.gifURL {
                     AnimatedImage(url: gifURL)
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(contentMode: .fill)
                         .frame(width: 301, height: 671)
                         .clipped()
                 } else {

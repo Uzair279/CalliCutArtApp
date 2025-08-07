@@ -124,7 +124,7 @@ struct ListItem: View {
         .padding(.horizontal, 11)
         .frame(width: 269, height: 67)
         .background(Color("screenBg"))
-        .cornerRadius(7.08)
+        .border(vm.svgVM?.selectedLayer == layer ? Color.blue : .clear, width: 1)
         .onAppear {
             isEyeSelected = layer.isHidden
             isLockSelected = layer.name == "locked"

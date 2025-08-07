@@ -5,6 +5,7 @@ struct Sidemenu: View {
     let categories: [Category]
     @Binding var selectedCategoryID: String?
     @Binding var showPremium : Bool
+    @State var showSettingView: Bool = false
     var body: some View {
         
         VStack(spacing: 50) {
@@ -28,9 +29,17 @@ struct Sidemenu: View {
                         }
                     }
                 }
+                SidebarItem(iconAndLabel: "Settings", isSelected: false)
+                    .onTapGesture {
+                        showSettingView = true
+                    }
             }
             .padding(.top, isProuctPro || premiumVM.isProductPurchased ? 20 : 0)
             Spacer()
+        }
+        .sheet(isPresented: $showSettingView) {
+            // Present your SubscriptionView
+           SettingView(hideSettings: $showSettingView)
         }
         
     }
