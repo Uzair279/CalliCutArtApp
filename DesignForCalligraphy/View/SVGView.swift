@@ -62,7 +62,15 @@ class SVGCanvasNSView: NSView, ObservableObject {
     override var undoManager: UndoManager? {
         externalUndoManager ?? super.undoManager
     }
-    
+    func resetAll() {
+        if let undoManager {
+            while undoManager.canUndo {
+                undoManager.undo()
+            }
+            undoManager.removeAllActions()
+        }
+        selectedLayer = nil
+    }
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         wantsLayer = true

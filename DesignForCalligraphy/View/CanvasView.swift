@@ -22,6 +22,7 @@ struct TopBarView: View {
     @State var textEditor: Bool = false
     @State var textEditorText: String = ""
     @State var showSaveScreen = false
+    @State var showResetAlert: Bool = false
     @Binding var svgURL : URL?
     let backAction: () -> Void
     var body: some View {
@@ -45,7 +46,7 @@ struct TopBarView: View {
                             }
                         })
                         UndoManagerView(image: "resetAll", action: {
-                            sideBarVM.svgVM?.undoManager?.removeAllActions()
+                            sideBarVM.svgVM?.resetAll()
                         })
                         UndoManagerView(image: "redo", action: {
                             if sideBarVM.svgVM?.undoManager?.canRedo ?? false {
@@ -107,6 +108,12 @@ struct TopBarView: View {
                 }
                 .background(.white)
             }
+//            .alert("Do you want to reset all?", isPresented: $showResetAlert) {
+//                Button("No", role: .cancel) {}
+//                Button("Yes", role: .destructive) {
+//                    sideBarVM.svgVM?.resetAll()
+//                }
+//            }
             .sheet(isPresented: $showSaveScreen) {
                 if let preview = sideBarVM.svgVM?.svgRootLayer?.snapshot() {
                     ExportTemplateView(showSaveScreen: $showSaveScreen, previewImage: preview) { selectedFormat, selectedResolution in
