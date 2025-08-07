@@ -1,7 +1,9 @@
 import SwiftUI
 
 struct SettingView : View {
+    @EnvironmentObject var premiumVM: SubscriptionViewModel
     @Binding var hideSettings: Bool
+    @Binding var showPremium: Bool
     @State var isDarkMode: Bool = false
     var body: some View {
         VStack(spacing: 0) {
@@ -29,10 +31,31 @@ struct SettingView : View {
                 .frame(width: 734, height: 42)
                 .background(.white)
                 .cornerRadius(8)
-                SettingItem(text: "Unlock Pro", anotherText: nil)
+                if !isProuctPro {
+                    if !premiumVM.isProductPurchased {
+                        SettingItem(text: "Unlock Pro", anotherText: nil)
+                            .onTapGesture {
+                                hideSettings = false
+                                showPremium = true
+                            }
+                    }
+                }
                 SettingItem(text: "Restore purchase", anotherText: nil)
+                    .onTapGesture {
+                        premiumVM.restorePurchases()
+                    }
                 SettingItem(text: "Contact us", anotherText: nil)
+                    .onTapGesture {
+                        if let url = URL(string: contactEmail) {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
                 SettingItem(text: "Rate app", anotherText: nil)
+                    .onTapGesture {
+                        if let url = URL(string: "https://apps.apple.com/app/id\(appID)?mt=12?action=write-review") {
+                                   NSWorkspace.shared.open(url)
+                               }
+                    }
             }
             .padding(.top, 25)
         }

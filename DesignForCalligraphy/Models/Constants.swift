@@ -2,6 +2,8 @@ import Foundation
 import AppKit
 
 let isAppfree : Bool = false
+let appID = "11111111"
+let contactEmail = "mailto:support@example.com"
 let privacyPolicyLink = "https://yourdomain.com/privacyPolicy"
 let termsOfUseLink = "https://yourdomain.com/terms"
 let productIDs = ["com.newapp.weekly", "com.newapp.monthly", "com.newapp.yearly", "com.newapp.lifetime"]

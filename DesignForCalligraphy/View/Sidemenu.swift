@@ -39,7 +39,7 @@ struct Sidemenu: View {
         }
         .sheet(isPresented: $showSettingView) {
             // Present your SubscriptionView
-           SettingView(hideSettings: $showSettingView)
+            SettingView(hideSettings: $showSettingView, showPremium: $showPremium)
         }
         
     }

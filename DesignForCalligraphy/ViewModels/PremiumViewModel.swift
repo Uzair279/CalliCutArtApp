@@ -98,6 +98,7 @@ class SubscriptionViewModel: ObservableObject {
         Task {
             do {
                 try await AppStore.sync()
+                await checkPurchaseStatus()
             } catch {
                 print("Restore failed: \(error)")
             }
