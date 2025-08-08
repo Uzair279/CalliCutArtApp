@@ -51,6 +51,8 @@ struct SidebarItem: View {
     var body: some View {
         HStack(spacing: 15) {
             Image(iconAndLabel)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
                 .frame(width: 24, height: 24)
                 .foregroundStyle(isSelected ? Color("selectedColor") : Color.black)
             Text(iconAndLabel)
