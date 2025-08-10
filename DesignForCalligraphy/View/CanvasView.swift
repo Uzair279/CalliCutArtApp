@@ -454,7 +454,7 @@ struct TextEditView: View {
             }
             .popover(isPresented: $isPopoverPresented, arrowEdge: .bottom) {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 6) {
+                    LazyVStack(alignment: .leading, spacing: 6) {
                         ForEach(availableFonts, id: \.self) { font in
                             Text(font)
                                 .font(.custom(font, size: 14))
@@ -466,9 +466,10 @@ struct TextEditView: View {
                                 }
                         }
                     }
-                    .padding(.vertical)
-                    .frame(width: 200, height: 300)
+                    
                 }
+                .padding(.vertical)
+                .frame(width: 200, height: 300)
             }
             ZStack {
                 RoundedRectangle(cornerRadius: 8)
@@ -488,16 +489,18 @@ struct TextEditView: View {
                 showPopover.toggle()
             }
             .popover(isPresented: $showPopover, arrowEdge: .bottom) {
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(fontSizes, id: \.self) { size in
-                        Button(action: {
-                            selectedSize = size
-                            showPopover = false
-                            sideBarVM.svgVM?.changeFontSizeAttribute(size) 
-                        }) {
-                            Text("\(Int(size)) pt")
-                                .foregroundColor(.primary)
-                                .padding(.vertical, 4)
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(fontSizes, id: \.self) { size in
+                            Button(action: {
+                                selectedSize = size
+                                showPopover = false
+                                sideBarVM.svgVM?.changeFontSizeAttribute(size)
+                            }) {
+                                Text("\(Int(size)) pt")
+                                    .foregroundColor(.primary)
+                                    .padding(.vertical, 4)
+                            }
                         }
                     }
                 }
