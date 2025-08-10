@@ -104,7 +104,7 @@ class SVGCanvasNSView: NSView, ObservableObject {
         svgImage.size = newSize
         
         svgRootLayer = svgImage.caLayerTree
-        svgRootLayer?.frame.size = CGSize(width: 400, height: 400)
+        svgRootLayer?.frame.size = CGSize(width: 500, height: 400)
         self.updateSublayers()
         clearAllTransforms(in: svgRootLayer)
         guard let svgRootLayer = svgRootLayer else { return }
