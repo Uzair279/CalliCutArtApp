@@ -109,6 +109,7 @@ struct TopBarView: View {
                             SVGCanvasView(svgURL: svgPath, onCreateView: { view in
                                 DispatchQueue.main.async {
                                     sideBarVM.svgVM = view
+                                    sideBarVM.svgVM?.loadSVG(url: svgPath)
                                 }
                             })
                             .frame(width: 500, height: 400)

@@ -91,7 +91,7 @@ struct Firstscreen : View {
                         AnimatedImage(url: url)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 338, height: 301) 
+                            .frame(width: 338, height: 301)
                     } else {
                         Image(image)
                     }
