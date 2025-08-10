@@ -419,7 +419,7 @@ struct TextEditView: View {
     
     let fontSizes: [CGFloat] = [8, 10, 12, 14, 16, 18, 24, 30, 36]
     @State private var isPopoverPresented = false
-    @State private var selectedFont: String = "SF Pro Display"
+    @State private var selectedFont: String = "SF Pro Text"
     
     // List of available fonts (you can customize this further)
     private var availableFonts: [String] {

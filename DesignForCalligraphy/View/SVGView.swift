@@ -393,30 +393,24 @@ class SVGCanvasNSView: NSView, ObservableObject {
     func addTextLayer(_ text: String) {
         guard let root = svgRootLayer else { return }
 
-        let textLayer = CATextLayer()
-        textLayer.frame = CGRect(
+        let textLayer = FlippedTextLayer()
+        textLayer.frame.origin = CGPoint(
             x: root.bounds.midX - 100,
-            y: root.bounds.midY - 20,
-            width: 200,
-            height: 40
+            y: root.bounds.midY - 20
         )
 
-        let font = NSFont.systemFont(ofSize: 30)
+        let font = NSFont(name: "SF Pro Text", size: 30)
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .foregroundColor: NSColor.labelColor
         ]
-        textLayer.string = NSAttributedString(string: text, attributes: attributes)
+        
+        let string = NSAttributedString(string: text, attributes: attributes)
+        textLayer.string = string
         textLayer.font = font
-        textLayer.fontSize = 18
+        textLayer.fontSize = 30
+        textLayer.frame.size = string.size()
         textLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
-        textLayer.alignmentMode = .left
-        textLayer.isWrapped = true
-        
-        // ✅ Fix flipped text caused by flipped root layer
-        textLayer.setAffineTransform(CGAffineTransform(scaleX: 1, y: -1))
-        textLayer.isGeometryFlipped = true
-        
         root.addSublayer(textLayer)
         updateSublayers()
         setNeedsDisplay(bounds)
@@ -519,46 +513,38 @@ class SVGCanvasNSView: NSView, ObservableObject {
     }
 
     func changeTextColor(_ color: NSColor) {
-        guard let textLayer = self.selectedLayer as? CATextLayer else {
-            print("Selected layer is not a CATextLayer")
-            return
-        }
-        
-        let oldColor = NSColor(cgColor: textLayer.foregroundColor ?? NSColor.black.cgColor) ?? .black
-        
-        // Apply new color
-        if let attributed = textLayer.string as? NSAttributedString {
-            let rawString = attributed.string
-            let newAttrString = NSAttributedString(string: rawString, attributes: [.foregroundColor: color])
-            textLayer.string = newAttrString
-        } else {
-            textLayer.foregroundColor = color.cgColor
-        }
-        textLayer.setNeedsDisplay()
-        
-        // Register undo
-        undoManager?.registerUndo(withTarget: self) { [oldColor, color] target in
-            target.changeTextColor(oldColor)
-            
-            // Register redo
-            target.undoManager?.registerUndo(withTarget: target) { redoTarget in
-                redoTarget.changeTextColor(color)
-            }
-        }
-        
-        undoManager?.setActionName("Change Text Color")
-    }
-
-    func changeFontSizeAttribute(_ newFontSize: CGFloat) {
-        guard let textLayer = self.selectedLayer as? CATextLayer,
-              let currentAttributedString = textLayer.string as? NSAttributedString else {
+        guard let textLayer = selectedLayer as? CATextLayer,
+              let attributedString = textLayer.string as? NSAttributedString else {
             print("Invalid layer or no attributed text")
             return
         }
 
-        let oldAttributedString = currentAttributedString
+        let oldAttributedString = attributedString
 
-        let mutableAttrString = NSMutableAttributedString(attributedString: currentAttributedString)
+        let mutableAttrString = NSMutableAttributedString(attributedString: attributedString)
+        mutableAttrString.addAttribute(.foregroundColor, value: color, range: NSRange(location: 0, length: mutableAttrString.length))
+        textLayer.string = mutableAttrString
+        textLayer.frame.size = mutableAttrString.size()
+
+        undoManager?.registerUndo(withTarget: self) { target in
+            target.setTextLayerAttributedString(oldAttributedString)
+            target.undoManager?.registerUndo(withTarget: target) { redoTarget in
+                redoTarget.changeTextColor(color)
+            }
+        }
+        undoManager?.setActionName("Change Text Color")
+    }
+
+    func changeFontSizeAttribute(_ newFontSize: CGFloat) {
+        guard let textLayer = selectedLayer as? CATextLayer,
+              let attributedString = textLayer.string as? NSAttributedString else {
+            print("Invalid layer or no attributed text")
+            return
+        }
+
+        let oldAttributedString = attributedString
+
+        let mutableAttrString = NSMutableAttributedString(attributedString: attributedString)
         mutableAttrString.enumerateAttribute(.font, in: NSRange(location: 0, length: mutableAttrString.length)) { value, range, _ in
             if let oldFont = value as? NSFont {
                 let newFont = NSFont(descriptor: oldFont.fontDescriptor, size: newFontSize) ?? NSFont.systemFont(ofSize: newFontSize)
@@ -567,55 +553,55 @@ class SVGCanvasNSView: NSView, ObservableObject {
         }
 
         textLayer.string = mutableAttrString
+        textLayer.frame.size = mutableAttrString.size()
 
-        // Register undo
         undoManager?.registerUndo(withTarget: self) { target in
             target.setTextLayerAttributedString(oldAttributedString)
-
-            // Register redo
             target.undoManager?.registerUndo(withTarget: target) { redoTarget in
                 redoTarget.changeFontSizeAttribute(newFontSize)
             }
         }
-
         undoManager?.setActionName("Change Font Size")
     }
-
     func setTextLayerAttributedString(_ attributedString: NSAttributedString) {
         guard let textLayer = self.selectedLayer as? CATextLayer else { return }
         textLayer.string = attributedString
+        textLayer.frame.size = attributedString.size()
     }
     func changeFontUsingAttributes(newFont: NSFont) {
-        guard let textLayer = self.selectedLayer as? CATextLayer,
-              let string = textLayer.string as? NSAttributedString else {
+        guard let textLayer = selectedLayer as? CATextLayer,
+              let attributedString = textLayer.string as? NSAttributedString else {
             print("Invalid layer or no attributed text")
             return
         }
 
-        let oldAttributedString = string
+        let oldAttributedString = attributedString
 
-        // Preserve color if exists
-        let oldColor = string.attribute(.foregroundColor, at: 0, effectiveRange: nil) as? NSColor ?? .black
-        let newAttributes: [NSAttributedString.Key: Any] = [
-            .font: newFont,
-            .foregroundColor: oldColor
-        ]
-        let newAttributedString = NSAttributedString(string: string.string, attributes: newAttributes)
+        let mutableAttrString = NSMutableAttributedString(attributedString: attributedString)
+        mutableAttrString.enumerateAttribute(.font, in: NSRange(location: 0, length: mutableAttrString.length)) { _, range, _ in
+            mutableAttrString.addAttribute(.font, value: newFont, range: range)
+        }
 
-        textLayer.string = newAttributedString
+        textLayer.string = mutableAttrString
+        textLayer.frame.size = mutableAttrString.size()
 
-        // Register undo
         undoManager?.registerUndo(withTarget: self) { target in
             target.setTextLayerAttributedString(oldAttributedString)
-
-            // Register redo
             target.undoManager?.registerUndo(withTarget: target) { redoTarget in
                 redoTarget.changeFontUsingAttributes(newFont: newFont)
             }
         }
-
         undoManager?.setActionName("Change Font")
     }
 
 
+}
+class FlippedTextLayer: CATextLayer {
+    override func draw(in ctx: CGContext) {
+        ctx.saveGState()
+        ctx.translateBy(x: 0, y: bounds.height)
+        ctx.scaleBy(x: 1.0, y: -1.0)
+        super.draw(in: ctx)
+        ctx.restoreGState()
+    }
 }
