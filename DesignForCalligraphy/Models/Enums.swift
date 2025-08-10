@@ -193,3 +193,6 @@ enum EditSidemenu {
     case text
     case background
 }
+extension Notification.Name {
+    static let didUpdateSublayers = Notification.Name("didUpdateSublayers")
+}

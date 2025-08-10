@@ -37,6 +37,16 @@ class SVGCanvasNSView: NSView, ObservableObject {
     func updateSublayers() {
         let layers = svgRootLayer?.sublayers ?? []
         self.sublayers = layers
+        var editType: String = "background"
+        if let selected = selectedLayer, selected is CATextLayer {
+            editType = "text"
+        }
+        
+        NotificationCenter.default.post(
+            name: .didUpdateSublayers,
+            object: nil,
+            userInfo: ["editType": editType]
+        )
     }
     
     var svgImage: SVGKImage?
@@ -382,10 +392,16 @@ class SVGCanvasNSView: NSView, ObservableObject {
     }
     func addTextLayer(_ text: String) {
         guard let root = svgRootLayer else { return }
+
         let textLayer = CATextLayer()
-        textLayer.frame = CGRect(x: 50, y: 50, width: 200, height: 40)
-        
-        let font = NSFont.systemFont(ofSize: 18)
+        textLayer.frame = CGRect(
+            x: root.bounds.midX - 100,
+            y: root.bounds.midY - 20,
+            width: 200,
+            height: 40
+        )
+
+        let font = NSFont.systemFont(ofSize: 30)
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .foregroundColor: NSColor.labelColor
@@ -404,7 +420,7 @@ class SVGCanvasNSView: NSView, ObservableObject {
         root.addSublayer(textLayer)
         updateSublayers()
         setNeedsDisplay(bounds)
-        
+        self.selectedLayer = textLayer
         // Undo support
         undoManager?.registerUndo(withTarget: self) { targetSelf in
             textLayer.removeFromSuperlayer()

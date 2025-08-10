@@ -90,7 +90,7 @@ struct TopBarView: View {
                         .padding(.vertical, 20)
                         .frame(width: 190)
                     default:
-                        EmptyView()
+                        TextEditView(selectedColor: $selectedColor, showTextView: $textEditor, sideBarVM: sideBarVM)
                     }
                     
                     Divider()
@@ -129,6 +129,16 @@ struct TopBarView: View {
                     
                 }
                 .background(.white)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .didUpdateSublayers)) { notification in
+                if let editTypeString = notification.userInfo?["editType"] as? String {
+                    if editTypeString == "background" {
+                        showEditType = .background
+                    } else if editTypeString == "text" {
+                        showEditType = .background
+                        showEditType = .text
+                    }
+                }
             }
 //            .alert("Do you want to reset all?", isPresented: $showResetAlert) {
 //                Button("No", role: .cancel) {}
@@ -181,6 +191,8 @@ struct TopBarView: View {
                     Button(action: {
                         if !textEditorText.isEmpty {
                             textEditor = false
+                            showEditType = .background
+                            showEditType = .text
                             sideBarVM.svgVM?.addTextLayer(textEditorText)
                         }
                     }) {
@@ -435,23 +447,26 @@ struct TextEditView: View {
             Text("Font")
                 .foregroundStyle(.black)
                 .font(.custom(Fonts.regular.rawValue, size: 12))
-            ZStack {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color("screenBg"))
-                    .frame(width: 161, height: 32)
-                HStack {
-                    Text(selectedFont)
-                        .foregroundStyle(.black)
-                        .font(.custom(Fonts.regular.rawValue, size: 12))
-                    Spacer()
-                    Image("downArrow")
-                }
-                .padding(.horizontal, 12)
-            }
-            .frame(width: 161, height: 32)
-            .onTapGesture {
+            Button(action: {
                 isPopoverPresented.toggle()
+            }) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color("screenBg"))
+                        .frame(width: 161, height: 32)
+                    HStack {
+                        Text(selectedFont)
+                            .foregroundStyle(.black)
+                            .font(.custom(Fonts.regular.rawValue, size: 12))
+                        Spacer()
+                        Image("downArrow")
+                    }
+                    .padding(.horizontal, 12)
+                }
+                .frame(width: 161, height: 32)
             }
+            .buttonStyle(.plain)
+            .disabled(!(sideBarVM.svgVM?.selectedLayer is CATextLayer))
             .popover(isPresented: $isPopoverPresented, arrowEdge: .bottom) {
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 6) {
@@ -471,6 +486,9 @@ struct TextEditView: View {
                 .padding(.vertical)
                 .frame(width: 200, height: 300)
             }
+            Button(action: {
+                showPopover.toggle()
+            }) {
             ZStack {
                 RoundedRectangle(cornerRadius: 8)
                     .fill(Color("screenBg"))
@@ -485,9 +503,9 @@ struct TextEditView: View {
                 .padding(.horizontal, 12)
             }
             .frame(width: 161, height: 32)
-            .onTapGesture {
-                showPopover.toggle()
-            }
+        }
+        .buttonStyle(.plain)
+        .disabled(!(sideBarVM.svgVM?.selectedLayer is CATextLayer))
             .popover(isPresented: $showPopover, arrowEdge: .bottom) {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 8) {
@@ -511,6 +529,7 @@ struct TextEditView: View {
             .onChange(of: selectedColor) { newColor in
                     sideBarVM.svgVM?.changeTextColor(NSColor(newColor))
             }
+            .disabled(!(sideBarVM.svgVM?.selectedLayer is CATextLayer))
             Spacer()
         }
         .padding(.vertical, 20)
