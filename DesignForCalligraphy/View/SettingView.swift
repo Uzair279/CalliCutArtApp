@@ -18,19 +18,19 @@ struct SettingView : View {
                 Spacer()
             }
             VStack(spacing: 15) {
-                SettingItem(text: "Language", anotherText: "English")
-                HStack {
-                   Text("Dark Mode")
-                        .foregroundStyle(.black)
-                        .font(.custom(Fonts.regular.rawValue, size: 20))
-                    Spacer()
-                    Toggle("", isOn: $isDarkMode)
-                        .toggleStyle(SwitchToggleStyle(tint: Color("selectedColor")))
-                }
-                .padding(.horizontal, 20)
-                .frame(width: 734, height: 42)
-                .background(.white)
-                .cornerRadius(8)
+//                SettingItem(text: "Language", anotherText: "English")
+//                HStack {
+//                   Text("Dark Mode")
+//                        .foregroundStyle(.black)
+//                        .font(.custom(Fonts.regular.rawValue, size: 20))
+//                    Spacer()
+//                    Toggle("", isOn: $isDarkMode)
+//                        .toggleStyle(SwitchToggleStyle(tint: Color("selectedColor")))
+//                }
+//                .padding(.horizontal, 20)
+//                .frame(width: 734, height: 42)
+//                .background(.white)
+//                .cornerRadius(8)
                 if !isProuctPro {
                     if !premiumVM.isProductPurchased {
                         SettingItem(text: "Unlock Pro", anotherText: nil)
@@ -60,7 +60,7 @@ struct SettingView : View {
             .padding(.top, 25)
         }
         .padding(.horizontal, 20)
-        .frame(width: 774, height: 416)
+        .frame(width: 774, height: 332)
         .background(Color("screenBg"))
     }
 }

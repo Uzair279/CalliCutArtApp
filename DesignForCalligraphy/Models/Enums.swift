@@ -3,6 +3,7 @@ import Foundation
 import AppKit
 import SVGKit
 import StoreKit
+import SwiftUI
 
 enum screen{
     case home
@@ -167,4 +168,28 @@ extension CALayer {
     var isHiddenLayer: Bool {
         return self.isHidden
     }
+}
+
+extension Color {
+    init?(cgColor: CGColor?) {
+        guard let cgColor = cgColor, let components = cgColor.components else {
+            return nil
+        }
+
+        let colorSpace = cgColor.colorSpace?.model
+        switch colorSpace {
+        case .rgb:
+            let red = components[0]
+            let green = components[1]
+            let blue = components[2]
+            let alpha = components.count >= 4 ? components[3] : 1.0
+            self = Color(red: red, green: green, blue: blue, opacity: alpha)
+        default:
+            return nil
+        }
+    }
+}
+enum EditSidemenu {
+    case text
+    case background
 }

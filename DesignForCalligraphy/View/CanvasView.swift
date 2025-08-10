@@ -24,6 +24,8 @@ struct TopBarView: View {
     @State var showSaveScreen = false
     @State var showResetAlert: Bool = false
     @Binding var svgURL : URL?
+    @State private var selectedColor: Color = .white
+    @State  var showEditType : EditSidemenu? = nil
     let backAction: () -> Void
     var body: some View {
         ZStack {
@@ -68,10 +70,29 @@ struct TopBarView: View {
                 .padding(.horizontal, 20)
                 .frame(height: 64)
                 .background(Color("screenBg"))
-                HStack {
-                    CanvasSidemenu(showTextEditor: $textEditor)
+                HStack(spacing: 0) {
+                    CanvasSidemenu(showTextEditor: $showEditType)
                         .frame(width: 120)
                         .background(.white)
+                    Divider()
+                        .frame(width: 1)
+                    switch showEditType{
+                    case .text:
+                        TextEditView(selectedColor: $selectedColor, showTextView: $textEditor, sideBarVM: sideBarVM)
+                    case .background:
+                        VStack(alignment: .leading) {
+                            ColorPicker("Background Color", selection: $selectedColor)
+                                .onChange(of: selectedColor) { newColor in
+                                    sideBarVM.svgVM?.changeBackgroundColor(NSColor(newColor))
+                                }
+                            Spacer()
+                        }
+                        .padding(.vertical, 20)
+                        .frame(width: 190)
+                    default:
+                        EmptyView()
+                    }
+                    
                     Divider()
                         .frame(width: 1)
                     Spacer()
@@ -286,30 +307,54 @@ struct TopBarView: View {
 
 }
 struct CanvasSidemenu: View {
-    @Binding  var showTextEditor: Bool
+    @Binding  var showTextEditor: EditSidemenu?
+    @State var showHowToUse = false
     var body: some View {
         VStack(spacing: 20) {
             CanvasSidemenuItem(image: "Text", text: "Text", action: {
-                showTextEditor = true
+                showTextEditor = .text
+            })
+            CanvasSidemenuItem(image: "Backgrounds", text: "Backgrounds", action: {
+                showTextEditor = .background
             })
             CanvasSidemenuItem(image: "Image", text: "Image", action: {
                //Add action
             })
+            .opacity(0)
             CanvasSidemenuItem(image: "Neons", text: "Neons", action: {
                //Add action
             })
+            .opacity(0)
             CanvasSidemenuItem(image: "Designs", text: "Designs", action: {
                //Add action
             })
+            .opacity(0)
             CanvasSidemenuItem(image: "Calligraphy", text: "Caligraphy", action: {
                //Add action
             })
-            CanvasSidemenuItem(image: "Backgrounds", text: "Backgrounds", action: {
-               //Add action
-            })
+            .opacity(0)
             Spacer()
+            HStack(spacing: 3.48) {
+                ZStack {
+                    Circle()
+                        .fill(.black)
+                        .frame(width: 13.52, height: 13.52)
+                    Text("?")
+                        .foregroundStyle(.white)
+                        .font(.custom(Fonts.regular.rawValue, size: 9.96))
+                }
+                Text("How to use?")
+                    .foregroundStyle(.black)
+                    .font(.custom(Fonts.regular.rawValue, size: 14))
+            }
+            .onTapGesture {
+                showHowToUse = true
+            }
         }
         .padding(.vertical, 20)
+        .sheet(isPresented: $showHowToUse, content: {
+            HowToUseView(showHowToUse: $showHowToUse)
+        })
         
     }
 }
@@ -355,3 +400,118 @@ struct LayersView: View {
 }
 
 
+struct TextEditView: View {
+    @State private var showPopover = false
+    @State private var selectedSize: CGFloat = 30
+    
+    let fontSizes: [CGFloat] = [8, 10, 12, 14, 16, 18, 24, 30, 36]
+    @State private var isPopoverPresented = false
+    @State private var selectedFont: String = "SF Pro Display"
+    
+    // List of available fonts (you can customize this further)
+    private var availableFonts: [String] {
+        NSFontManager.shared.availableFontFamilies
+    }
+    @Binding var selectedColor: Color
+    @Binding var showTextView: Bool
+    var sideBarVM : CategoryViewModel
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("Text options")
+                .foregroundStyle(.black)
+                .font(.custom(Fonts.bold.rawValue, size: 16))
+            ZStack {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color("selectedColor"))
+                    .frame(width: 160, height: 37)
+                Text("+Add Text")
+                    .foregroundStyle(.white)
+                    .font(.custom(Fonts.regular.rawValue, size: 14))
+            }
+            .onTapGesture {
+                showTextView = true
+            }
+            Text("Font")
+                .foregroundStyle(.black)
+                .font(.custom(Fonts.regular.rawValue, size: 12))
+            ZStack {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color("screenBg"))
+                    .frame(width: 161, height: 32)
+                HStack {
+                    Text(selectedFont)
+                        .foregroundStyle(.black)
+                        .font(.custom(Fonts.regular.rawValue, size: 12))
+                    Spacer()
+                    Image("downArrow")
+                }
+                .padding(.horizontal, 12)
+            }
+            .frame(width: 161, height: 32)
+            .onTapGesture {
+                isPopoverPresented.toggle()
+            }
+            .popover(isPresented: $isPopoverPresented, arrowEdge: .bottom) {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(availableFonts, id: \.self) { font in
+                            Text(font)
+                                .font(.custom(font, size: 14))
+                                .padding(.horizontal)
+                                .onTapGesture {
+                                    selectedFont = font
+                                    isPopoverPresented = false
+                                    sideBarVM.svgVM?.changeFontUsingAttributes(newFont: NSFont(name: font, size: selectedSize)!)
+                                }
+                        }
+                    }
+                    .padding(.vertical)
+                    .frame(width: 200, height: 300)
+                }
+            }
+            ZStack {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color("screenBg"))
+                    .frame(width: 161, height: 32)
+                HStack {
+                    Text("\(Int(selectedSize))")
+                        .foregroundStyle(.black)
+                        .font(.custom(Fonts.regular.rawValue, size: 12))
+                    Spacer()
+                    Image("downArrow")
+                }
+                .padding(.horizontal, 12)
+            }
+            .frame(width: 161, height: 32)
+            .onTapGesture {
+                showPopover.toggle()
+            }
+            .popover(isPresented: $showPopover, arrowEdge: .bottom) {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(fontSizes, id: \.self) { size in
+                        Button(action: {
+                            selectedSize = size
+                            showPopover = false
+                            sideBarVM.svgVM?.changeFontSizeAttribute(size) 
+                        }) {
+                            Text("\(Int(size)) pt")
+                                .foregroundColor(.primary)
+                                .padding(.vertical, 4)
+                        }
+                    }
+                }
+                .padding()
+                .frame(width: 100)
+            }
+            ColorPicker("Color", selection: $selectedColor)
+            .onChange(of: selectedColor) { newColor in
+                    sideBarVM.svgVM?.changeTextColor(NSColor(newColor))
+            }
+            Spacer()
+        }
+        .padding(.vertical, 20)
+        .frame(width: 190)
+        .background(.white)
+
+    }
+}
