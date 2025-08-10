@@ -160,7 +160,6 @@ class SVGCanvasNSView: NSView, ObservableObject {
                     if sub.bounds.contains(localPoint) {
                         selectedLayer = sub
                         originalTransform = sub.affineTransform()
-                        setAnchorPointToCenter(for: sub)
                         break
                     }
                     else {
@@ -173,39 +172,6 @@ class SVGCanvasNSView: NSView, ObservableObject {
             }
         }
     }
-    
-    private func setAnchorPointToCenter(for layer: CALayer) {
-        let bounds = layer.bounds
-        let oldAnchorPoint = layer.anchorPoint
-        let oldPosition = layer.position
-
-        // Calculate new anchor point and the difference
-        let newAnchorPoint = CGPoint(x: 0.5, y: 0.5)
-        let anchorDelta = CGPoint(
-            x: newAnchorPoint.x - oldAnchorPoint.x,
-            y: newAnchorPoint.y - oldAnchorPoint.y
-        )
-
-        // Convert the delta into position offset
-        let offset = CGPoint(
-            x: bounds.size.width * anchorDelta.x,
-            y: bounds.size.height * anchorDelta.y
-        )
-
-        // Apply transform if any
-        var transformedOffset = offset
-        if let _ = layer.presentation(), layer.affineTransform() != .identity {
-            transformedOffset = offset.applying(layer.affineTransform())
-        }
-
-        // Adjust the position
-        layer.anchorPoint = newAnchorPoint
-        layer.position = CGPoint(
-            x: oldPosition.x + transformedOffset.x,
-            y: oldPosition.y + transformedOffset.y
-        )
-    }
-
     
     // MARK: - Gesture Recognizers
     private func setupGestureRecognizers() {

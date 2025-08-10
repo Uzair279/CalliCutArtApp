@@ -26,6 +26,8 @@ struct TopBarView: View {
     @Binding var svgURL : URL?
     @State private var selectedColor: Color = .white
     @State  var showEditType : EditSidemenu? = nil
+    @State var selectedSize: CGFloat = 30
+    @State var selectedFont: String = "SF Pro Text"
     let backAction: () -> Void
     var body: some View {
         ZStack {
@@ -48,7 +50,7 @@ struct TopBarView: View {
                             }
                         })
                         UndoManagerView(image: "resetAll", action: {
-                            sideBarVM.svgVM?.resetAll()
+                            showResetAlert = true
                         })
                         UndoManagerView(image: "redo", action: {
                             if sideBarVM.svgVM?.undoManager?.canRedo ?? false {
@@ -78,7 +80,7 @@ struct TopBarView: View {
                         .frame(width: 1)
                     switch showEditType{
                     case .text:
-                        TextEditView(selectedColor: $selectedColor, showTextView: $textEditor, sideBarVM: sideBarVM)
+                        TextEditView(selectedSize: $selectedSize, selectedFont: $selectedFont, selectedColor: $selectedColor, showTextView: $textEditor, sideBarVM: sideBarVM)
                     case .background:
                         VStack(alignment: .leading) {
                             ColorPicker("Background Color", selection: $selectedColor)
@@ -90,7 +92,7 @@ struct TopBarView: View {
                         .padding(.vertical, 20)
                         .frame(width: 190)
                     default:
-                        TextEditView(selectedColor: $selectedColor, showTextView: $textEditor, sideBarVM: sideBarVM)
+                        TextEditView(selectedSize: $selectedSize, selectedFont: $selectedFont, selectedColor: $selectedColor, showTextView: $textEditor, sideBarVM: sideBarVM)
                     }
                     
                     Divider()
@@ -137,15 +139,30 @@ struct TopBarView: View {
                     } else if editTypeString == "text" {
                         showEditType = .background
                         showEditType = .text
+                        if let textLayer = sideBarVM.svgVM?.selectedLayer as? CATextLayer {
+                            // Update state so TextEditView shows correct settings
+                            if let attributedString = textLayer.string as? NSAttributedString {
+                                let attributes = attributedString.attributes(at: 0, effectiveRange: nil)
+                                
+                                if let font = attributes[.font] as? NSFont {
+                                    selectedFont = font.fontName
+                                    selectedSize = font.pointSize
+                                }
+                            }
+
+                        }
+                       
                     }
                 }
             }
-//            .alert("Do you want to reset all?", isPresented: $showResetAlert) {
-//                Button("No", role: .cancel) {}
-//                Button("Yes", role: .destructive) {
-//                    sideBarVM.svgVM?.resetAll()
-//                }
-//            }
+
+            .alert("Do you want to reset all?", isPresented: $showResetAlert) {
+                Button("No", role: .cancel) {}
+                Button("Yes", role: .destructive) {
+                    showResetAlert = false
+                    sideBarVM.svgVM?.resetAll()
+                }
+            }
             .sheet(isPresented: $showSaveScreen) {
                 if let preview = sideBarVM.svgVM?.svgRootLayer?.snapshot() {
                     ExportTemplateView(showSaveScreen: $showSaveScreen, previewImage: preview) { selectedFormat, selectedResolution in
@@ -415,11 +432,11 @@ struct LayersView: View {
 
 struct TextEditView: View {
     @State private var showPopover = false
-    @State private var selectedSize: CGFloat = 30
+    @Binding var selectedSize: CGFloat
     
     let fontSizes: [CGFloat] = [8, 10, 12, 14, 16, 18, 24, 30, 36]
     @State private var isPopoverPresented = false
-    @State private var selectedFont: String = "SF Pro Text"
+    @Binding var selectedFont: String
     
     // List of available fonts (you can customize this further)
     private var availableFonts: [String] {
