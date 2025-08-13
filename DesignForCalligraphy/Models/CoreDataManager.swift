@@ -31,6 +31,7 @@ final class CoreDataManager {
             print("Failed to encode model")
         }
     }
+    
 
     // MARK: Fetch all models
     func fetchUserModels() -> [UserSaveModel] {
@@ -40,6 +41,32 @@ final class CoreDataManager {
             return users.compactMap {
                 guard let json = $0.info?.data(using: .utf8) else { return nil }
                 return try? JSONDecoder().decode(UserSaveModel.self, from: json)
+            }
+        } catch {
+            print("Failed to fetch users: \(error)")
+            return []
+        }
+    }
+    func saveIsFirstTime(_ model: IsFirstTime) {
+        let user = User(context: context)
+        if let jsonData = try? JSONEncoder().encode(model),
+           let jsonString = String(data: jsonData, encoding: .utf8) {
+            user.data = jsonString
+            saveContext()
+        } else {
+            print("Failed to encode model")
+        }
+    }
+    
+
+    // MARK: Fetch all models
+    func fetchFirstTimeModel() -> [IsFirstTime] {
+        let request: NSFetchRequest<User> = User.fetchRequest()
+        do {
+            let users = try context.fetch(request)
+            return users.compactMap {
+                guard let json = $0.data?.data(using: .utf8) else { return nil }
+                return try? JSONDecoder().decode(IsFirstTime.self, from: json)
             }
         } catch {
             print("Failed to fetch users: \(error)")

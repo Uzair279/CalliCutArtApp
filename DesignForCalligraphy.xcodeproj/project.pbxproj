@@ -14,12 +14,12 @@
 		4D71879E2E3E7ADA0050799B /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4D71879B2E3E7ADA0050799B /* SF-Pro-Text-Regular.otf */; };
 		4D71879F2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4D71879C2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf */; };
 		4D7187A02E3E7ADA0050799B /* SF-Pro-Text-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4D71879D2E3E7ADA0050799B /* SF-Pro-Text-Medium.otf */; };
-		4D7187A62E3F93350050799B /* StorageData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187A42E3F93350050799B /* StorageData.xcdatamodeld */; };
 		4D7187A82E3F94DB0050799B /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187A72E3F94DB0050799B /* CoreDataManager.swift */; };
 		4D7187AA2E3F95260050799B /* PremiumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187A92E3F95260050799B /* PremiumViewModel.swift */; };
 		4D7187AC2E4508DB0050799B /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187AB2E4508DB0050799B /* SettingView.swift */; };
 		4D7187AE2E48FCFE0050799B /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187AD2E48FCFE0050799B /* HowToUseView.swift */; };
 		4D7187B02E4906BF0050799B /* zoom.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4D7187AF2E4906BF0050799B /* zoom.gif */; };
+		4D7187B32E4D143C0050799B /* StorageData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187B12E4D143C0050799B /* StorageData.xcdatamodeld */; };
 		4DCD49592E100518009F4986 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD49582E100518009F4986 /* Constants.swift */; };
 		4DCD495B2E10103C009F4986 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD495A2E10103C009F4986 /* CanvasView.swift */; };
 		4DCD495D2E10105D009F4986 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD495C2E10105D009F4986 /* HomeView.swift */; };
@@ -47,12 +47,12 @@
 		4D71879C2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
 		4D71879D2E3E7ADA0050799B /* SF-Pro-Text-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Medium.otf"; sourceTree = "<group>"; };
 		4D7187A12E3E7E640050799B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		4D7187A52E3F93350050799B /* StorageData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StorageData.xcdatamodel; sourceTree = "<group>"; };
 		4D7187A72E3F94DB0050799B /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		4D7187A92E3F95260050799B /* PremiumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumViewModel.swift; sourceTree = "<group>"; };
 		4D7187AB2E4508DB0050799B /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		4D7187AD2E48FCFE0050799B /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
 		4D7187AF2E4906BF0050799B /* zoom.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = zoom.gif; sourceTree = "<group>"; };
+		4D7187B22E4D143C0050799B /* StorageData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StorageData.xcdatamodel; sourceTree = "<group>"; };
 		4DCD49582E100518009F4986 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4DCD495A2E10103C009F4986 /* CanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		4DCD495C2E10105D009F4986 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -95,7 +95,6 @@
 		4DF4A7772E0EFF1C00C269C4 = {
 			isa = PBXGroup;
 			children = (
-				4D7187A42E3F93350050799B /* StorageData.xcdatamodeld */,
 				4DF4A7822E0EFF1C00C269C4 /* DesignForCalligraphy */,
 				4DF4A7812E0EFF1C00C269C4 /* Products */,
 			);
@@ -112,6 +111,7 @@
 		4DF4A7822E0EFF1C00C269C4 /* DesignForCalligraphy */ = {
 			isa = PBXGroup;
 			children = (
+				4D7187B12E4D143C0050799B /* StorageData.xcdatamodeld */,
 				4D7187AF2E4906BF0050799B /* zoom.gif */,
 				4D71879C2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf */,
 				4D71879D2E3E7ADA0050799B /* SF-Pro-Text-Medium.otf */,
@@ -264,6 +264,7 @@
 				4DF4A7A32E0F0C5600C269C4 /* SidebarMenuViewModel.swift in Sources */,
 				4DCD495F2E1014F8009F4986 /* Components.swift in Sources */,
 				4DF4A7A52E0F15FE00C269C4 /* MainView.swift in Sources */,
+				4D7187B32E4D143C0050799B /* StorageData.xcdatamodeld in Sources */,
 				4D7187962E33F4470050799B /* SaveScreenView.swift in Sources */,
 				4D7187AA2E3F95260050799B /* PremiumViewModel.swift in Sources */,
 				4D7187A82E3F94DB0050799B /* CoreDataManager.swift in Sources */,
@@ -280,7 +281,6 @@
 				4DF4A79D2E0F091F00C269C4 /* Sidemenu.swift in Sources */,
 				4D7187932E2D56900050799B /* PremiumView.swift in Sources */,
 				4DCD49592E100518009F4986 /* Constants.swift in Sources */,
-				4D7187A62E3F93350050799B /* StorageData.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -517,14 +517,14 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		4D7187A42E3F93350050799B /* StorageData.xcdatamodeld */ = {
+		4D7187B12E4D143C0050799B /* StorageData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				4D7187A52E3F93350050799B /* StorageData.xcdatamodel */,
+				4D7187B22E4D143C0050799B /* StorageData.xcdatamodel */,
 			);
-			currentVersion = 4D7187A52E3F93350050799B /* StorageData.xcdatamodel */;
+			currentVersion = 4D7187B22E4D143C0050799B /* StorageData.xcdatamodel */;
 			name = StorageData.xcdatamodeld;
-			path = /Users/sohaib/DesignForCalligraphy/StorageData.xcdatamodeld;
+			path = /Users/sohaib/DesignForCalligraphy/DesignForCalligraphy/StorageData.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

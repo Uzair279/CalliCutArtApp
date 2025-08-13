@@ -46,3 +46,6 @@ class SVGLayerModel: NSObject, Identifiable {
 struct UserSaveModel: Codable {
     var isPro: Bool
 }
+struct IsFirstTime: Codable {
+    var isFirsttime: Bool
+}
