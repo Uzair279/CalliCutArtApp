@@ -19,7 +19,6 @@
 		4D7187AC2E4508DB0050799B /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187AB2E4508DB0050799B /* SettingView.swift */; };
 		4D7187AE2E48FCFE0050799B /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187AD2E48FCFE0050799B /* HowToUseView.swift */; };
 		4D7187B02E4906BF0050799B /* zoom.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4D7187AF2E4906BF0050799B /* zoom.gif */; };
-		4D7187B32E4D143C0050799B /* StorageData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4D7187B12E4D143C0050799B /* StorageData.xcdatamodeld */; };
 		4DCD49592E100518009F4986 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD49582E100518009F4986 /* Constants.swift */; };
 		4DCD495B2E10103C009F4986 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD495A2E10103C009F4986 /* CanvasView.swift */; };
 		4DCD495D2E10105D009F4986 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD495C2E10105D009F4986 /* HomeView.swift */; };
@@ -36,6 +35,7 @@
 		4DF4A7A12E0F0C3900C269C4 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7A02E0F0C3900C269C4 /* Models.swift */; };
 		4DF4A7A32E0F0C5600C269C4 /* SidebarMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7A22E0F0C5600C269C4 /* SidebarMenuViewModel.swift */; };
 		4DF4A7A52E0F15FE00C269C4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7A42E0F15FE00C269C4 /* MainView.swift */; };
+		70C33F762E4DE5C2002C1EBA /* StorageData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 70C33F742E4DE5C2002C1EBA /* StorageData.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,7 +52,6 @@
 		4D7187AB2E4508DB0050799B /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		4D7187AD2E48FCFE0050799B /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
 		4D7187AF2E4906BF0050799B /* zoom.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = zoom.gif; sourceTree = "<group>"; };
-		4D7187B22E4D143C0050799B /* StorageData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StorageData.xcdatamodel; sourceTree = "<group>"; };
 		4DCD49582E100518009F4986 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4DCD495A2E10103C009F4986 /* CanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		4DCD495C2E10105D009F4986 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -70,6 +69,7 @@
 		4DF4A7A02E0F0C3900C269C4 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		4DF4A7A22E0F0C5600C269C4 /* SidebarMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarMenuViewModel.swift; sourceTree = "<group>"; };
 		4DF4A7A42E0F15FE00C269C4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		70C33F752E4DE5C2002C1EBA /* StorageData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StorageData.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +111,6 @@
 		4DF4A7822E0EFF1C00C269C4 /* DesignForCalligraphy */ = {
 			isa = PBXGroup;
 			children = (
-				4D7187B12E4D143C0050799B /* StorageData.xcdatamodeld */,
 				4D7187AF2E4906BF0050799B /* zoom.gif */,
 				4D71879C2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf */,
 				4D71879D2E3E7ADA0050799B /* SF-Pro-Text-Medium.otf */,
@@ -126,6 +125,7 @@
 				4DF4A7912E0EFF1E00C269C4 /* DesignForCalligraphy.entitlements */,
 				4DF4A7892E0EFF1E00C269C4 /* Preview Content */,
 				4D7187942E2D63DA0050799B /* store.storekit */,
+				70C33F742E4DE5C2002C1EBA /* StorageData.xcdatamodeld */,
 			);
 			path = DesignForCalligraphy;
 			sourceTree = "<group>";
@@ -264,7 +264,7 @@
 				4DF4A7A32E0F0C5600C269C4 /* SidebarMenuViewModel.swift in Sources */,
 				4DCD495F2E1014F8009F4986 /* Components.swift in Sources */,
 				4DF4A7A52E0F15FE00C269C4 /* MainView.swift in Sources */,
-				4D7187B32E4D143C0050799B /* StorageData.xcdatamodeld in Sources */,
+				70C33F762E4DE5C2002C1EBA /* StorageData.xcdatamodeld in Sources */,
 				4D7187962E33F4470050799B /* SaveScreenView.swift in Sources */,
 				4D7187AA2E3F95260050799B /* PremiumViewModel.swift in Sources */,
 				4D7187A82E3F94DB0050799B /* CoreDataManager.swift in Sources */,
@@ -415,7 +415,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DesignForCalligraphy/Preview Content\"";
-				DEVELOPMENT_TEAM = 3PVLZ5R65F;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DesignForCalligraphy/Info.plist;
@@ -443,7 +443,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DesignForCalligraphy/Preview Content\"";
-				DEVELOPMENT_TEAM = 3PVLZ5R65F;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DesignForCalligraphy/Info.plist;
@@ -517,15 +517,14 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		4D7187B12E4D143C0050799B /* StorageData.xcdatamodeld */ = {
+		70C33F742E4DE5C2002C1EBA /* StorageData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				4D7187B22E4D143C0050799B /* StorageData.xcdatamodel */,
+				70C33F752E4DE5C2002C1EBA /* StorageData.xcdatamodel */,
 			);
-			currentVersion = 4D7187B22E4D143C0050799B /* StorageData.xcdatamodel */;
-			name = StorageData.xcdatamodeld;
-			path = /Users/sohaib/DesignForCalligraphy/DesignForCalligraphy/StorageData.xcdatamodeld;
-			sourceTree = "<group>";
+			currentVersion = 70C33F752E4DE5C2002C1EBA /* StorageData.xcdatamodel */;
+			path = StorageData.xcdatamodeld;
+			sourceTree = SOURCE_ROOT;
 			versionGroupType = wrapper.xcdatamodel;
 		};
 /* End XCVersionGroup section */
