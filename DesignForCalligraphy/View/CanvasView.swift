@@ -552,6 +552,7 @@ struct TextEditView: View {
                 .frame(width: 100)
             }
             ColorPicker("Color", selection: $selectedColor)
+                .foregroundStyle(.black)
             .onChange(of: selectedColor) { newColor in
                     sideBarVM.svgVM?.changeTextColor(NSColor(newColor))
             }
