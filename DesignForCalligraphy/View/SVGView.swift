@@ -371,7 +371,7 @@ class SVGCanvasNSView: NSView, ObservableObject {
         let font = NSFont(name: "SF Pro Text", size: 30)
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font,
-            .foregroundColor: NSColor.labelColor
+            .foregroundColor: NSColor.black
         ]
         
         let string = NSAttributedString(string: text, attributes: attributes)

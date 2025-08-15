@@ -227,7 +227,7 @@ struct TopBarView: View {
                             .padding(.horizontal, 30)
                             .padding(.vertical, 10)
                             .frame(maxWidth: .infinity)
-                            .background(textEditorText.isEmpty ? Color.gray.opacity(0.4) : Color.accentColor)
+                            .background(textEditorText.isEmpty ? Color.gray.opacity(0.4) : Color("selectedColor"))
                             .foregroundColor(.white)
                             .cornerRadius(8)
                             .animation(.easeInOut(duration: 0.2), value: textEditorText)
