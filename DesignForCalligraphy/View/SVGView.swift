@@ -170,6 +170,12 @@ class SVGCanvasNSView: NSView, ObservableObject {
                     selectedLayer = nil
                 }
             }
+            NotificationCenter.default.post(
+                name: NSNotification.Name("LayerSelectionChanged"),
+                object: self,
+                userInfo: ["layer": self.selectedLayer]
+            )
+
         }
     }
     
@@ -480,7 +486,28 @@ class SVGCanvasNSView: NSView, ObservableObject {
             }
         }
     }
-
+    func changeShapeColor(_ color: NSColor, layer: CALayer?) {
+        guard let layer = layer,  let shapeLayer = layer as? CAShapeLayer else { return }
+        
+        let oldColor = NSColor(cgColor: shapeLayer.fillColor ?? NSColor.black.cgColor) ?? .clear
+        shapeLayer.fillColor = color.cgColor
+        
+        undoManager?.registerUndo(withTarget: self) { [oldColor, color] target in
+            // Undo: restore the old color
+            shapeLayer.fillColor = oldColor.cgColor
+            
+            // Register redo
+            target.undoManager?.registerUndo(withTarget: target) { redoTarget in
+                // Redo: restore the new color
+                shapeLayer.fillColor  = color.cgColor
+                
+                // Register undo again for infinite undo/redo
+                redoTarget.undoManager?.registerUndo(withTarget: redoTarget) { finalTarget in
+                    finalTarget.changeShapeColor(oldColor, layer: layer)
+                }
+            }
+        }
+    }
     func changeTextColor(_ color: NSColor) {
         guard let textLayer = selectedLayer as? CATextLayer,
               let attributedString = textLayer.string as? NSAttributedString else {

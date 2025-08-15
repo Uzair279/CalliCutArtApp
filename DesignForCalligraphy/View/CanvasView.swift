@@ -24,10 +24,13 @@ struct TopBarView: View {
     @State var showSaveScreen = false
     @State var showResetAlert: Bool = false
     @Binding var svgURL : URL?
-    @State private var selectedColor: Color = .white
+    @State var selectedColor: Color = .white
+    @State var selectedImageColor: Color = .black
+    @State var selectedTextColor: Color = .black
     @State  var showEditType : EditSidemenu? = nil
     @State var selectedSize: CGFloat = 30
     @State var selectedFont: String = "SF Pro Text"
+    @State var opacityValue: Double = 0.0
     let backAction: () -> Void
     var body: some View {
         ZStack {
@@ -84,16 +87,43 @@ struct TopBarView: View {
                         )
                     switch showEditType{
                     case .text:
-                        TextEditView(selectedSize: $selectedSize, selectedFont: $selectedFont, selectedColor: $selectedColor, showTextView: $textEditor, sideBarVM: sideBarVM)
+                        TextEditView(selectedSize: $selectedSize, selectedFont: $selectedFont, selectedColor: $selectedTextColor, showTextView: $textEditor, sideBarVM: sideBarVM)
                     case .background:
-                        VStack(alignment: .leading) {
+                        HStack {
+                        VStack(alignment: .leading, spacing: 12) {
+                                Text("Backgrounds")
+                                    .foregroundStyle(.black)
+                                    .font(.custom(Fonts.bold.rawValue, size: 18))
                             ColorPicker("Background Color", selection: $selectedColor)
                                 .foregroundStyle(.black)
                                 .onChange(of: selectedColor) { newColor in
                                     sideBarVM.svgVM?.changeBackgroundColor(NSColor(newColor))
                                 }
                             Spacer()
+                            }
+                           
+                            Spacer()
                         }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 20)
+                        .frame(width: 190)
+                    case .image:
+                        HStack {
+                        VStack(alignment: .leading, spacing: 12) {
+                                Text("Image Options")
+                                    .foregroundStyle(.black)
+                                    .font(.custom(Fonts.bold.rawValue, size: 18))
+                                ColorPicker("Color", selection: $selectedImageColor)
+                                    .foregroundStyle(.black)
+                                    .onChange(of: selectedImageColor) { newColor in
+                                        sideBarVM.svgVM?.changeShapeColor(NSColor(newColor), layer: sideBarVM.svgVM?.selectedLayer)
+                                    }
+                                Spacer()
+                            }
+                           
+                            Spacer()
+                        }
+                        .padding(.horizontal, 10)
                         .padding(.vertical, 20)
                         .frame(width: 190)
                     default:
@@ -140,6 +170,20 @@ struct TopBarView: View {
                     
                 }
                 .background(.white)
+                .onReceive(NotificationCenter.default.publisher(for: Notification.Name("LayerSelectionChanged"))) { notification in
+                    if let userInfo = notification.userInfo,
+                       let type = userInfo["layer"] as? CALayer {
+                        if type is CATextLayer{
+                            showEditType = .text
+                        }
+                        else if type is CAShapeLayer {
+                            showEditType = .image
+                        }
+                    }
+                    else {
+                        showEditType = .background
+                    }
+                }
             }
             .onReceive(NotificationCenter.default.publisher(for: .didUpdateSublayers)) { notification in
                 if let editTypeString = notification.userInfo?["editType"] as? String {
@@ -353,13 +397,12 @@ struct CanvasSidemenu: View {
             CanvasSidemenuItem(image: "Text", text: "Text", action: {
                 showTextEditor = .text
             })
+            CanvasSidemenuItem(image: "Image", text: "Image", action: {
+                showTextEditor = .image
+            })
             CanvasSidemenuItem(image: "Backgrounds", text: "Backgrounds", action: {
                 showTextEditor = .background
             })
-            CanvasSidemenuItem(image: "Image", text: "Image", action: {
-               //Add action
-            })
-            .opacity(0)
             CanvasSidemenuItem(image: "Neons", text: "Neons", action: {
                //Add action
             })
@@ -565,3 +608,91 @@ struct TextEditView: View {
 
     }
 }
+
+import AppKit
+
+class ColoredThumbSliderCell: NSSliderCell {
+    var thumbColor: NSColor = .systemBlue
+    var minTrackColor: NSColor = .systemBlue
+    var maxTrackColor: NSColor = .lightGray
+
+    override func drawKnob(_ knobRect: NSRect) {
+        let path = NSBezierPath(ovalIn: knobRect)
+        thumbColor.setFill()
+        path.fill()
+    }
+
+    override func drawBar(inside aRect: NSRect, flipped: Bool) {
+        let cornerRadius: CGFloat = aRect.height / 2
+
+        // Full background (max track)
+        let backgroundPath = NSBezierPath(roundedRect: aRect, xRadius: cornerRadius, yRadius: cornerRadius)
+        maxTrackColor.setFill()
+        backgroundPath.fill()
+
+        // Filled portion (min track)
+        let valueFraction = CGFloat((doubleValue - minValue) / (maxValue - minValue))
+        let filledWidth = aRect.width * valueFraction
+        let filledRect = NSRect(x: aRect.origin.x, y: aRect.origin.y, width: filledWidth, height: aRect.height)
+
+        let filledPath = NSBezierPath(roundedRect: filledRect, xRadius: cornerRadius, yRadius: cornerRadius)
+        minTrackColor.setFill()
+        filledPath.fill()
+    }
+}
+
+
+struct CustomMacSlider: NSViewRepresentable {
+    @Binding var value: Double
+    var range: ClosedRange<Double>
+    var thumbColor: NSColor
+    var minTrackColor: NSColor
+    var maxTrackColor: NSColor
+
+    func makeNSView(context: Context) -> NSSlider {
+        let slider = NSSlider(value: value,
+                              minValue: range.lowerBound,
+                              maxValue: range.upperBound,
+                              target: context.coordinator,
+                              action: #selector(Coordinator.valueChanged(_:)))
+
+        if let cell = slider.cell as? NSSliderCell {
+            let customCell = ColoredThumbSliderCell()
+            customCell.controlSize = cell.controlSize
+            customCell.sliderType = cell.sliderType
+            customCell.thumbColor = thumbColor
+            customCell.minTrackColor = minTrackColor
+            customCell.maxTrackColor = maxTrackColor
+            slider.cell = customCell
+        }
+
+        return slider
+    }
+
+    func updateNSView(_ nsView: NSSlider, context: Context) {
+        nsView.doubleValue = value
+
+        if let cell = nsView.cell as? ColoredThumbSliderCell {
+            cell.thumbColor = thumbColor
+            cell.minTrackColor = minTrackColor
+            cell.maxTrackColor = maxTrackColor
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(value: $value)
+    }
+
+    class Coordinator: NSObject {
+        var value: Binding<Double>
+
+        init(value: Binding<Double>) {
+            self.value = value
+        }
+
+        @objc func valueChanged(_ sender: NSSlider) {
+            value.wrappedValue = sender.doubleValue
+        }
+    }
+}
+
