@@ -1,8 +1,6 @@
 import SwiftUI
 struct HomeView: View {
     @StateObject var viewModel: CategoryViewModel
-    @State var selectedCategoryID: String?
-    @State var selectedSubcategoryID: String?
     @State var showLoader: Bool = false
     @Binding var svgURL: URL?
     @Binding var screenType: screen
@@ -13,23 +11,25 @@ struct HomeView: View {
             HStack(spacing: 0) {
                 Sidemenu(
                     categories: viewModel.categories,
-                    selectedCategoryID: $selectedCategoryID,
+                    selectedCategoryID: $viewModel.selectedCategoryID,
                     showPremium: $showPremiumScreen
                 )
                 .frame(width: 230)
                 .background(Color("screenBg"))
                 
                 SubSidemenu(
-                    subcategories: viewModel.categories.first(where: { $0.title == selectedCategoryID })?.subcategories ?? [],
-                    selectedSubcategoryID: $selectedSubcategoryID
+                    subcategories: viewModel.categories.first(where: { $0.title == viewModel.selectedCategoryID })?.subcategories ?? [],
+                    selectedSubcategoryID: $viewModel.selectedSubcategoryID
                 )
-                .id(selectedCategoryID ?? "")
+                .id(viewModel.selectedCategoryID ?? "")
+
+                .id(viewModel.selectedCategoryID ?? "")
                 .frame(width: 190)
                 .background(Color.white)
                 
-                if let selectedCategoryID,
+                if let selectedCategoryID = viewModel.selectedCategoryID,
                    let selectedCategory = viewModel.categories.first(where: { $0.title == selectedCategoryID }),
-                   let selectedSubcategoryID,
+                   let selectedSubcategoryID = viewModel.selectedSubcategoryID,
                    let selectedSubcategory = selectedCategory.subcategories?.first(where: { $0.id == selectedSubcategoryID }) {
                     
                     MainView(
@@ -69,27 +69,22 @@ struct HomeView: View {
                 }
             }
             
-            .onAppear {
-                if let firstCategory = viewModel.categories.first {
-                    selectedCategoryID = firstCategory.title
-                    selectedSubcategoryID = firstCategory.subcategories?.first?.id
-                }
-            }
-            
+           
+
             .onChange(of: viewModel.categories.count) { _ in
                 if let firstCategory = viewModel.categories.first {
-                    selectedCategoryID = firstCategory.title
-                    selectedSubcategoryID = firstCategory.subcategories?.first?.id
+                    viewModel.selectedCategoryID = firstCategory.title
+                    viewModel.selectedSubcategoryID = firstCategory.subcategories?.first?.id
                 }
             }
-            
-            .onChange(of: selectedCategoryID) { newCategoryID in
+
+            .onChange(of: viewModel.selectedCategoryID) { newCategoryID in
                 if let newCategoryID = newCategoryID,
                    let newCategory = viewModel.categories.first(where: { $0.title == newCategoryID }) {
-                    selectedSubcategoryID = newCategory.subcategories?.first?.id
+                    viewModel.selectedSubcategoryID = newCategory.subcategories?.first?.id
                 }
             }
-            
+
             .sheet(isPresented: $showPremiumScreen) {
                 SubscriptionView(showPremium: $showPremiumScreen)
                     .frame(width: 819, height: 622)

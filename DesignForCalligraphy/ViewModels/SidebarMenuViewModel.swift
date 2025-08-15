@@ -4,6 +4,8 @@ import CoreText
 class CategoryViewModel: ObservableObject {
     @Published var categories: [Category] = []
     @Published var svgVM: SVGCanvasNSView?
+    @Published var selectedCategoryID: String?
+    @Published var selectedSubcategoryID: String?
     init() {
         self.loadCategories()
         self.installFonts()
