@@ -284,9 +284,12 @@ class SVGCanvasNSView: NSView, ObservableObject {
     // MARK: - Resize root layer on view resize
     override func layout() {
         super.layout()
-        // Optionally trigger a new layout pass if needed
+
         if let image = svgImage {
-            image.scaleToFit(inside: bounds.size)
+            // Force the SVG to render at our view's current size
+            image.size = bounds.size
+
+            // Make sure the root layer stays centered
             svgRootLayer?.position = CGPoint(x: bounds.midX, y: bounds.midY)
         }
     }

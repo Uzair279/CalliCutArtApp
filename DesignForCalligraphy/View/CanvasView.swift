@@ -77,13 +77,18 @@ struct TopBarView: View {
                         .frame(width: 120)
                         .background(.white)
                     Divider()
-                        .frame(width: 1)
+                        .frame(width: 0.5)
+                        .overlay(
+                            Rectangle()
+                                .fill(Color("grey"))
+                        )
                     switch showEditType{
                     case .text:
                         TextEditView(selectedSize: $selectedSize, selectedFont: $selectedFont, selectedColor: $selectedColor, showTextView: $textEditor, sideBarVM: sideBarVM)
                     case .background:
                         VStack(alignment: .leading) {
                             ColorPicker("Background Color", selection: $selectedColor)
+                                .foregroundStyle(.black)
                                 .onChange(of: selectedColor) { newColor in
                                     sideBarVM.svgVM?.changeBackgroundColor(NSColor(newColor))
                                 }
@@ -96,7 +101,11 @@ struct TopBarView: View {
                     }
                     
                     Divider()
-                        .frame(width: 1)
+                        .frame(width: 0.5)
+                        .overlay(
+                            Rectangle()
+                                .fill(Color("grey"))
+                        )   
                     Spacer()
                     ZStack {
                         // Fixed Background Image

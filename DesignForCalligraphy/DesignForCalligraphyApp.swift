@@ -4,7 +4,7 @@ import SwiftUI
 @main
 struct DesignForCalligraphyApp: App {
     @StateObject var viewModel = SubscriptionViewModel()
-    @State var isFirstTime: Bool = true
+    @State var isFirstTime: Bool = false
     var body: some Scene {
         WindowGroup {
             VStack {

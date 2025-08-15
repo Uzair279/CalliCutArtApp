@@ -42,6 +42,7 @@ struct SubscriptionView: View {
             }
         }
         .frame(width: 819, height: 671)
+        .background(.white)
         .onAppear {
             viewModel.loadProducts()
         }
