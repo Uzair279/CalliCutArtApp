@@ -50,7 +50,9 @@ struct HowToUseView: View {
         .onAppear {
             Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
                 currentIndex = (currentIndex + 1) % screenTypes.count
-                useScreenType = screenTypes[currentIndex]
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    useScreenType = screenTypes[currentIndex]
+                }
             }
         }
     }
