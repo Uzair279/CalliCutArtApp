@@ -4,6 +4,8 @@ import SDWebImageSwiftUI
 
 struct HowToUseView: View {
     @State var useScreenType: UseScreenType = .click
+    private let screenTypes: [UseScreenType] = [.click, .zoom, .rotate]
+    @State private var currentIndex = 0
     @Binding var showHowToUse: Bool
     var body: some View {
         VStack(spacing: 3) {
@@ -34,32 +36,23 @@ struct HowToUseView: View {
             }
            Spacer()
             HStack {
-                Circle()
-                    .stroke(useScreenType == .click ? Color("selectedColor") : .clear, lineWidth: 1)
-                    .background(Circle().fill(Color("selectedColor")).frame(width: 10, height: 10))
-                    .frame(width: 20, height: 20)
-                    .onTapGesture {
-                        useScreenType = .click
-                    }
-                Circle()
-                    .stroke(useScreenType == .zoom ? Color("selectedColor") : .clear, lineWidth: 1)
-                    .background(Circle().fill(Color("selectedColor")).frame(width: 10, height: 10))
-                    .frame(width: 20, height: 20)
-                    .onTapGesture {
-                        useScreenType = .zoom
-                    }
-                Circle()
-                    .stroke(useScreenType == .rotate ? Color("selectedColor") : .clear, lineWidth: 1)
-                    .background(Circle().fill(Color("selectedColor")).frame(width: 10, height: 10))
-                    .frame(width: 20, height: 20)
-                    .onTapGesture {
-                        useScreenType = .rotate
-                    }
+                ForEach(screenTypes, id: \.self) { type in
+                    Circle()
+                        .stroke(useScreenType == type ? Color("selectedColor") : .clear, lineWidth: 1)
+                        .background(Circle().fill(Color("selectedColor")).frame(width: 10, height: 10))
+                        .frame(width: 20, height: 20)
+                }
             }
             .padding(.bottom, 27)
         }
         .frame(width: 914, height: 525)
         .background(.white)
+        .onAppear {
+            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
+                currentIndex = (currentIndex + 1) % screenTypes.count
+                useScreenType = screenTypes[currentIndex]
+            }
+        }
     }
 }
 
@@ -104,7 +97,7 @@ struct Firstscreen : View {
         }
     }
 }
-enum UseScreenType{
+enum UseScreenType: Hashable{
     case click
     case zoom
     case rotate
