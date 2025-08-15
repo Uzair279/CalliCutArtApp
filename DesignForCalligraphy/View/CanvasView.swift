@@ -49,6 +49,7 @@ struct TopBarView: View {
                     HStack(spacing: 32) {
                         UndoManagerView(image: "undo", action: {
                             if sideBarVM.svgVM?.undoManager?.canUndo ?? false {
+                                sideBarVM.svgVM?.selectedLayer = nil
                                 sideBarVM.svgVM?.undoManager?.undo()
                             }
                         })
@@ -57,6 +58,7 @@ struct TopBarView: View {
                         })
                         UndoManagerView(image: "redo", action: {
                             if sideBarVM.svgVM?.undoManager?.canRedo ?? false {
+                                sideBarVM.svgVM?.selectedLayer = nil
                                 sideBarVM.svgVM?.undoManager?.redo()
                             }
                         })
@@ -201,7 +203,7 @@ struct TopBarView: View {
                            let nsColor = NSColor(cgColor: cgColor) {
                             selectedColor = Color(nsColor)
                         } else {
-                            selectedColor = Color.clear
+                            selectedColor = Color.white
                         }
 
                     }
