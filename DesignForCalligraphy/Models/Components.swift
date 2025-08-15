@@ -35,17 +35,20 @@ struct ImportExportView: View {
 struct CanvasSidemenuItem: View {
     let image : String
     let text : String
+    var isselected : Bool
     let action: () -> Void
     var body: some View {
         Button(action: action) {
             VStack (spacing: 6) {
                 Image(image)
                     .frame(width: 32, height: 32)
-                    .background(Color("grey"))
+                    .foregroundStyle(isselected ? Color.white : .black)
+                    .background(isselected ?Color("selectedColor") : .grey)
                     .cornerRadius(4)
                 Text(text)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(isselected ? Color("selectedColor") : .black)
                     .font(.custom("", size: 14))
+                
             }
         }
         .buttonStyle(.plain)

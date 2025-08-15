@@ -175,13 +175,35 @@ struct TopBarView: View {
                        let type = userInfo["layer"] as? CALayer {
                         if type is CATextLayer{
                             showEditType = .text
+                            if let textLayer = type as? CATextLayer,
+                               let cgColor = textLayer.foregroundColor,
+                               let nsColor = NSColor(cgColor: cgColor) {
+                                selectedTextColor = Color(nsColor)
+                            } else {
+                                selectedTextColor = Color.black
+                            }
+
                         }
                         else if type is CAShapeLayer {
                             showEditType = .image
+                            if let shapeLayer = type as? CAShapeLayer,
+                               let cgColor = shapeLayer.fillColor,
+                               let nsColor = NSColor(cgColor: cgColor) {
+                                selectedImageColor = Color(nsColor)
+                            } else {
+                                selectedImageColor = Color.black
+                            }
                         }
                     }
                     else {
                         showEditType = .background
+                        if let cgColor = sideBarVM.svgVM?.svgRootLayer?.backgroundColor,
+                           let nsColor = NSColor(cgColor: cgColor) {
+                            selectedColor = Color(nsColor)
+                        } else {
+                            selectedColor = Color.clear
+                        }
+
                     }
                 }
             }
@@ -394,24 +416,24 @@ struct CanvasSidemenu: View {
     @State var showHowToUse = false
     var body: some View {
         VStack(spacing: 20) {
-            CanvasSidemenuItem(image: "Text", text: "Text", action: {
+            CanvasSidemenuItem(image: "Text", text: "Text", isselected: showTextEditor == .text, action: {
                 showTextEditor = .text
             })
-            CanvasSidemenuItem(image: "Image", text: "Image", action: {
+            CanvasSidemenuItem(image: "Image", text: "Image",isselected: showTextEditor == .image, action: {
                 showTextEditor = .image
             })
-            CanvasSidemenuItem(image: "Backgrounds", text: "Backgrounds", action: {
+            CanvasSidemenuItem(image: "Backgrounds", text: "Backgrounds",isselected: showTextEditor == .background, action: {
                 showTextEditor = .background
             })
-            CanvasSidemenuItem(image: "Neons", text: "Neons", action: {
+            CanvasSidemenuItem(image: "Neons", text: "Neons",isselected: false, action: {
                //Add action
             })
             .opacity(0)
-            CanvasSidemenuItem(image: "Designs", text: "Designs", action: {
+            CanvasSidemenuItem(image: "Designs", text: "Designs",isselected: false, action: {
                //Add action
             })
             .opacity(0)
-            CanvasSidemenuItem(image: "Calligraphy", text: "Caligraphy", action: {
+            CanvasSidemenuItem(image: "Calligraphy", text: "Caligraphy",isselected: false, action: {
                //Add action
             })
             .opacity(0)

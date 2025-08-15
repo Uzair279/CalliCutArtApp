@@ -487,7 +487,8 @@ class SVGCanvasNSView: NSView, ObservableObject {
         }
     }
     func changeShapeColor(_ color: NSColor, layer: CALayer?) {
-        guard let layer = layer,  let shapeLayer = layer as? CAShapeLayer else { return }
+        guard let layer = layer,  let shapeLayer = layer as? CAShapeLayer else { showAlert(title: "No Shape Layer Selected", message: "Please selected a shape layer")
+            return }
         
         let oldColor = NSColor(cgColor: shapeLayer.fillColor ?? NSColor.black.cgColor) ?? .clear
         shapeLayer.fillColor = color.cgColor
