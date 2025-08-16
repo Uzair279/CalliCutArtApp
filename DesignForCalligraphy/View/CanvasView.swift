@@ -139,11 +139,10 @@ struct TopBarView: View {
                                 .fill(Color("grey"))
                         )   
                     Spacer()
-                    ZStack {
+                    ZStack(alignment: .center) {
                         // Fixed Background Image
                         Image("canvas")
                             .resizable()
-                            .scaledToFit() // Ensures the image doesn't stretch
                             .frame(width: 500, height: 500) // Fixed size for consistency
                             .clipped()
                         
@@ -155,7 +154,7 @@ struct TopBarView: View {
                                     sideBarVM.svgVM?.loadSVG(url: svgPath)
                                 }
                             })
-                            .frame(width: 500, height: 400)
+                            .frame(width: 500, height: 500)
                             .clipped()
                             
                         } else {

@@ -10,6 +10,7 @@ struct ContentView: View {
                 .frame(minWidth: 1300, minHeight: 750)
         case .canvas:
             CanvasView(sideBarVM: viewModel, screenType: $screenType, svgURL: $svgURL)
+                .frame(minWidth: 1300, minHeight: 750)
         }
    
     }
