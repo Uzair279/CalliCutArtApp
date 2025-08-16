@@ -25,7 +25,7 @@ struct TopBarView: View {
     @State var showResetAlert: Bool = false
     @Binding var svgURL : URL?
     @State var selectedColor: Color = .white
-    @State var selectedImageColor: Color = .black
+    @State var selectedImageColor: Color = .white
     @State var selectedTextColor: Color = .black
     @State  var showEditType : EditSidemenu? = nil
     @State var selectedSize: CGFloat = 30
@@ -188,13 +188,13 @@ struct TopBarView: View {
                         }
                         else if type is CAShapeLayer {
                             showEditType = .image
-                            if let shapeLayer = type as? CAShapeLayer,
-                               let cgColor = shapeLayer.fillColor,
-                               let nsColor = NSColor(cgColor: cgColor) {
-                                selectedImageColor = Color(nsColor)
-                            } else {
-                                selectedImageColor = Color.black
-                            }
+//                            if let shapeLayer = type as? CAShapeLayer,
+//                               let cgColor = shapeLayer.fillColor,
+//                               let nsColor = NSColor(cgColor: cgColor) {
+//                                selectedImageColor = Color(nsColor)
+//                            } else {
+//                                selectedImageColor = Color.black
+//                            }
                         }
                     }
                     else {
@@ -421,7 +421,7 @@ struct CanvasSidemenu: View {
             CanvasSidemenuItem(image: "Text", text: "Text", isselected: showTextEditor == .text, action: {
                 showTextEditor = .text
             })
-            CanvasSidemenuItem(image: "Image", text: "Image",isselected: showTextEditor == .image, action: {
+            CanvasSidemenuItem(image: "Image", text: "Object",isselected: showTextEditor == .image, action: {
                 showTextEditor = .image
             })
             CanvasSidemenuItem(image: "Backgrounds", text: "Backgrounds",isselected: showTextEditor == .background, action: {

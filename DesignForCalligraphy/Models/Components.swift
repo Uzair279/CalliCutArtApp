@@ -119,6 +119,7 @@ struct ListItem: View {
                 }) {
                     Image("delete")
                         .frame(width: 21.66, height: 21.66)
+                        .background(Color("grey"))
                         .cornerRadius(1.77)
                 }
                 .buttonStyle(.plain)
