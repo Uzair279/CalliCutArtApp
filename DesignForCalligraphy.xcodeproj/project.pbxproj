@@ -41,7 +41,6 @@
 /* Begin PBXFileReference section */
 		4D7187902E2D53270050799B /* categories.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
 		4D7187922E2D56900050799B /* PremiumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumView.swift; sourceTree = "<group>"; };
-		4D7187942E2D63DA0050799B /* store.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = store.storekit; sourceTree = "<group>"; };
 		4D7187952E33F4470050799B /* SaveScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveScreenView.swift; sourceTree = "<group>"; };
 		4D71879B2E3E7ADA0050799B /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
 		4D71879C2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
@@ -124,7 +123,6 @@
 				4DF4A7872E0EFF1E00C269C4 /* Assets.xcassets */,
 				4DF4A7912E0EFF1E00C269C4 /* DesignForCalligraphy.entitlements */,
 				4DF4A7892E0EFF1E00C269C4 /* Preview Content */,
-				4D7187942E2D63DA0050799B /* store.storekit */,
 				70C33F742E4DE5C2002C1EBA /* StorageData.xcdatamodeld */,
 			);
 			path = DesignForCalligraphy;
