@@ -120,9 +120,9 @@ extension Product {
             let discount = (1 - (costPerWeek / basePrice)) * 100
             return String(format: "%.0f%% Off", max(discount, 0))
         case 3:
-            return "One Time"
+            return "Unlimited"
         default:
-            return "Standard"
+            return "Best"
         }
     }
     func planName(from productIDs: [String]) -> String {

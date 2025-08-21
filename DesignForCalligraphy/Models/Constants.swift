@@ -2,11 +2,12 @@ import Foundation
 import AppKit
 
 let isAppfree : Bool = false
-let appID = "11111111"
-let contactEmail = "mailto:support@example.com"
-let privacyPolicyLink = "https://yourdomain.com/privacyPolicy"
-let termsOfUseLink = "https://yourdomain.com/terms"
-let productIDs = ["com.newapp.weekly", "com.newapp.monthly", "com.newapp.yearly", "com.newapp.lifetime"]
+let appID = "6751298149"
+let contactEmail = "https://sites.google.com/view/cgapp/contact-us"
+let privacyPolicyLink = "https://sites.google.com/view/cgapp/privacy-policy"
+let termsOfUseLink = "https://sites.google.com/view/cgapp/terms-of-use"
+let agreementLink = "https://sites.google.com/view/cgapp/agreement-eula"
+let productIDs = ["weekly_sub_calligraphy_mac", "monthly_sub_calligraphy_mac", "yearly_sub_calligraphy_mac", "lifetime_inapp_calligraphy_mac"]
 var isProuctPro : Bool {
     if isAppfree {
         return true

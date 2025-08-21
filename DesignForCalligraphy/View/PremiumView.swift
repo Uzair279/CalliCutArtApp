@@ -170,13 +170,21 @@ struct SubscriptionOptionsView: View {
             }
             .padding(.top, 11)
             .buttonStyle(.plain)
-            Text("Subscription automatically renew unless canceled before the end of the current period. You won't be charged if you cancel during the trial period.")
-                .foregroundStyle(Color("premiumgrey"))
-                .font(.custom(Fonts.regular.rawValue, size: 12))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-                .padding(.top, 30)
+            ScrollView {
+                Text("Payment will be charged to your ITunes account at confirmation of purchase.Your subscription will automatically renew unless auto-renew is turned off at least 24-hours before the end of the current subscription period. Your account will be charged for renewal within 24-hours prior to the end of the current subscription period. Automatic renewals will cost the same price you were originally charged for the subscription. You can manage your subscriptions and turn off auto-renewal by going to your Account Settings on the App Store after purchase. Read our terms of service and Privacy Policy for more information.")
+                    .foregroundStyle(Color("premiumgrey"))
+                    .font(.custom(Fonts.regular.rawValue, size: 12))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                    
+            }
+            .frame(height: 30)
+            .padding(.top, 20)
             HStack(spacing: 15) {
+                if let url = URL(string: agreementLink) {
+                    Link("Agreement EULA", destination: url)
+                }
+                Text("|")
                 if let url = URL(string: termsOfUseLink) {
                     Link("Terms of Use", destination: url)
                 }
@@ -202,6 +210,19 @@ struct SubscriptionRowForProduct: View {
     let product: Product
     let isSelected: Bool
     let planType: String
+    var totalPriceText: String {
+           if let basePrice = numericPrice(from: product.displayPrice) {
+               let total = basePrice * 2
+               let formatter = NumberFormatter()
+               formatter.numberStyle = .currency
+               formatter.locale = Locale.current
+
+               return formatter.string(from: NSNumber(value: total)) ?? "\(total)"
+           } else {
+               return "Invalid price"
+           }
+       }
+
     var body: some View {
         HStack(spacing: 0) {
             Image(isSelected ? "selectedCircle" : "circle")
@@ -210,12 +231,42 @@ struct SubscriptionRowForProduct: View {
                 .frame(width: 24, height: 24)
                 .padding(.leading, 18)
             VStack(alignment: .leading, spacing: 10) {
-                Text(product.displayName == "" ? prodcutName : product.displayName)
-                    .foregroundStyle(.black)
-                    .font(.custom(Fonts.medium.rawValue, size: 18))
-                Text(product.displayPrice)
-                    .foregroundStyle(.black)
-                    .font(.custom(Fonts.bold.rawValue, size: 20))
+                if product.id == productIDs.last {
+                    HStack(spacing: 8) {
+                        Text(prodcutName)
+                            .foregroundStyle(.black)
+                            .font(.custom(Fonts.medium.rawValue, size: 18))
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Text("Was")
+                                    .foregroundStyle(.red)
+                                    .font(.custom(Fonts.regular.rawValue, size: 20))
+                                Text(totalPriceText)
+                                    .strikethrough(true, color: Color.red)
+                                    .foregroundStyle(.red)
+                                    .font(.custom(Fonts.regular.rawValue, size: 20))
+                            }
+                            HStack {
+                                Text("Now")
+                                    .foregroundStyle(Color("selectedColor"))
+                                    .font(.custom(Fonts.regular.rawValue, size: 20))
+                                Text(product.displayPrice)
+                                    .foregroundStyle(Color("selectedColor"))
+                                    .font(.custom(Fonts.regular.rawValue, size: 20))
+                            }
+                        }
+                    }
+                }
+                else {
+                    Text(prodcutName)
+                        .foregroundStyle(.black)
+                        .font(.custom(Fonts.medium.rawValue, size: 18))
+                }
+                if product.id != productIDs.last {
+                    Text(product.displayPrice)
+                        .foregroundStyle(.black)
+                        .font(.custom(Fonts.bold.rawValue, size: 20))
+                }
             }
             .padding(.leading, 20)
             Spacer()
@@ -236,6 +287,17 @@ struct SubscriptionRowForProduct: View {
                 .strokeBorder(isSelected ? Color("selectedColor") : Color("border"), lineWidth: 1)
         }
     }
+    func numericPrice(from priceString: String) -> Double? {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+
+        // Use the current locale if you don't know the currency locale,
+        // or specify one if you know it:
+        formatter.locale = Locale.current
+
+        return formatter.number(from: priceString)?.doubleValue
+    }
+
     func localizedSubscriptionPeriod(_ period: Product.SubscriptionPeriod) -> String {
         let unit: String
         switch period.unit {
