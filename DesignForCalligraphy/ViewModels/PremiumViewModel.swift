@@ -2,11 +2,17 @@ import SwiftUI
 import StoreKit
 
 class SubscriptionViewModel: ObservableObject {
-    @Published var products: [Product] = []
+    @Published
+       private(set) var products: [Product] = []
     @Published var selectedProduct: Product?
     @Published var isProductPurchased: Bool = false
     @Published var gifURL: URL? = nil
+    private var transactionUpdateTask: Task<Void, Never>? = nil
+    @Published
+       private(set) var purchasedProductIDs = Set<String>()
+    var foundActiveSubscription = false
     init() {
+        transactionUpdateTask = observeTransactionUpdates()
         self.downloadGif()
         Task {
             await checkPurchaseStatus()
@@ -24,27 +30,46 @@ class SubscriptionViewModel: ObservableObject {
             }
         }
     }
-
+    private func observeTransactionUpdates() -> Task<Void, Never> {
+        Task(priority: .background) { [unowned self] in
+            for await result in Transaction.updates {
+                print("transaction updated observed")
+                guard case .verified(let transaction) = result else {
+                    continue
+                }
+                
+                await checkPurchaseStatus()
+                await transaction.finish()
+            }
+        }
+    }
+    
     func checkPurchaseStatus() async {
         for await result in Transaction.currentEntitlements {
             guard case .verified(let transaction) = result else { continue }
-            
-            // Check for your product identifiers
-            
-            if productIDs.contains(transaction.productID) {
-                // ✅ User has an active entitlement
+
+            if transaction.revocationDate == nil {
                 await MainActor.run {
+                    foundActiveSubscription = true
+                    self.purchasedProductIDs.insert(transaction.productID)
+                    
                     self.isProductPurchased = true
+                    saveProStatusToCoreData(true)
                 }
-                saveProStatusToCoreData(true)
-                return
             }
         }
-        await MainActor.run {
-            self.isProductPurchased = false
+
+        // If no valid subscription found, set isProductPurchased = false
+        if !foundActiveSubscription {
+            await MainActor.run {
+                self.isProductPurchased = false
+            }
+            saveProStatusToCoreData(false)
         }
-        saveProStatusToCoreData(false)
     }
+
+
+
     func loadProducts() {
         Task {
             do {
@@ -71,7 +96,7 @@ class SubscriptionViewModel: ObservableObject {
         selectedProduct = product
     }
 
-    func purchaseSelected() {
+    func purchaseSelected(compeletion: @escaping () -> Void) {
         guard let product = selectedProduct else { return }
         Task {
             do {
@@ -80,15 +105,20 @@ class SubscriptionViewModel: ObservableObject {
                 case .success(_):
                     saveProStatusToCoreData(true)
                     await checkPurchaseStatus()
+                    compeletion()
                 case .userCancelled:
                     saveProStatusToCoreData(false)
+                    compeletion()
                 case .pending:
                     print(" Purchase pending")
+                    compeletion()
                 default:
                     saveProStatusToCoreData(false)
+                    compeletion()
                 }
             } catch {
                 saveProStatusToCoreData(false)
+                compeletion()
             }
         }
     }

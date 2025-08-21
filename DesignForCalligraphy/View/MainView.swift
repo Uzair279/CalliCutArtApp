@@ -76,6 +76,8 @@ struct GridView: View {
                                     .scaledToFill()
                             } placeholder: {
                                 ProgressView()
+                                    .frame(width: 148, height: 148)
+                                    .background(Color.black.opacity(0.3))
                             }
                             .frame(width: 148, height: 148)
                             .background(Color.white)

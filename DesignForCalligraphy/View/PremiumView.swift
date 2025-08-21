@@ -5,47 +5,57 @@ import SDWebImageSwiftUI
 struct SubscriptionView: View {
     @EnvironmentObject var viewModel : SubscriptionViewModel
     @State var selectedPlanID = "Monthly"
+    @State var showLoader: Bool = false
     @Binding var showPremium : Bool
     var body: some View {
-        HStack(spacing: 0) {
-            // Left Side Features
-            ZStack {
-                if let gifURL = viewModel.gifURL {
-                    AnimatedImage(url: gifURL)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 301, height: 671)
-                        .clipped()
-                } else {
-                    Image("girl")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 301, height: 671)
-                }
-                FeaturesListView()
-                Image("cross")
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .offset(x: -120, y: -280)
-                    .onTapGesture {
-                        showPremium = false
+        ZStack {
+            HStack(spacing: 0) {
+                // Left Side Features
+                ZStack {
+                    if let gifURL = viewModel.gifURL {
+                        AnimatedImage(url: gifURL)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 301, height: 671)
+                            .clipped()
+                    } else {
+                        Image("girl")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 301, height: 671)
                     }
+                    FeaturesListView()
+                    Image("cross")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .offset(x: -120, y: -280)
+                        .onTapGesture {
+                            showPremium = false
+                        }
+                }
+                .frame(width: 301)
+                // Right Side Subscription Options
+                SubscriptionOptionsView(viewModel: viewModel, selectedPlanID: $selectedPlanID, showLoader: $showLoader)
+                    .frame(width: 518)
             }
-            .frame(width: 301)
-            // Right Side Subscription Options
-            SubscriptionOptionsView(viewModel: viewModel, selectedPlanID: $selectedPlanID)
-                .frame(width: 518)
-        }
-        .onChange(of: viewModel.isProductPurchased) { newVal in
-            if newVal {
-                showPremium = false
+            .onChange(of: viewModel.isProductPurchased) { newVal in
+                if newVal {
+                    showPremium = false
+                }
+            }
+            .frame(width: 819, height: 671)
+            .background(.white)
+            .onAppear {
+                viewModel.loadProducts()
+            }
+            if showLoader {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.black.opacity(0.3))
+                    .edgesIgnoringSafeArea(.all)
             }
         }
-        .frame(width: 819, height: 671)
-        .background(.white)
-        .onAppear {
-            viewModel.loadProducts()
-        }
+    
     }
 }
 
@@ -94,6 +104,7 @@ struct FeatureRow: View {
 struct SubscriptionOptionsView: View {
     @ObservedObject var viewModel: SubscriptionViewModel
     @Binding var selectedPlanID: String
+    @Binding var showLoader: Bool
     let options: [SubscriptionOption] = [
         .init(title: "Weekly", price: "$___", label: "Basic"),
         .init(title: "Monthly", price: "$___", label: "Free trial"),
@@ -158,7 +169,10 @@ struct SubscriptionOptionsView: View {
                     showAlert(title: "Error!", message: "There is some issue with the product please try again")
                 }
                 else {
-                    viewModel.purchaseSelected()
+                    showLoader = true
+                    viewModel.purchaseSelected() {
+                        showLoader = false
+                    }
                 }
             }) {
                 Text("Continue")
