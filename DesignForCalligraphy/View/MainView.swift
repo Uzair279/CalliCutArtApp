@@ -85,13 +85,13 @@ struct GridView: View {
                                     .scaledToFit()
                             } placeholder: {
                                 ProgressView()
-                                    .frame(width: 148, height: 148)
+                                    .frame(width: 148, height: 199)
                                     .background(Color.black.opacity(0.3))
                             }
                             
                             .frame(width: 148, height: 148)
-//                            if index > 2 && !isProuctPro {
-//                                if !premiumVM.isProductPurchased {
+                            if index > 2 && !isProuctPro {
+                                if !premiumVM.isProductPurchased {
                             VStack {
                                 HStack {
                                     Spacer()
@@ -100,8 +100,8 @@ struct GridView: View {
                                 }
                                 Spacer()
                             }
-//                                }
-//                            }
+                                }
+                            }
                             VStack {
                                 Spacer()
                                 HStack(spacing: 10) {

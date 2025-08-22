@@ -79,6 +79,7 @@ struct HomeView: View {
                                         try fileManager.moveItem(at: localSVGURL, to: saveURL)
                                         
                                     } catch {
+                                        showAlert(title: "Error", message: "File not Exist or unable to save right now")
                                         print("Failed to save file: \(error.localizedDescription)")
                                     }
                                 }
@@ -104,6 +105,7 @@ struct HomeView: View {
                                                 try fileManager.moveItem(at: fileURL, to: saveURL)
                                                 
                                             } catch {
+                                                showAlert(title: "Error", message: "File not Exist or unable to save right now")
                                                 print("Failed to save file: \(error.localizedDescription)")
                                             }
                                             
