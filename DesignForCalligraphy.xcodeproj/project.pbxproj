@@ -35,6 +35,7 @@
 		4DF4A7A12E0F0C3900C269C4 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7A02E0F0C3900C269C4 /* Models.swift */; };
 		4DF4A7A32E0F0C5600C269C4 /* SidebarMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7A22E0F0C5600C269C4 /* SidebarMenuViewModel.swift */; };
 		4DF4A7A52E0F15FE00C269C4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7A42E0F15FE00C269C4 /* MainView.swift */; };
+		704ECD432E58D3D80065B093 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704ECD422E58D3D30065B093 /* AppDelegate.swift */; };
 		70C33F762E4DE5C2002C1EBA /* StorageData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 70C33F742E4DE5C2002C1EBA /* StorageData.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 		4DF4A7A02E0F0C3900C269C4 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		4DF4A7A22E0F0C5600C269C4 /* SidebarMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarMenuViewModel.swift; sourceTree = "<group>"; };
 		4DF4A7A42E0F15FE00C269C4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		704ECD422E58D3D30065B093 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70C33F752E4DE5C2002C1EBA /* StorageData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StorageData.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,6 +159,7 @@
 		4DF4A7982E0F08EB00C269C4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				704ECD422E58D3D30065B093 /* AppDelegate.swift */,
 				4DF4A79A2E0F090700C269C4 /* Enums.swift */,
 				4DF4A7A02E0F0C3900C269C4 /* Models.swift */,
 				4DCD49582E100518009F4986 /* Constants.swift */,
@@ -277,6 +280,7 @@
 				4D7187AE2E48FCFE0050799B /* HowToUseView.swift in Sources */,
 				4DF4A7842E0EFF1C00C269C4 /* DesignForCalligraphyApp.swift in Sources */,
 				4DF4A79D2E0F091F00C269C4 /* Sidemenu.swift in Sources */,
+				704ECD432E58D3D80065B093 /* AppDelegate.swift in Sources */,
 				4D7187932E2D56900050799B /* PremiumView.swift in Sources */,
 				4DCD49592E100518009F4986 /* Constants.swift in Sources */,
 			);

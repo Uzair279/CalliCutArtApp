@@ -60,6 +60,61 @@ struct HomeView: View {
 
                             }
 
+                        }, downloadAction: { newItem in
+                            let svgDownloadURL = generateSVGURL(for: selectedCategoryID, subcategoryID: selectedSubcategoryID, itemID: newItem)
+                            let localSVGURL = localSVGPath(categoryID: selectedCategoryID, subcategoryID: selectedSubcategoryID, itemID: newItem)
+
+                            if checkIfFileExists(at: localSVGURL) {
+                                promptUserForSaveLocation(defaultFileName: "Calligraphy_\(newItem).svg") { saveURL in
+                                    guard let saveURL = saveURL else {
+                                        print(" User cancelled save")
+                                        return
+                                    }
+                                    
+                                    do {
+                                        let fileManager = FileManager.default
+                                        if fileManager.fileExists(atPath: saveURL.path) {
+                                            try fileManager.removeItem(at: saveURL)
+                                        }
+                                        try fileManager.moveItem(at: localSVGURL, to: saveURL)
+                                        
+                                    } catch {
+                                        print("Failed to save file: \(error.localizedDescription)")
+                                    }
+                                }
+                                
+                            } else {
+                                promptUserForSaveLocation(defaultFileName: "calligraphy_\(newItem).svg") { saveURL in
+                                       guard let saveURL = saveURL else {
+                                           print("❌ User cancelled save")
+                                           return
+                                       }
+                                showLoader = true
+                                    downloadSVG(from: svgDownloadURL, categoryID: selectedCategoryID, subcategoryID: selectedSubcategoryID, itemID: newItem) { result in
+                                        DispatchQueue.main.async {
+                                            showLoader = false
+                                        }
+                                        switch result {
+                                        case .success(let fileURL):
+                                            do {
+                                                let fileManager = FileManager.default
+                                                if fileManager.fileExists(atPath: saveURL.path) {
+                                                    try fileManager.removeItem(at: saveURL)
+                                                }
+                                                try fileManager.moveItem(at: fileURL, to: saveURL)
+                                                
+                                            } catch {
+                                                print("Failed to save file: \(error.localizedDescription)")
+                                            }
+                                            
+                                            
+                                        case .failure(let error):
+                                            print("Failed to download SVG: \(error.localizedDescription)")
+                                        }
+                                    }
+                                }
+
+                            }
                         }
                     )
                 } else {
@@ -96,7 +151,22 @@ struct HomeView: View {
             }
         }
     }
-
+    func promptUserForSaveLocation(defaultFileName: String = "image.svg",
+                                   completion: @escaping (URL?) -> Void) {
+        let savePanel = NSSavePanel()
+        savePanel.title = "Save SVG File"
+        savePanel.nameFieldStringValue = defaultFileName
+        savePanel.allowedContentTypes = [.svg] // Requires macOS 12+ (UniformTypeIdentifiers)
+        savePanel.canCreateDirectories = true
+        
+        savePanel.begin { response in
+            if response == .OK, let url = savePanel.url {
+                completion(url)
+            } else {
+                completion(nil)
+            }
+        }
+    }
 
     func localSVGPath(categoryID: String, subcategoryID: String, itemID: String) -> URL {
         let fileManager = FileManager.default
