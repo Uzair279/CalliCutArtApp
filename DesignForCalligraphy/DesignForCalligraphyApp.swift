@@ -3,7 +3,7 @@ import SwiftUI
 
 @main
 struct DesignForCalligraphyApp: App {
-    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+//    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var viewModel = SubscriptionViewModel()
     @State var isFirstTime: Bool = false
     var body: some Scene {
@@ -26,11 +26,10 @@ struct DesignForCalligraphyApp: App {
             })
         }
         .commands {
-                  CommandGroup(replacing: .newItem) {}   // disables ⌘N (New Window)// 🔑 removes system Help menu
+//                  CommandGroup(replacing: .newItem) {}   // disables ⌘N (New Window)// 🔑 removes system Help menu
                   
                   CommandMenu("Support") {                 // your custom Help
                       Button("Rate Us") {
-                          let appID = "1234567890" // replace with your App Store ID
                           if let url = URL(string: "https://apps.apple.com/app/id\(appID)?action=write-review&mt=12") {
                               NSWorkspace.shared.open(url)
                           }
