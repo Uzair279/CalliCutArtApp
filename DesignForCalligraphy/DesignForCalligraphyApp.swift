@@ -44,3 +44,116 @@ struct DesignForCalligraphyApp: App {
               }
     }
 }
+struct ContentView1: View {
+    @State private var selectedItem: SidebarItemType = .aiSVGGenerator
+    var body: some View {
+        HStack {
+            VStack {
+                HStack(spacing: 8.5) {
+                    Image("sidemenuTopIcon")
+                    Text("AI SVG Generator")
+                        .foregroundStyle(Color("textColor"))
+                        .font(.system(size: 16, weight: .bold))
+                }
+                ScrollView {
+                    ForEach(SidebarItemType.allCases.filter { $0.isSelectable }) { item in
+                        SideItem(
+                            imageName: item.iconName,
+                            text: item.title,
+                            isSelected: selectedItem == item
+                        )
+                        .onTapGesture {
+                            selectedItem = item
+                        }
+                    }
+                }
+                .padding(.top, 28)
+                Spacer()
+                ForEach(SidebarItemType.allCases.filter { !$0.isSelectable }) { item in
+                    SideItem(
+                        imageName: item.iconName,
+                        text: item.title,
+                        isSelected: false
+                    )
+                    .onTapGesture {
+                        print("\(item.title) tapped")
+                    }
+                }
+                
+                
+                Image("premiumSideIcon")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 196, height: 166)
+            }
+            .padding(.top, 32)
+            .padding(.bottom, 20)
+            .frame(width: 247)
+            .background(.white)
+            .shadow(color: Color(.sRGB, red: 155, green: 155, blue: 155, opacity: 0.25), radius: 10.1, x: 4, y: 0)
+            MainAIView(screenType: $selectedItem) {
+                //MARK: History
+            }
+        }
+        
+    }
+}
+struct SideItem : View {
+    let imageName: String
+    let text: String
+    let isSelected: Bool
+    var body: some View {
+        HStack {
+            Image(imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 24, height: 24)
+                .padding(.leading, 28)
+            Text(text)
+                .font(.system(size: 16, weight: isSelected ? .bold : .medium))
+                .foregroundStyle(Color("textColor"))
+            Spacer()
+            if isSelected {
+                Rectangle()
+                    .fill(Color(.sRGB, red: 151/255, green: 77/255, blue: 208/255, opacity: 1.0))
+                    .frame(width: 3, height: 48)
+            }
+            
+        }
+        .frame(height: 48)
+        .background(isSelected ? Color("newSelection") : .white)
+    }
+}
+struct MainAIView: View {
+    @Binding var screenType: SidebarItemType
+    let historyAction: () -> Void
+    var body: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Button(action: historyAction) {
+                    Image("historyIcon")
+                        .padding(.trailing, 48)
+                        .padding(.top, 22)
+                }.buttonStyle(.plain)
+            }
+            switch screenType {
+            case .aiSVGGenerator:
+                AISVGGeneratorView()
+            case .explore:
+                AISVGGeneratorView()
+            case .aiTShirtGenerator:
+                AITShirtGeneratorView()
+            case .aiFontFinder:
+                AIFontFinderView()
+            case .rateUs:
+                EmptyView()
+            case .support:
+                EmptyView()
+            }
+        }
+        .padding(.bottom, 29)
+        .background(Color(.sRGB, red: 251/255, green: 251/255, blue: 251/255, opacity: 1.0))
+    }
+}
+

@@ -54,9 +54,9 @@ struct SidebarItem: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 24, height: 24)
-                .foregroundStyle(isSelected ? Color("selectedColor") : Color.black)
+                .foregroundStyle(isSelected ? Color("purple") : Color.black)
             Text(iconAndLabel)
-                .foregroundStyle(isSelected ? Color("selectedColor") : Color.black)
+                .foregroundStyle(isSelected ? Color("purple") : Color.black)
                 .font(.custom(Fonts.medium.rawValue, size: 16))
             Spacer()
         }

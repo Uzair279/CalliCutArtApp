@@ -38,8 +38,8 @@ struct HowToUseView: View {
             HStack {
                 ForEach(screenTypes, id: \.self) { type in
                     Circle()
-                        .stroke(useScreenType == type ? Color("selectedColor") : .clear, lineWidth: 1)
-                        .background(Circle().fill(Color("selectedColor")).frame(width: 10, height: 10))
+                        .stroke(useScreenType == type ? Color("purple") : .clear, lineWidth: 1)
+                        .background(Circle().fill(Color("purple")).frame(width: 10, height: 10))
                         .frame(width: 20, height: 20)
                 }
             }

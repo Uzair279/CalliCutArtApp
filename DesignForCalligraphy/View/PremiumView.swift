@@ -178,7 +178,7 @@ struct SubscriptionOptionsView: View {
                 Text("Continue")
                     .font(.custom(Fonts.medium.rawValue, size: 16))
                     .frame(width: 458, height: 42)
-                    .background(Color("selectedColor"))
+                    .background(Color("purple"))
                     .foregroundColor(.white)
                     .cornerRadius(100)
             }
@@ -262,10 +262,10 @@ struct SubscriptionRowForProduct: View {
                             }
                             HStack {
                                 Text("Now")
-                                    .foregroundStyle(Color("selectedColor"))
+                                    .foregroundStyle(Color("purple"))
                                     .font(.custom(Fonts.regular.rawValue, size: 20))
                                 Text(product.displayPrice)
-                                    .foregroundStyle(Color("selectedColor"))
+                                    .foregroundStyle(Color("purple"))
                                     .font(.custom(Fonts.regular.rawValue, size: 20))
                             }
                         }
@@ -298,7 +298,7 @@ struct SubscriptionRowForProduct: View {
         .cornerRadius(12)
         .overlay {
             RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(isSelected ? Color("selectedColor") : Color("border"), lineWidth: 1)
+                .strokeBorder(isSelected ? Color("purple") : Color("border"), lineWidth: 1)
         }
     }
     func numericPrice(from priceString: String) -> Double? {
@@ -372,7 +372,7 @@ struct SubscriptionRow: View {
         .cornerRadius(12)
         .overlay {
             RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(isSelected ? Color("selectedColor") : Color("border"), lineWidth: 1)
+                .strokeBorder(isSelected ? Color("purple") : Color("border"), lineWidth: 1)
         }
     }
 }

@@ -49,3 +49,7 @@ struct UserSaveModel: Codable {
 struct IsFirstTime: Codable {
     var isFirsttime: Bool
 }
+struct SidebarItemModel: Identifiable {
+    let id = UUID()
+    let type: SidebarItemType
+}

@@ -68,7 +68,7 @@ struct TopBarView: View {
                         ImportExportView(text: "Import", textColor: .black, bgColor: "grey", action: {
                             sideBarVM.svgVM?.addImageLayerFromFinder()
                         })
-                        ImportExportView(text: "Export", textColor: .white, bgColor: "selectedColor", action: {
+                        ImportExportView(text: "Export", textColor: .white, bgColor: "purple", action: {
                             sideBarVM.svgVM?.selectedLayer = nil
                            showSaveScreen = true
                         })
@@ -294,7 +294,7 @@ struct TopBarView: View {
                             .padding(.horizontal, 30)
                             .padding(.vertical, 10)
                             .frame(maxWidth: .infinity)
-                            .background(textEditorText.isEmpty ? Color.gray.opacity(0.4) : Color("selectedColor"))
+                            .background(textEditorText.isEmpty ? Color.gray.opacity(0.4) : Color("purple"))
                             .foregroundColor(.white)
                             .cornerRadius(8)
                             .animation(.easeInOut(duration: 0.2), value: textEditorText)
@@ -527,7 +527,7 @@ struct TextEditView: View {
                 .font(.custom(Fonts.bold.rawValue, size: 16))
             ZStack {
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(Color("selectedColor"))
+                    .fill(Color("purple"))
                     .frame(width: 160, height: 37)
                 Text("+Add Text")
                     .foregroundStyle(.white)

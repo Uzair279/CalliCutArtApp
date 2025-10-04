@@ -27,7 +27,6 @@
 		4DED96972E119A1C00A68B86 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DED96962E119A1C00A68B86 /* SVGKit */; };
 		4DF4A7842E0EFF1C00C269C4 /* DesignForCalligraphyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7832E0EFF1C00C269C4 /* DesignForCalligraphyApp.swift */; };
 		4DF4A7862E0EFF1C00C269C4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7852E0EFF1C00C269C4 /* ContentView.swift */; };
-		4DF4A7882E0EFF1E00C269C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DF4A7872E0EFF1E00C269C4 /* Assets.xcassets */; };
 		4DF4A78B2E0EFF1E00C269C4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DF4A78A2E0EFF1E00C269C4 /* Preview Assets.xcassets */; };
 		4DF4A79B2E0F090700C269C4 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A79A2E0F090700C269C4 /* Enums.swift */; };
 		4DF4A79D2E0F091F00C269C4 /* Sidemenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A79C2E0F091F00C269C4 /* Sidemenu.swift */; };
@@ -35,6 +34,13 @@
 		4DF4A7A12E0F0C3900C269C4 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7A02E0F0C3900C269C4 /* Models.swift */; };
 		4DF4A7A32E0F0C5600C269C4 /* SidebarMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7A22E0F0C5600C269C4 /* SidebarMenuViewModel.swift */; };
 		4DF4A7A52E0F15FE00C269C4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF4A7A42E0F15FE00C269C4 /* MainView.swift */; };
+		700F89AA2E8D884A00D9E5DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 700F89A92E8D884A00D9E5DA /* Assets.xcassets */; };
+		700F89AD2E90E14800D9E5DA /* AISVGGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89AC2E90E13E00D9E5DA /* AISVGGeneratorView.swift */; };
+		700F89AF2E90E16E00D9E5DA /* AIFontFinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89AE2E90E16600D9E5DA /* AIFontFinderView.swift */; };
+		700F89B12E90E17D00D9E5DA /* AITShirtGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89B02E90E17200D9E5DA /* AITShirtGeneratorView.swift */; };
+		700F89B32E90E19600D9E5DA /* PromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89B22E90E18F00D9E5DA /* PromptView.swift */; };
+		700F89B52E90E1C800D9E5DA /* SVGSaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89B42E90E1C000D9E5DA /* SVGSaveView.swift */; };
+		700F89B72E90E47C00D9E5DA /* TShirtDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89B62E90E47600D9E5DA /* TShirtDownload.swift */; };
 		704ECD432E58D3D80065B093 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704ECD422E58D3D30065B093 /* AppDelegate.swift */; };
 		70C33F762E4DE5C2002C1EBA /* StorageData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 70C33F742E4DE5C2002C1EBA /* StorageData.xcdatamodeld */; };
 /* End PBXBuildFile section */
@@ -60,7 +66,6 @@
 		4DF4A7802E0EFF1C00C269C4 /* DesignForCalligraphy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DesignForCalligraphy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DF4A7832E0EFF1C00C269C4 /* DesignForCalligraphyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignForCalligraphyApp.swift; sourceTree = "<group>"; };
 		4DF4A7852E0EFF1C00C269C4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		4DF4A7872E0EFF1E00C269C4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4DF4A78A2E0EFF1E00C269C4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4DF4A7912E0EFF1E00C269C4 /* DesignForCalligraphy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DesignForCalligraphy.entitlements; sourceTree = "<group>"; };
 		4DF4A79A2E0F090700C269C4 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
@@ -69,6 +74,13 @@
 		4DF4A7A02E0F0C3900C269C4 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		4DF4A7A22E0F0C5600C269C4 /* SidebarMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarMenuViewModel.swift; sourceTree = "<group>"; };
 		4DF4A7A42E0F15FE00C269C4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		700F89A92E8D884A00D9E5DA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		700F89AC2E90E13E00D9E5DA /* AISVGGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AISVGGeneratorView.swift; sourceTree = "<group>"; };
+		700F89AE2E90E16600D9E5DA /* AIFontFinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIFontFinderView.swift; sourceTree = "<group>"; };
+		700F89B02E90E17200D9E5DA /* AITShirtGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITShirtGeneratorView.swift; sourceTree = "<group>"; };
+		700F89B22E90E18F00D9E5DA /* PromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptView.swift; sourceTree = "<group>"; };
+		700F89B42E90E1C000D9E5DA /* SVGSaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVGSaveView.swift; sourceTree = "<group>"; };
+		700F89B62E90E47600D9E5DA /* TShirtDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TShirtDownload.swift; sourceTree = "<group>"; };
 		704ECD422E58D3D30065B093 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70C33F752E4DE5C2002C1EBA /* StorageData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StorageData.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -122,8 +134,8 @@
 				4DF4A7982E0F08EB00C269C4 /* Models */,
 				4DF4A7972E0F08E100C269C4 /* View */,
 				4DF4A7832E0EFF1C00C269C4 /* DesignForCalligraphyApp.swift */,
-				4DF4A7872E0EFF1E00C269C4 /* Assets.xcassets */,
 				4DF4A7912E0EFF1E00C269C4 /* DesignForCalligraphy.entitlements */,
+				700F89A92E8D884A00D9E5DA /* Assets.xcassets */,
 				4DF4A7892E0EFF1E00C269C4 /* Preview Content */,
 				70C33F742E4DE5C2002C1EBA /* StorageData.xcdatamodeld */,
 			);
@@ -141,6 +153,7 @@
 		4DF4A7972E0F08E100C269C4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				700F89AB2E90E13500D9E5DA /* NewAI */,
 				4DF4A7852E0EFF1C00C269C4 /* ContentView.swift */,
 				4DF4A79C2E0F091F00C269C4 /* Sidemenu.swift */,
 				4DF4A79E2E0F09D600C269C4 /* SubSidemenu.swift */,
@@ -177,6 +190,19 @@
 				4D7187A92E3F95260050799B /* PremiumViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		700F89AB2E90E13500D9E5DA /* NewAI */ = {
+			isa = PBXGroup;
+			children = (
+				700F89B62E90E47600D9E5DA /* TShirtDownload.swift */,
+				700F89B42E90E1C000D9E5DA /* SVGSaveView.swift */,
+				700F89B22E90E18F00D9E5DA /* PromptView.swift */,
+				700F89B02E90E17200D9E5DA /* AITShirtGeneratorView.swift */,
+				700F89AE2E90E16600D9E5DA /* AIFontFinderView.swift */,
+				700F89AC2E90E13E00D9E5DA /* AISVGGeneratorView.swift */,
+			);
+			path = NewAI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,9 +275,9 @@
 				4D71879F2E3E7ADA0050799B /* SF-Pro-Text-Bold.otf in Resources */,
 				4D7187A02E3E7ADA0050799B /* SF-Pro-Text-Medium.otf in Resources */,
 				4D7187912E2D53270050799B /* categories.json in Resources */,
+				700F89AA2E8D884A00D9E5DA /* Assets.xcassets in Resources */,
 				4D71879E2E3E7ADA0050799B /* SF-Pro-Text-Regular.otf in Resources */,
 				4D7187B02E4906BF0050799B /* zoom.gif in Resources */,
-				4DF4A7882E0EFF1E00C269C4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,11 +291,14 @@
 				4DF4A7A32E0F0C5600C269C4 /* SidebarMenuViewModel.swift in Sources */,
 				4DCD495F2E1014F8009F4986 /* Components.swift in Sources */,
 				4DF4A7A52E0F15FE00C269C4 /* MainView.swift in Sources */,
+				700F89AF2E90E16E00D9E5DA /* AIFontFinderView.swift in Sources */,
 				70C33F762E4DE5C2002C1EBA /* StorageData.xcdatamodeld in Sources */,
 				4D7187962E33F4470050799B /* SaveScreenView.swift in Sources */,
 				4D7187AA2E3F95260050799B /* PremiumViewModel.swift in Sources */,
 				4D7187A82E3F94DB0050799B /* CoreDataManager.swift in Sources */,
+				700F89B32E90E19600D9E5DA /* PromptView.swift in Sources */,
 				4DCD495B2E10103C009F4986 /* CanvasView.swift in Sources */,
+				700F89B52E90E1C800D9E5DA /* SVGSaveView.swift in Sources */,
 				4DF4A79F2E0F09D600C269C4 /* SubSidemenu.swift in Sources */,
 				4DF4A7862E0EFF1C00C269C4 /* ContentView.swift in Sources */,
 				4DCD495D2E10105D009F4986 /* HomeView.swift in Sources */,
@@ -277,12 +306,15 @@
 				4DED96882E1126FB00A68B86 /* SVGView.swift in Sources */,
 				4DF4A79B2E0F090700C269C4 /* Enums.swift in Sources */,
 				4DF4A7A12E0F0C3900C269C4 /* Models.swift in Sources */,
+				700F89B72E90E47C00D9E5DA /* TShirtDownload.swift in Sources */,
+				700F89B12E90E17D00D9E5DA /* AITShirtGeneratorView.swift in Sources */,
 				4D7187AE2E48FCFE0050799B /* HowToUseView.swift in Sources */,
 				4DF4A7842E0EFF1C00C269C4 /* DesignForCalligraphyApp.swift in Sources */,
 				4DF4A79D2E0F091F00C269C4 /* Sidemenu.swift in Sources */,
 				704ECD432E58D3D80065B093 /* AppDelegate.swift in Sources */,
 				4D7187932E2D56900050799B /* PremiumView.swift in Sources */,
 				4DCD49592E100518009F4986 /* Constants.swift in Sources */,
+				700F89AD2E90E14800D9E5DA /* AISVGGeneratorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

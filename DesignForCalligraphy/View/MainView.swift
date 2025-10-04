@@ -10,9 +10,6 @@ struct MainView: View {
     var body: some View {
         VStack {
             HStack {
-                Text("Designs for Calligraphy")
-                    .foregroundStyle(.black)
-                    .font(.custom(Fonts.bold.rawValue, size: 20))
                 Spacer()
                 Button(action: {
                     addNew()
@@ -22,18 +19,39 @@ struct MainView: View {
                             .foregroundStyle(.white)
                             .font(.custom(Fonts.medium.rawValue, size: 16))
                     }
-                    .frame(width: 123, height: 42)
-                    .background(Color("selectedColor"))
-                    .cornerRadius(100)
+                    .frame(width: 142, height: 48)
+                    .background(Color("purple"))
+                    .cornerRadius(12)
                 }
                 .buttonStyle(.plain)
                 .opacity(0)
             }
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color("purple"))
+                .frame(height: 177)
+                .overlay(
+                    VStack(spacing: 12) {
+                        Text("Explore More!")
+                            .font(.system(size: 32, weight: .semibold))
+                            .foregroundColor(.white)
+                            .padding(.top, 20)
+                        Text("Explore our gallery to find a selection of SVG crafted by our free members. They accessible for download by everyone.")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 24)
+                )
+                .padding(.horizontal, 48)
+            TabMenuView()
+                .offset(y: -60)
             GridView(itemCount: itemCount, categoryID: categoryID, subcategoryID: subcategoryID) { str in
                 grdiAction(str)
             } downloadAction: { newStr in
                 downloadAction(newStr)
             }
+            .offset(y: -40)
             Spacer()
         }
         .padding(20)
@@ -51,12 +69,12 @@ struct GridView: View {
     let downloadAction: (String) -> Void
     @State private var showSubscriptionSheet = false
     let columns = [
-        GridItem(.adaptive(minimum: 148, maximum: 148), spacing: 12)
+        GridItem(.adaptive(minimum: 148, maximum: 148), spacing: 27)
     ]
 
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 12) {
+            LazyVGrid(columns: columns, spacing: 32) {
                 ForEach(0..<itemCount, id: \.self) { index in
                     Button(action: {
                         
@@ -109,7 +127,7 @@ struct GridView: View {
                                     Button(action:{
                                         downloadAction("\(index)")
                                     }) {
-                                        Image("download")
+                                        Image("newDownload")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 35, height: 23)
@@ -119,10 +137,11 @@ struct GridView: View {
                                     Button(action:{
                                         action("\(index)")
                                     }) {
-                                        Image("Edit")
+                                        Image("newEdit")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 35, height: 23)
+                
                                     }
                                     .buttonStyle(.plain)
                                     Spacer()
@@ -148,5 +167,165 @@ struct GridView: View {
         let cat = categoryID.lowercased()
         let subCat = subcategoryID.lowercased()
         return "\(baseURL)/\(cat)/thumbnails/\(subCat)/thumbnail\(itemID).png"
+    }
+}
+
+
+
+struct TabMenuView: View {
+    @State private var selectedTab: TabItem = .calligraphy
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            ForEach(Array(TabItem.allCases.enumerated()), id: \.1) { index, tab in
+                let isFirst = index == 0
+                let isLast = index == TabItem.allCases.count - 1
+                VStack(spacing: 6) {
+                    tab.icon
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(selectedTab == tab ? .white : .gray)
+                    
+                    Text(tab.title)
+                        .font(.system(size: 14))
+                        .foregroundColor(selectedTab == tab ? .white : .gray)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(
+                    selectedTab == tab ? Color("purple") : Color.white
+                )
+                .overlay(
+                    // ✅ Stroke only for selected
+                    Group {
+                        if selectedTab == tab {
+                            RoundedCornersShape(
+                                radius: 50,
+                                corners: cornerMask(isFirst: isFirst, isLast: isLast)
+                            )
+                            .stroke(Color("lightPurple"), lineWidth: 4)
+                        }
+                    }
+                )
+                .clipShape(
+                    RoundedCornersShape(
+                        radius: 50,
+                        corners: cornerMask(isFirst: isFirst, isLast: isLast)
+                    )
+                )
+
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    selectedTab = tab
+                }
+                if tab != TabItem.allCases.last! {
+                    Divider()
+                }
+               
+            }
+        }
+        .frame(width: 744, height: 95)
+        .background(Color.white)
+        .cornerRadius(50)
+        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 0)
+    }
+    private func cornerMask(isFirst: Bool, isLast: Bool) -> CACornerMask {
+           switch (isFirst, isLast) {
+           case (true, false): return [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+           case (false, true): return [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+           default: return []
+           }
+       }
+}
+
+enum TabItem: CaseIterable {
+    case calligraphy, cutflies, stickers, monogram, shapes
+    
+    var title: String {
+        switch self {
+        case .calligraphy: return "Calligraphy"
+        case .cutflies: return "Cutflies"
+        case .stickers: return "Stickers"
+        case .monogram: return "Monogram"
+        case .shapes: return "Shapes"
+        }
+    }
+    
+    var icon: Image {
+        switch self {
+        case .calligraphy: return Image(systemName: "pencil") // placeholder
+        case .cutflies: return Image(systemName: "square.on.square")
+        case .stickers: return Image(systemName: "face.smiling")
+        case .monogram: return Image(systemName: "gearshape")
+        case .shapes: return Image(systemName: "circle.hexagonpath")
+        }
+    }
+}
+
+
+
+struct RoundedCornersShape: Shape {
+    var radius: CGFloat
+    var corners: CACornerMask   // Use Core Animation's mask instead of NSRectCorner
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+
+        let tl = corners.contains(.layerMinXMinYCorner)
+        let tr = corners.contains(.layerMaxXMinYCorner)
+        let bl = corners.contains(.layerMinXMaxYCorner)
+        let br = corners.contains(.layerMaxXMaxYCorner)
+
+        let width = rect.width
+        let height = rect.height
+
+        // Start at bottom-left
+        path.move(to: CGPoint(x: rect.minX + (bl ? radius : 0), y: rect.minY))
+
+        // Bottom edge
+        if br {
+            path.addLine(to: CGPoint(x: rect.maxX - radius, y: rect.minY))
+            path.addRelativeArc(center: CGPoint(x: rect.maxX - radius, y: rect.minY + radius),
+                                radius: radius,
+                                startAngle: Angle(degrees: 270),
+                                delta: Angle(degrees: 90))
+        } else {
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+        }
+
+        // Right edge
+        if tr {
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - radius))
+            path.addRelativeArc(center: CGPoint(x: rect.maxX - radius, y: rect.maxY - radius),
+                                radius: radius,
+                                startAngle: Angle(degrees: 0),
+                                delta: Angle(degrees: 90))
+        } else {
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        }
+
+        // Top edge
+        if tl {
+            path.addLine(to: CGPoint(x: rect.minX + radius, y: rect.maxY))
+            path.addRelativeArc(center: CGPoint(x: rect.minX + radius, y: rect.maxY - radius),
+                                radius: radius,
+                                startAngle: Angle(degrees: 90),
+                                delta: Angle(degrees: 90))
+        } else {
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        }
+
+        // Left edge
+        if bl {
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + radius))
+            path.addRelativeArc(center: CGPoint(x: rect.minX + radius, y: rect.minY + radius),
+                                radius: radius,
+                                startAngle: Angle(degrees: 180),
+                                delta: Angle(degrees: 90))
+        } else {
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.minY))
+        }
+
+        return path
     }
 }

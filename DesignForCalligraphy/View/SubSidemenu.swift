@@ -42,7 +42,7 @@ struct SidemenuItem: View {
         .cornerRadius(8.0)
         .overlay(
             RoundedRectangle(cornerRadius: 8.0)
-                .strokeBorder(isSelected ? Color("selectedColor") : Color("grey"), lineWidth: 1.75)
+                .strokeBorder(isSelected ? Color("purple") : Color("grey"), lineWidth: 1.75)
         )
     }
 }

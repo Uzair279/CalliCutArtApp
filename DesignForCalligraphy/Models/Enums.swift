@@ -197,3 +197,43 @@ enum EditSidemenu {
 extension Notification.Name {
     static let didUpdateSublayers = Notification.Name("didUpdateSublayers")
 }
+enum SidebarItemType: String, CaseIterable, Identifiable {
+    case aiSVGGenerator
+    case explore
+    case aiTShirtGenerator
+    case aiFontFinder
+    case rateUs
+    case support
+
+    var id: String { self.rawValue }
+
+    var title: String {
+        switch self {
+        case .aiSVGGenerator: return "AI SVG Generator"
+        case .explore: return "Explore"
+        case .aiTShirtGenerator: return "AI T-shirt Generator"
+        case .aiFontFinder: return "AI Font Finder"
+        case .rateUs: return "Rate Us"
+        case .support: return "Support"
+        }
+    }
+
+    var iconName: String {
+        switch self {
+        case .aiSVGGenerator: return "AISvgSidemenu"
+        case .explore: return "explore"
+        case .aiTShirtGenerator: return "AITShirtSidemenu"
+        case .aiFontFinder: return "AIFont"
+        case .rateUs: return "newRateus"
+        case .support: return "newSupport"
+        }
+    }
+    var isSelectable: Bool {
+        switch self {
+        case .rateUs, .support:
+            return false
+        default:
+            return true
+        }
+    }
+}

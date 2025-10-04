@@ -112,7 +112,7 @@ struct ExportTemplateView: View {
             .font(.system(size: 12, weight: .medium))
             .foregroundColor(selected ? .white : .black)
             .frame(width: 136, height: 32)
-            .background(selected ? Color("selectedColor") : Color("screenBg"))
+            .background(selected ? Color("purple") : Color("screenBg"))
             .cornerRadius(4)
     }
 
@@ -121,7 +121,7 @@ struct ExportTemplateView: View {
             .font(.system(size: 12, weight: .medium))
             .foregroundColor(selected ? .white : .black)
             .frame(width: 136, height: 32)
-            .background(selected ? Color("selectedColor") : Color("screenBg"))
+            .background(selected ? Color("purple") : Color("screenBg"))
             .cornerRadius(4)
     }
 
@@ -130,11 +130,11 @@ struct ExportTemplateView: View {
             .font(.system(size: 16, weight: .medium))
             .foregroundColor(isPrimary ? .white : .black)
             .frame(width: 420, height: 42)
-            .background(isPrimary ? Color("selectedColor") : Color("screenBg"))
+            .background(isPrimary ? Color("purple") : Color("screenBg"))
             .cornerRadius(100)
             .overlay(
                 RoundedRectangle(cornerRadius: 100)
-                    .stroke(isPrimary ? Color("selectedColor") :Color("screenBg"), lineWidth: 1.75)
+                    .stroke(isPrimary ? Color("purple") :Color("screenBg"), lineWidth: 1.75)
             )
     }
 }

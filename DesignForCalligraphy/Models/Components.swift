@@ -43,10 +43,10 @@ struct CanvasSidemenuItem: View {
                 Image(image)
                     .frame(width: 32, height: 32)
                     .foregroundStyle(isselected ? Color.white : .black)
-                    .background(isselected ?Color("selectedColor") : .grey)
+                    .background(isselected ?Color("purple") : .grey)
                     .cornerRadius(4)
                 Text(text)
-                    .foregroundStyle(isselected ? Color("selectedColor") : .black)
+                    .foregroundStyle(isselected ? Color("purple") : .black)
                     .font(.custom("", size: 14))
                 
             }
@@ -92,7 +92,7 @@ struct ListItem: View {
                     Image("eye")
                         .foregroundStyle(isEyeSelected ? .white : .black)
                         .frame(width: 21.66, height: 21.66)
-                        .background(isEyeSelected ? Color("selectedColor") : Color("grey"))
+                        .background(isEyeSelected ? Color("purple") : Color("grey"))
                         .cornerRadius(1.77)
                 }
                 .buttonStyle(.plain)
@@ -104,7 +104,7 @@ struct ListItem: View {
                     Image("lock")
                         .foregroundStyle(isLockSelected ? .white : .black)
                         .frame(width: 21.66, height: 21.66)
-                        .background(isLockSelected ? Color("selectedColor") : Color("grey"))
+                        .background(isLockSelected ? Color("purple") : Color("grey"))
                         .cornerRadius(1.77)
                 }
                 .buttonStyle(.plain)

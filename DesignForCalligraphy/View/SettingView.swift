@@ -25,7 +25,7 @@ struct SettingView : View {
 //                        .font(.custom(Fonts.regular.rawValue, size: 20))
 //                    Spacer()
 //                    Toggle("", isOn: $isDarkMode)
-//                        .toggleStyle(SwitchToggleStyle(tint: Color("selectedColor")))
+//                        .toggleStyle(SwitchToggleStyle(tint: Color("purple")))
 //                }
 //                .padding(.horizontal, 20)
 //                .frame(width: 734, height: 42)
