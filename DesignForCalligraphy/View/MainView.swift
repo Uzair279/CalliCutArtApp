@@ -1,6 +1,7 @@
 import SwiftUI
 import SDWebImageSwiftUI
 struct MainView: View {
+    @ObservedObject var viewModel: CategoryViewModel
     let itemCount: Int
     let categoryID: String
     let subcategoryID: String
@@ -44,8 +45,13 @@ struct MainView: View {
                     .padding(.horizontal, 24)
                 )
                 .padding(.horizontal, 48)
-            TabMenuView()
-                .offset(y: -60)
+            TabMenuView(
+                categories: viewModel.categories,
+                selectedCategoryID: $viewModel.selectedCategoryID
+            )
+            .offset(y: -60)
+
+
             GridView(itemCount: itemCount, categoryID: categoryID, subcategoryID: subcategoryID) { str in
                 grdiAction(str)
             } downloadAction: { newStr in
@@ -173,55 +179,48 @@ struct GridView: View {
 
 
 struct TabMenuView: View {
-    @State private var selectedTab: TabItem = .calligraphy
-    
+    let categories: [Category]
+    @Binding var selectedCategoryID: String?
+
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(Array(TabItem.allCases.enumerated()), id: \.1) { index, tab in
-                let isFirst = index == 0
-                let isLast = index == TabItem.allCases.count - 1
+            ForEach(categories) { category in
+                let isFirst = categories.first == category
+                let isLast = categories.last == category
+                let isSelected = selectedCategoryID == category.title
+
                 VStack(spacing: 6) {
-                    tab.icon
+                    Image(category.title ?? "")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 24, height: 24)
-                        .foregroundColor(selectedTab == tab ? .white : .gray)
-                    
-                    Text(tab.title)
+                        .foregroundColor(isSelected ? .white : .gray)
+
+                    Text(category.title ?? "")
                         .font(.system(size: 14))
-                        .foregroundColor(selectedTab == tab ? .white : .gray)
+                        .foregroundColor(isSelected ? .white : .gray)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(
-                    selectedTab == tab ? Color("purple") : Color.white
-                )
+                .background(isSelected ? Color("purple") : Color.white)
                 .overlay(
-                    // ✅ Stroke only for selected
-                    Group {
-                        if selectedTab == tab {
-                            RoundedCornersShape(
-                                radius: 50,
-                                corners: cornerMask(isFirst: isFirst, isLast: isLast)
-                            )
+                    isSelected ?
+                        RoundedCornersShape(radius: 50, corners: cornerMask(isFirst: isFirst, isLast: isLast))
                             .stroke(Color("lightPurple"), lineWidth: 4)
-                        }
-                    }
+                        : nil
                 )
                 .clipShape(
-                    RoundedCornersShape(
-                        radius: 50,
-                        corners: cornerMask(isFirst: isFirst, isLast: isLast)
-                    )
+                    RoundedCornersShape(radius: 50, corners: cornerMask(isFirst: isFirst, isLast: isLast))
                 )
-
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    selectedTab = tab
+                    selectedCategoryID = category.title
                 }
-                if tab != TabItem.allCases.last! {
+
+                if !isLast {
                     Divider()
+                        .frame(width: 1)
+                        .background(Color.gray)
                 }
-               
             }
         }
         .frame(width: 744, height: 95)
@@ -229,39 +228,15 @@ struct TabMenuView: View {
         .cornerRadius(50)
         .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 0)
     }
+
     private func cornerMask(isFirst: Bool, isLast: Bool) -> CACornerMask {
-           switch (isFirst, isLast) {
-           case (true, false): return [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-           case (false, true): return [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
-           default: return []
-           }
-       }
-}
-
-enum TabItem: CaseIterable {
-    case calligraphy, cutflies, stickers, monogram, shapes
-    
-    var title: String {
-        switch self {
-        case .calligraphy: return "Calligraphy"
-        case .cutflies: return "Cutflies"
-        case .stickers: return "Stickers"
-        case .monogram: return "Monogram"
-        case .shapes: return "Shapes"
-        }
-    }
-    
-    var icon: Image {
-        switch self {
-        case .calligraphy: return Image(systemName: "pencil") // placeholder
-        case .cutflies: return Image(systemName: "square.on.square")
-        case .stickers: return Image(systemName: "face.smiling")
-        case .monogram: return Image(systemName: "gearshape")
-        case .shapes: return Image(systemName: "circle.hexagonpath")
+        switch (isFirst, isLast) {
+        case (true, false): return [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+        case (false, true): return [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        default: return []
         }
     }
 }
-
 
 
 struct RoundedCornersShape: Shape {

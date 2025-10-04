@@ -7,13 +7,13 @@ struct SidebarMenuItem: Identifiable, Decodable {
 }
 
 
-struct Category: Identifiable, Codable {
+struct Category: Identifiable, Codable, Equatable {
     let id: String? // Category ID
     let title: String? // Category title
     let subcategories: [SubCategory]? // Optional list of subcategories
 }
 
-struct SubCategory: Identifiable, Codable {
+struct SubCategory: Identifiable, Codable, Equatable {
     let id: String? // Subcategory ID
     let title: String? // Subcategory title
     let itemCount: Int? // Optional list of items

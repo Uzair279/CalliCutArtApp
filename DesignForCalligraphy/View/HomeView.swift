@@ -9,13 +9,13 @@ struct HomeView: View {
     var body: some View {
         ZStack {
             HStack(spacing: 0) {
-                Sidemenu(
-                    categories: viewModel.categories,
-                    selectedCategoryID: $viewModel.selectedCategoryID,
-                    showPremium: $showPremiumScreen
-                )
-                .frame(width: 230)
-                .background(Color("screenBg"))
+//                Sidemenu(
+//                    categories: viewModel.categories,
+//                    selectedCategoryID: $viewModel.selectedCategoryID,
+//                    showPremium: $showPremiumScreen
+//                )
+//                .frame(width: 230)
+//                .background(Color("screenBg"))
                 
                 SubSidemenu(
                     subcategories: viewModel.categories.first(where: { $0.title == viewModel.selectedCategoryID })?.subcategories ?? [],
@@ -33,6 +33,7 @@ struct HomeView: View {
                    let selectedSubcategory = selectedCategory.subcategories?.first(where: { $0.id == selectedSubcategoryID }) {
                     
                     MainView(
+                        viewModel: viewModel,
                         itemCount: selectedSubcategory.itemCount ?? 0,
                         categoryID: selectedCategoryID,
                         subcategoryID: selectedSubcategoryID,
