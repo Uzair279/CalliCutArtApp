@@ -52,8 +52,12 @@ struct AIFontFinderView: View {
                             .foregroundColor(Color("purple"))
                             .font(.system(size: 18))
                             .frame(width: 48, height: 48)
-                            .background(Color(.sRGB, red: 231/255, green: 231/255, blue: 231/255))
-                            .cornerRadius(10)
+                            .background(Color.white)
+                            .cornerRadius(100)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 100)
+                                    .stroke(Color.gray, lineWidth: 1)
+                            }
                     }
                     .buttonStyle(.plain)
                     Spacer()

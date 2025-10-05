@@ -35,16 +35,24 @@ struct PromptInputCard: View {
                             .foregroundColor(Color("purple"))
                             .font(.system(size: 18))
                             .frame(width: 48, height: 48)
-                            .background(Color(.sRGB, red: 231/255, green: 231/255, blue: 231/255))
-                            .cornerRadius(10)
+                            .background(Color.white)
+                            .cornerRadius(100)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 100)
+                                    .stroke(Color.gray, lineWidth: 1)
+                            }
                             
 
                         Image(systemName: "mic")
                             .foregroundColor(Color("purple"))
                             .font(.system(size: 18))
                             .frame(width: 48, height: 48)
-                            .background(Color(.sRGB, red: 231/255, green: 231/255, blue: 231/255))
-                            .cornerRadius(10)
+                            .background(Color.white)
+                            .cornerRadius(100)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 100)
+                                    .stroke(Color.gray, lineWidth: 1)
+                            }
                             
                     }
 
@@ -118,11 +126,11 @@ struct DropdownTagView: View {
         }
         .cornerRadius(100)
         .padding(.horizontal, 12)
-        .padding(.vertical, 13.5)
+        .frame(height: 48)
         .background(Color.white)
         .overlay(
             RoundedRectangle(cornerRadius: 100)
-                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                .stroke(Color.gray, lineWidth: 1)
         )
     
     }
