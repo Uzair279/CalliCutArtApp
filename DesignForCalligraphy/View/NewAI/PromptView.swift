@@ -116,12 +116,12 @@ struct DropdownTagView: View {
                 .foregroundColor(.gray)
                 .padding(.top, 1)
         }
-        .cornerRadius(8.0)
+        .cornerRadius(100)
         .padding(.horizontal, 12)
         .padding(.vertical, 13.5)
         .background(Color.white)
         .overlay(
-            RoundedRectangle(cornerRadius: 8.0)
+            RoundedRectangle(cornerRadius: 100)
                 .stroke(Color.gray.opacity(0.3), lineWidth: 1)
         )
     

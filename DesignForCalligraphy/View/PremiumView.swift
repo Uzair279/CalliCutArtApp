@@ -368,11 +368,11 @@ struct SubscriptionRow: View {
             }
         }
         .frame(width: 478, height: 70)
-        .background(isSelected ? Color("selectionLight") : .white)
+        .background(isSelected ? Color("lightPurple") : .white)
         .cornerRadius(12)
         .overlay {
             RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(isSelected ? Color("purple") : Color("border"), lineWidth: 1)
+                .strokeBorder(isSelected ? Color("purple") : Color("purple"), lineWidth: 1)
         }
     }
 }
