@@ -7,7 +7,7 @@ struct ContentView: View {
         switch screenType {
         case .home:
             HomeView(viewModel: viewModel, svgURL: $svgURL, screenType: $screenType)
-                .frame(minWidth: 1300, minHeight: 750)
+                
         case .canvas:
             CanvasView(sideBarVM: viewModel, screenType: $screenType, svgURL: $svgURL)
                 .frame(minWidth: 1300, minHeight: 750)

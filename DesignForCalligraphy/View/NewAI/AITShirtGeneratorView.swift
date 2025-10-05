@@ -8,30 +8,38 @@ struct AITShirtGeneratorView: View {
 
     var body: some View {
         VStack(spacing: 24) {
+            HStack {
+                Spacer()
+                Button(action: {}) {
+                    Image("historyIcon")
+                        .padding(.trailing, 48)
+                        .padding(.top, 22)
+                }.buttonStyle(.plain)
+            }
             // MARK: - Banner
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color("purple"))
-                .frame(height: 156)
+                .frame(width: 1066, height: 156)
                 .overlay(
-                    VStack(spacing: 12) {
+                    VStack{
                         Text("Design a T-Shirt in minutes!")
-                            .font(.system(size: 32, weight: .semibold))
+                            .font(.system(size: 42, weight: .semibold))
                             .foregroundColor(.white)
-
+                            .padding(.top,15)
+                            .frame(height: 63)
                         Text("Discover the power of AI with our free T-Shirt generator!\nConvert your text prompts into stunning T-Shirts using our advanced AI technology.")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.white)
                             .multilineTextAlignment(.center)
+                            .lineSpacing(4)
+                            .frame(height: 48)
                     }
-                    .padding(.horizontal, 24)
                 )
-                .padding(.horizontal, 48)
 
             // MARK: - Input Card
             PromptInputCard() {
                 showSaveSheet = true
             }
-
             // MARK: - Generated T-shirts Grid
             VStack(alignment: .leading, spacing: 12) {
                 Text("Find the perfect T-shirt")

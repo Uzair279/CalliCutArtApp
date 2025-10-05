@@ -8,11 +8,9 @@ struct PromptInputCard: View {
         ZStack(alignment: .topTrailing) {
             VStack(alignment: .leading, spacing: 12) {
 
-                // MARK: TextEditor (Top Input Area)
-                TextEditor(text: $promptText)
-                    .font(.system(size: 14))
+                ClearTextEditor(text: $promptText)
                     .frame(minHeight: 80, maxHeight: 100)
-                    .padding(8)
+                    .padding(6)
                     .background(Color.white)
                     .cornerRadius(10)
                     .overlay(
@@ -21,8 +19,8 @@ struct PromptInputCard: View {
                             if promptText.isEmpty {
                                 Text("Type your idea here in English...")
                                     .foregroundColor(.gray)
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 4)
                                     .font(.system(size: 14))
                                     .allowsHitTesting(false)
                             }
@@ -81,10 +79,10 @@ struct PromptInputCard: View {
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color.white)
                     .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
-                    .overlay(content: {
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color("purple"), lineWidth: 1)
-                    })
+//                    .overlay(content: {
+//                        RoundedRectangle(cornerRadius: 16)
+//                            .stroke(Color("purple"), lineWidth: 1)
+//                    })
             )
 
             // MARK: "1/2" Badge
@@ -127,5 +125,43 @@ struct DropdownTagView: View {
                 .stroke(Color.gray.opacity(0.3), lineWidth: 1)
         )
     
+    }
+}
+
+
+struct ClearTextEditor: NSViewRepresentable {
+    @Binding var text: String
+
+    func makeNSView(context: Context) -> NSScrollView {
+        let scrollView = NSTextView.scrollableTextView()
+        let textView = scrollView.documentView as! NSTextView
+        textView.isRichText = false
+        textView.drawsBackground = false // <- key!
+        textView.backgroundColor = .clear
+        textView.textColor = .black
+        textView.delegate = context.coordinator
+        return scrollView
+    }
+
+    func updateNSView(_ nsView: NSScrollView, context: Context) {
+        let textView = nsView.documentView as! NSTextView
+        if textView.string != text {
+            textView.string = text
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject, NSTextViewDelegate {
+        var parent: ClearTextEditor
+        init(_ parent: ClearTextEditor) { self.parent = parent }
+
+        func textDidChange(_ notification: Notification) {
+            if let textView = notification.object as? NSTextView {
+                parent.text = textView.string
+            }
+        }
     }
 }

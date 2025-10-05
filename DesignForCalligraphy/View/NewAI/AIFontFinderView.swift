@@ -7,50 +7,41 @@ struct AIFontFinderView: View {
     @State var showcropview: Bool = false
     @State var showresultview: Bool = false
     var body: some View {
-        VStack(spacing: 32) {
+        VStack(spacing: 24) {
+            HStack {
+                Spacer()
+                Button(action: {}) {
+                    Image("historyIcon")
+                        .padding(.trailing, 48)
+                        .padding(.top, 22)
+                }.buttonStyle(.plain)
+            }
+            
             // MARK: - Banner
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color("purple"))
-                .frame(height: 156)
+                .frame(width: 1066, height: 156)
                 .overlay(
-                    VStack(spacing: 12) {
+                    VStack {
                         Text("AI Font Finder")
-                            .font(.system(size: 32, weight: .semibold))
+                            .font(.system(size: 42, weight: .semibold))
                             .foregroundColor(.white)
-
+                            .padding(.top,15)
+                            .frame(height: 63)
                         Text("Upload an image or screenshot, and let AI find the exact or closest matching font for your projects.")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.white)
                             .multilineTextAlignment(.center)
+                            .lineSpacing(4)
+                            .frame(height: 48)
                     }
-                    .padding(.horizontal, 24)
                 )
-                .padding(.horizontal, 48)
+
 
             // MARK: - Input Card
             VStack(alignment: .leading, spacing: 12) {
 
-                // MARK: TextEditor (Top Input Area)
-                TextEditor(text: $fontPrompt)
-                    .font(.system(size: 14))
-                    .frame(minHeight: 20, maxHeight: 30)
-                    .padding(8)
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .overlay(
-                        // Placeholder
-                        Group {
-                            if fontPrompt.isEmpty {
-                                Text("Type your idea here in English...")
-                                    .foregroundColor(.gray)
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 8)
-                                    .font(.system(size: 14))
-                                    .allowsHitTesting(false)
-                            }
-                        }, alignment: .topLeading
-                    )
-
+               
                 // MARK: Bottom Controls
                 HStack(spacing: 12) {
                     // Icons
@@ -83,13 +74,12 @@ struct AIFontFinderView: View {
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal)
-            .padding(.vertical, 16)
+            .padding(.horizontal, 12)
+            .frame(width: 1066, height: 80)
             .background(Color.white)
             .cornerRadius(12)
-            .padding(.horizontal, 48)
             .shadow(color: Color.black.opacity(0.05), radius: 4)
-
+            .padding(.top, 100)
             Spacer()
         }
         .padding(.top, 20)

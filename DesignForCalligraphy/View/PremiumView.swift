@@ -115,7 +115,7 @@ struct SubscriptionOptionsView: View {
     var body: some View {
         VStack(spacing: 0) {
             Text("Unlock Limitless Features")
-                .foregroundStyle(.black)
+                .foregroundStyle(Color("purple"))
                 .font(.custom(Fonts.bold.rawValue, size: 30))
             Text("Unlock the full power of your creativity")
                 .foregroundStyle(Color("premiumgrey"))
@@ -239,7 +239,7 @@ struct SubscriptionRowForProduct: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            Image(isSelected ? "selectedCircle" : "circle")
+            Image(isSelected ? "newCircle" : "circle")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 24, height: 24)
@@ -262,10 +262,10 @@ struct SubscriptionRowForProduct: View {
                             }
                             HStack {
                                 Text("Now")
-                                    .foregroundStyle(Color("purple"))
+                                    .foregroundStyle(Color.green)
                                     .font(.custom(Fonts.regular.rawValue, size: 20))
                                 Text(product.displayPrice)
-                                    .foregroundStyle(Color("purple"))
+                                    .foregroundStyle(Color.green)
                                     .font(.custom(Fonts.regular.rawValue, size: 20))
                             }
                         }
@@ -294,11 +294,11 @@ struct SubscriptionRowForProduct: View {
                     .padding(.trailing, 18)
         }
         .frame(width: 478, height: 70)
-        .background(isSelected ? Color("selectionLight") : .white)
+        .background(isSelected ? Color("lightPurple") : .white)
         .cornerRadius(12)
         .overlay {
             RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(isSelected ? Color("purple") : Color("border"), lineWidth: 1)
+                .strokeBorder(isSelected ? Color("purple") : Color("purple"), lineWidth: 1)
         }
     }
     func numericPrice(from priceString: String) -> Double? {

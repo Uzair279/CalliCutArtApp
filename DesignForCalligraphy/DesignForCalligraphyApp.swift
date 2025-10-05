@@ -9,7 +9,7 @@ struct DesignForCalligraphyApp: App {
     var body: some Scene {
         WindowGroup {
             VStack {
-                ContentView()
+                HomeViewNew()
                     .environmentObject(viewModel)
                     .onAppear() {
                         let model = CoreDataManager.shared.fetchFirstTimeModel()
@@ -44,10 +44,11 @@ struct DesignForCalligraphyApp: App {
               }
     }
 }
-struct ContentView1: View {
+struct HomeViewNew: View {
     @State private var selectedItem: SidebarItemType = .aiSVGGenerator
+    @State var showPremium : Bool = false
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             VStack {
                 HStack(spacing: 8.5) {
                     Image("sidemenuTopIcon")
@@ -76,15 +77,28 @@ struct ContentView1: View {
                         isSelected: false
                     )
                     .onTapGesture {
-                        print("\(item.title) tapped")
+                        if item.title == "Rate Us" {
+                            if let url = URL(string: "https://apps.apple.com/app/id\(appID)?mt=12?action=write-review") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }
+                        else if item.title == "Support" {
+                            if let url = URL(string: contactEmail) {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }
                     }
                 }
                 
-                
-                Image("premiumSideIcon")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 196, height: 166)
+                Button(action: {
+                    showPremium = true
+                }) {
+                    Image("premiumSideIcon")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 196, height: 166)
+                }
+                .buttonStyle(.plain)
             }
             .padding(.top, 32)
             .padding(.bottom, 20)
@@ -94,6 +108,9 @@ struct ContentView1: View {
             MainAIView(screenType: $selectedItem) {
                 //MARK: History
             }
+        }
+        .sheet(isPresented: $showPremium) {
+            SubscriptionView(showPremium: $showPremium)
         }
         
     }
@@ -129,19 +146,11 @@ struct MainAIView: View {
     let historyAction: () -> Void
     var body: some View {
         VStack {
-            HStack {
-                Spacer()
-                Button(action: historyAction) {
-                    Image("historyIcon")
-                        .padding(.trailing, 48)
-                        .padding(.top, 22)
-                }.buttonStyle(.plain)
-            }
             switch screenType {
             case .aiSVGGenerator:
                 AISVGGeneratorView()
             case .explore:
-                AISVGGeneratorView()
+                ContentView()
             case .aiTShirtGenerator:
                 AITShirtGeneratorView()
             case .aiFontFinder:
@@ -152,7 +161,6 @@ struct MainAIView: View {
                 EmptyView()
             }
         }
-        .padding(.bottom, 29)
         .background(Color(.sRGB, red: 251/255, green: 251/255, blue: 251/255, opacity: 1.0))
     }
 }

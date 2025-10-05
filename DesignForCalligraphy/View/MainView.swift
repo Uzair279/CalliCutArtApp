@@ -60,7 +60,7 @@ struct MainView: View {
             .offset(y: -40)
             Spacer()
         }
-        .padding(20)
+        
         .background(Color("screenBg"))
     }
 }
