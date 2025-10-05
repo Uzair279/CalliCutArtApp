@@ -44,32 +44,25 @@ class SubscriptionViewModel: ObservableObject {
         }
     }
     
+    @MainActor
+    func updatePurchaseStatus(isPurchased: Bool) {
+        self.isProductPurchased = isPurchased
+        self.saveProStatusToCoreData(isPurchased)
+    }
+
     func checkPurchaseStatus() async {
         for await result in Transaction.currentEntitlements {
             guard case .verified(let transaction) = result else { continue }
 
             if transaction.revocationDate == nil {
-                await MainActor.run {
-                    foundActiveSubscription = true
-                    self.purchasedProductIDs.insert(transaction.productID)
-                    
-                    self.isProductPurchased = true
-                    saveProStatusToCoreData(true)
-                }
+                self.purchasedProductIDs.insert(transaction.productID)
+                await updatePurchaseStatus(isPurchased: true)
+            } else {
+                self.purchasedProductIDs.remove(transaction.productID)
+                await updatePurchaseStatus(isPurchased: false)
             }
-        }
-
-        // If no valid subscription found, set isProductPurchased = false
-        if !foundActiveSubscription {
-            await MainActor.run {
-                self.isProductPurchased = false
-            }
-            saveProStatusToCoreData(false)
         }
     }
-
-
-
     func loadProducts() {
         Task {
             do {

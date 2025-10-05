@@ -115,11 +115,15 @@ struct PurpleButton: View {
                 Text(text)
             }
             .font(.system(size: 14, weight: .medium))
-            .foregroundColor(.white)
+            .foregroundColor(Color("purple"))
             .padding(.horizontal, 24)
             .padding(.vertical, 12)
-            .background(Color("purple"))
+            .background(Color(.sRGB, red: 247/255, green: 245/255, blue: 248/255))
             .cornerRadius(10)
+            .overlay {
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color("purple"), lineWidth: 1)
+            }
         }
         .buttonStyle(.plain)
     }

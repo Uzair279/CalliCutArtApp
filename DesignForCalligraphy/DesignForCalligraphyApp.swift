@@ -6,6 +6,7 @@ struct DesignForCalligraphyApp: App {
 //    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var viewModel = SubscriptionViewModel()
     @State var isFirstTime: Bool = false
+    
     var body: some Scene {
         WindowGroup {
             VStack {
@@ -45,67 +46,76 @@ struct DesignForCalligraphyApp: App {
     }
 }
 struct HomeViewNew: View {
+    @EnvironmentObject var premiumVM : SubscriptionViewModel
     @State private var selectedItem: SidebarItemType = .aiSVGGenerator
     @State var showPremium : Bool = false
+    @State var screenType : screen = .home
     var body: some View {
         HStack(spacing: 0) {
-            VStack {
-                HStack(spacing: 8.5) {
-                    Image("sidemenuTopIcon")
-                    Text("AI SVG Generator")
-                        .foregroundStyle(Color("textColor"))
-                        .font(.system(size: 16, weight: .bold))
-                }
-                ScrollView {
-                    ForEach(SidebarItemType.allCases.filter { $0.isSelectable }) { item in
+            if screenType == .home {
+                VStack {
+                    HStack(spacing: 8.5) {
+                        Image("sidemenuTopIcon")
+                        Text("AI SVG Generator")
+                            .foregroundStyle(Color("textColor"))
+                            .font(.system(size: 16, weight: .bold))
+                    }
+                    ScrollView {
+                        ForEach(SidebarItemType.allCases.filter { $0.isSelectable }) { item in
+                            SideItem(
+                                imageName: item.iconName,
+                                text: item.title,
+                                isSelected: selectedItem == item
+                            )
+                            .onTapGesture {
+                                selectedItem = item
+                            }
+                        }
+                    }
+                    .padding(.top, 28)
+                    Spacer()
+                    ForEach(SidebarItemType.allCases.filter { !$0.isSelectable }) { item in
                         SideItem(
                             imageName: item.iconName,
                             text: item.title,
-                            isSelected: selectedItem == item
+                            isSelected: false
                         )
                         .onTapGesture {
-                            selectedItem = item
-                        }
-                    }
-                }
-                .padding(.top, 28)
-                Spacer()
-                ForEach(SidebarItemType.allCases.filter { !$0.isSelectable }) { item in
-                    SideItem(
-                        imageName: item.iconName,
-                        text: item.title,
-                        isSelected: false
-                    )
-                    .onTapGesture {
-                        if item.title == "Rate Us" {
-                            if let url = URL(string: "https://apps.apple.com/app/id\(appID)?mt=12?action=write-review") {
-                                NSWorkspace.shared.open(url)
+                            if item.title == "Rate Us" {
+                                if let url = URL(string: "https://apps.apple.com/app/id\(appID)?mt=12?action=write-review") {
+                                    NSWorkspace.shared.open(url)
+                                }
                             }
-                        }
-                        else if item.title == "Support" {
-                            if let url = URL(string: contactEmail) {
-                                NSWorkspace.shared.open(url)
+                            else if item.title == "Support" {
+                                if let url = URL(string: contactEmail) {
+                                    NSWorkspace.shared.open(url)
+                                }
                             }
                         }
                     }
+                    ZStack {
+                        if !isProuctPro {
+                            if !premiumVM.isProductPurchased {
+                                Button(action: {
+                                    showPremium = true
+                                }) {
+                                    Image("premiumSideIcon")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 196, height: 166)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
                 }
-                
-                Button(action: {
-                    showPremium = true
-                }) {
-                    Image("premiumSideIcon")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 196, height: 166)
-                }
-                .buttonStyle(.plain)
+                .padding(.top, 32)
+                .padding(.bottom, 20)
+                .frame(width: 247)
+                .background(.white)
+                .shadow(color: Color(.sRGB, red: 155, green: 155, blue: 155, opacity: 0.25), radius: 10.1, x: 4, y: 0)
             }
-            .padding(.top, 32)
-            .padding(.bottom, 20)
-            .frame(width: 247)
-            .background(.white)
-            .shadow(color: Color(.sRGB, red: 155, green: 155, blue: 155, opacity: 0.25), radius: 10.1, x: 4, y: 0)
-            MainAIView(screenType: $selectedItem) {
+            MainAIView(screenType: $selectedItem, screenType1: $screenType) {
                 //MARK: History
             }
         }
@@ -143,6 +153,7 @@ struct SideItem : View {
 }
 struct MainAIView: View {
     @Binding var screenType: SidebarItemType
+    @Binding var screenType1: screen
     let historyAction: () -> Void
     var body: some View {
         VStack {
@@ -150,7 +161,7 @@ struct MainAIView: View {
             case .aiSVGGenerator:
                 AISVGGeneratorView()
             case .explore:
-                ContentView()
+                ContentView(screenType: $screenType1)
             case .aiTShirtGenerator:
                 AITShirtGeneratorView()
             case .aiFontFinder:

@@ -29,22 +29,20 @@ struct MainView: View {
             }
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color("purple"))
-                .frame(height: 177)
+                .frame(width: 929, height: 177)
                 .overlay(
                     VStack(spacing: 12) {
                         Text("Explore More!")
-                            .font(.system(size: 32, weight: .semibold))
+                            .font(.system(size: 42, weight: .semibold))
                             .foregroundColor(.white)
                             .padding(.top, 20)
                         Text("Explore our gallery to find a selection of SVG crafted by our free members. They accessible for download by everyone.")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.white)
                             .multilineTextAlignment(.center)
                         Spacer()
                     }
-                    .padding(.horizontal, 24)
                 )
-                .padding(.horizontal, 48)
             TabMenuView(
                 categories: viewModel.categories,
                 selectedCategoryID: $viewModel.selectedCategoryID
