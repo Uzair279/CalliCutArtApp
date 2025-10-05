@@ -41,6 +41,7 @@
 		700F89B32E90E19600D9E5DA /* PromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89B22E90E18F00D9E5DA /* PromptView.swift */; };
 		700F89B52E90E1C800D9E5DA /* SVGSaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89B42E90E1C000D9E5DA /* SVGSaveView.swift */; };
 		700F89B72E90E47C00D9E5DA /* TShirtDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89B62E90E47600D9E5DA /* TShirtDownload.swift */; };
+		700F89B92E92C01000D9E5DA /* MainAIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89B82E92C00A00D9E5DA /* MainAIView.swift */; };
 		704ECD432E58D3D80065B093 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704ECD422E58D3D30065B093 /* AppDelegate.swift */; };
 		70C33F762E4DE5C2002C1EBA /* StorageData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 70C33F742E4DE5C2002C1EBA /* StorageData.xcdatamodeld */; };
 /* End PBXBuildFile section */
@@ -81,6 +82,7 @@
 		700F89B22E90E18F00D9E5DA /* PromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptView.swift; sourceTree = "<group>"; };
 		700F89B42E90E1C000D9E5DA /* SVGSaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVGSaveView.swift; sourceTree = "<group>"; };
 		700F89B62E90E47600D9E5DA /* TShirtDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TShirtDownload.swift; sourceTree = "<group>"; };
+		700F89B82E92C00A00D9E5DA /* MainAIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAIView.swift; sourceTree = "<group>"; };
 		704ECD422E58D3D30065B093 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70C33F752E4DE5C2002C1EBA /* StorageData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StorageData.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -195,6 +197,7 @@
 		700F89AB2E90E13500D9E5DA /* NewAI */ = {
 			isa = PBXGroup;
 			children = (
+				700F89B82E92C00A00D9E5DA /* MainAIView.swift */,
 				700F89B62E90E47600D9E5DA /* TShirtDownload.swift */,
 				700F89B42E90E1C000D9E5DA /* SVGSaveView.swift */,
 				700F89B22E90E18F00D9E5DA /* PromptView.swift */,
@@ -301,6 +304,7 @@
 				700F89B52E90E1C800D9E5DA /* SVGSaveView.swift in Sources */,
 				4DF4A79F2E0F09D600C269C4 /* SubSidemenu.swift in Sources */,
 				4DF4A7862E0EFF1C00C269C4 /* ContentView.swift in Sources */,
+				700F89B92E92C01000D9E5DA /* MainAIView.swift in Sources */,
 				4DCD495D2E10105D009F4986 /* HomeView.swift in Sources */,
 				4D7187AC2E4508DB0050799B /* SettingView.swift in Sources */,
 				4DED96882E1126FB00A68B86 /* SVGView.swift in Sources */,

@@ -22,18 +22,20 @@ struct AIFontFinderView: View {
                 .fill(Color("purple"))
                 .frame(width: 1066, height: 156)
                 .overlay(
-                    VStack {
-                        Text("AI Font Finder")
-                            .font(.system(size: 42, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding(.top,15)
-                            .frame(height: 63)
-                        Text("Upload an image or screenshot, and let AI find the exact or closest matching font for your projects.")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.center)
-                            .lineSpacing(4)
-                            .frame(height: 48)
+                    ZStack {
+                        PolygonView()
+                        VStack {
+                            Text("AI Font Finder")
+                                .font(.system(size: 42, weight: .semibold))
+                                .foregroundColor(.white)
+                                .padding(.top,15)
+                                .frame(height: 63)
+                            Text("Upload an image or screenshot, and let AI find the exact or closest matching font for your projects.")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.white)
+                                .multilineTextAlignment(.center)
+                                .frame(height: 24)
+                        }
                     }
                 )
 

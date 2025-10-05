@@ -19,18 +19,20 @@ struct AISVGGeneratorView : View {
                 .fill(Color("purple"))
                 .frame(width: 1066, height: 156)
                 .overlay {
-                    VStack {
-                        Text("Text prompt to SVG in less than 10 seconds")
-                            .font(.system(size: 42, weight: .semibold))
-                            .padding(.top,15)
-                            .frame(height: 63)
-                        Text("Discover the power of AI with our free Text-to-SVG generator!\nConvert your text prompts into stunning SVG illustrations using our advanced AI technology.")
-                            .font(.system(size:16, weight: .semibold))
-                            .multilineTextAlignment(.center)
-                            .lineSpacing(4)
-                            .frame(height: 48)
+                    ZStack {
+                        PolygonView()
+                        VStack {
+                            Text("Text prompt to SVG in less than 10 seconds")
+                                .font(.system(size: 42, weight: .semibold))
+                                .padding(.top,15)
+                                .frame(height: 63)
+                            Text("Discover the power of AI with our free Text-to-SVG generator!\nConvert your text prompts into stunning SVG illustrations using our advanced AI technology.")
+                                .font(.system(size:16, weight: .semibold))
+                                .multilineTextAlignment(.center)
+                                .lineSpacing(4)
+                                .frame(height: 48)
+                        }
                     }
-                    
                     .foregroundStyle(Color.white)
                     
                 }

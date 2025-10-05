@@ -31,16 +31,35 @@ struct MainView: View {
                 .fill(Color("purple"))
                 .frame(width: 929, height: 177)
                 .overlay(
-                    VStack(spacing: 12) {
-                        Text("Explore More!")
-                            .font(.system(size: 42, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding(.top, 20)
-                        Text("Explore our gallery to find a selection of SVG crafted by our free members. They accessible for download by everyone.")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.center)
-                        Spacer()
+                    ZStack {
+                        VStack {
+                            HStack {
+                                Image("polygon2")
+                                    .cornerRadius(12)
+                                Spacer()
+                            }
+                            Spacer()
+                        }
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                Image("polygon1")
+                                    .cornerRadius(12)
+                                    .padding(.trailing, 5)
+                            }
+                        }
+                        VStack(spacing: 12) {
+                            Text("Explore More!")
+                                .font(.system(size: 42, weight: .semibold))
+                                .foregroundColor(.white)
+                                .padding(.top, 20)
+                            Text("Explore our gallery to find a selection of SVG crafted by our free members. They accessible for download by everyone.")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.white)
+                                .multilineTextAlignment(.center)
+                            Spacer()
+                        }
                     }
                 )
             TabMenuView(

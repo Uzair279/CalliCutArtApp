@@ -21,6 +21,8 @@ struct AITShirtGeneratorView: View {
                 .fill(Color("purple"))
                 .frame(width: 1066, height: 156)
                 .overlay(
+                    ZStack {
+                        PolygonView()
                     VStack{
                         Text("Design a T-Shirt in minutes!")
                             .font(.system(size: 42, weight: .semibold))
@@ -34,6 +36,7 @@ struct AITShirtGeneratorView: View {
                             .lineSpacing(4)
                             .frame(height: 48)
                     }
+                  }
                 )
 
             // MARK: - Input Card

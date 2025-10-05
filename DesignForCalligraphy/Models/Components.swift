@@ -137,3 +137,24 @@ struct ListItem: View {
 }
 
 
+struct PolygonView : View {
+    var body: some View {
+        VStack {
+            HStack {
+                Image("polygon2")
+                    .cornerRadius(12)
+                Spacer()
+            }
+            Spacer()
+        }
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                Image("polygon1")
+                    .cornerRadius(12)
+                    .padding(.trailing, 100)
+            }
+        }
+    }
+}
