@@ -1,14 +1,18 @@
 import SwiftUI
 
-
 struct PromptInputCard: View {
     @State private var promptText: String = ""
+    @StateObject private var speechManager = SpeechManager()
+    @State private var showSettingsAlert = false
+    @State var selectedImage: NSImage?
     let generateAction: () -> Void
+
     var body: some View {
         ZStack(alignment: .topTrailing) {
             VStack(alignment: .leading, spacing: 12) {
 
                 ClearTextEditor(text: $promptText)
+                    .disabled(speechManager.isRecording)
                     .frame(minHeight: 80, maxHeight: 100)
                     .padding(6)
                     .background(Color.white)
@@ -16,7 +20,7 @@ struct PromptInputCard: View {
                     .overlay(
                         // Placeholder
                         Group {
-                            if promptText.isEmpty {
+                            if promptText.isEmpty  {
                                 Text("Type your idea here in English...")
                                     .foregroundColor(.gray)
                                     .padding(.horizontal, 12)
@@ -26,11 +30,12 @@ struct PromptInputCard: View {
                             }
                         }, alignment: .topLeading
                     )
+                    .onChange(of: speechManager.transcript) { newValue in
+                        promptText = newValue
+                    }
 
-                // MARK: Bottom Controls
                 HStack(spacing: 12) {
-                    // Icons
-                    HStack(spacing: 12) {
+                    Button(action: { openImageFromFinder() }) {
                         Image(systemName: "camera")
                             .foregroundColor(Color("purple"))
                             .font(.system(size: 18))
@@ -41,10 +46,12 @@ struct PromptInputCard: View {
                                 RoundedRectangle(cornerRadius: 100)
                                     .stroke(Color.gray, lineWidth: 1)
                             }
-                            
-
-                        Image(systemName: "mic")
-                            .foregroundColor(Color("purple"))
+                        
+                    }
+                    .buttonStyle(.plain)
+                    Button(action: handleMicTapped) {
+                        Image(systemName: speechManager.isRecording ? "mic.fill" : "mic")
+                            .foregroundColor(speechManager.isRecording ? .red : Color("purple"))
                             .font(.system(size: 18))
                             .frame(width: 48, height: 48)
                             .background(Color.white)
@@ -54,7 +61,7 @@ struct PromptInputCard: View {
                                     .stroke(Color.gray, lineWidth: 1)
                             }
                             
-                    }
+                    }.buttonStyle(.plain)
 
                     // Dropdown Buttons
                     DropdownTagView(label: "Style")
@@ -64,10 +71,7 @@ struct PromptInputCard: View {
 
                     Spacer()
 
-                    // Generate Button
-                    Button(action: {
-                        generateAction()
-                    }) {
+                    Button(action: { generateAction() }) {
                         HStack(spacing: 6) {
                             Image(systemName: "sparkles")
                             Text("Generate")
@@ -106,6 +110,45 @@ struct PromptInputCard: View {
         .padding(.horizontal, 48)
         .padding(.vertical)
         .frame(width: 791, height: 184)
+        .alert("Microphone Access Denied", isPresented: $showSettingsAlert) {
+            Button("Open Settings") { openMacSettings() }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Please enable microphone access in System Settings → Privacy & Security → Microphone.")
+        }
+    }
+
+    private func handleMicTapped() {
+        if speechManager.isRecording {
+            speechManager.stopRecording()
+        } else {
+            Task {
+                let granted = await speechManager.requestPermission()
+                if granted {
+                    do { try speechManager.startRecording() }
+                    catch { print("Error starting recording:", error) }
+                } else {
+                    showSettingsAlert = true
+                }
+            }
+        }
+    }
+
+    private func openMacSettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    private func openImageFromFinder() {
+        let panel = NSOpenPanel()
+        panel.allowedFileTypes = ["png", "jpg", "jpeg", "heic"]
+        panel.allowsMultipleSelection = false
+        if panel.runModal() == .OK {
+            if let url = panel.url, let image = NSImage(contentsOf: url) {
+                self.selectedImage = image
+            }
+        }
     }
 }
 

@@ -42,6 +42,7 @@
 		700F89B52E90E1C800D9E5DA /* SVGSaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89B42E90E1C000D9E5DA /* SVGSaveView.swift */; };
 		700F89B72E90E47C00D9E5DA /* TShirtDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89B62E90E47600D9E5DA /* TShirtDownload.swift */; };
 		700F89B92E92C01000D9E5DA /* MainAIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89B82E92C00A00D9E5DA /* MainAIView.swift */; };
+		700F89BB2E981B8500D9E5DA /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89BA2E981B8200D9E5DA /* SpeechRecognizer.swift */; };
 		704ECD432E58D3D80065B093 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704ECD422E58D3D30065B093 /* AppDelegate.swift */; };
 		70C33F762E4DE5C2002C1EBA /* StorageData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 70C33F742E4DE5C2002C1EBA /* StorageData.xcdatamodeld */; };
 /* End PBXBuildFile section */
@@ -83,6 +84,7 @@
 		700F89B42E90E1C000D9E5DA /* SVGSaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVGSaveView.swift; sourceTree = "<group>"; };
 		700F89B62E90E47600D9E5DA /* TShirtDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TShirtDownload.swift; sourceTree = "<group>"; };
 		700F89B82E92C00A00D9E5DA /* MainAIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAIView.swift; sourceTree = "<group>"; };
+		700F89BA2E981B8200D9E5DA /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 		704ECD422E58D3D30065B093 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70C33F752E4DE5C2002C1EBA /* StorageData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StorageData.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -188,6 +190,7 @@
 		4DF4A7992E0F08F100C269C4 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				700F89BA2E981B8200D9E5DA /* SpeechRecognizer.swift */,
 				4DF4A7A22E0F0C5600C269C4 /* SidebarMenuViewModel.swift */,
 				4D7187A92E3F95260050799B /* PremiumViewModel.swift */,
 			);
@@ -295,6 +298,7 @@
 				4DCD495F2E1014F8009F4986 /* Components.swift in Sources */,
 				4DF4A7A52E0F15FE00C269C4 /* MainView.swift in Sources */,
 				700F89AF2E90E16E00D9E5DA /* AIFontFinderView.swift in Sources */,
+				700F89BB2E981B8500D9E5DA /* SpeechRecognizer.swift in Sources */,
 				70C33F762E4DE5C2002C1EBA /* StorageData.xcdatamodeld in Sources */,
 				4D7187962E33F4470050799B /* SaveScreenView.swift in Sources */,
 				4D7187AA2E3F95260050799B /* PremiumViewModel.swift in Sources */,
@@ -459,6 +463,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DesignForCalligraphy/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app needs access to your microphone for speech input.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app uses speech recognition to convert your voice into text.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -488,6 +494,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DesignForCalligraphy/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app needs access to your microphone for speech input.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app uses speech recognition to convert your voice into text.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
