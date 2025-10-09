@@ -53,3 +53,24 @@ struct SidebarItemModel: Identifiable {
     let id = UUID()
     let type: SidebarItemType
 }
+struct GenerateImageRequest: Encodable {
+    let prompt: String
+    let negativePrompt: String
+    let style: String?
+    let initialImage: String?
+    let initialImageType: String?
+}
+struct GenerateImageResponse: Decodable {
+    let success: Bool
+    let data: [GeneratedImage]
+}
+
+struct GeneratedImage: Decodable {
+    let id: String
+    let description: String
+    let pngUrl: String
+    let svgUrl: String
+    let prompt: String
+    let negativePrompt: String
+    let style: String
+}

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DownloadPopupView: View {
+    let imageURL: String
     let hideScreen:() -> Void
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -9,13 +10,29 @@ struct DownloadPopupView: View {
                 
                 // MARK: - Left: SVG Image + Share/Upload
                 VStack(spacing: 24) {
-                    Image("dummySVG") // Replace with your SVG/Asset
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 300, height: 300)
-                        .background(Color.white)
-                        .cornerRadius(24)
-                        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                    AsyncImage(url: URL(string: imageURL)) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                                .frame(width: 300, height: 300)
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 300, height: 300)
+                                .background(Color.white)
+                                .cornerRadius(24)
+                                .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+                        case .failure:
+                            Image(systemName: "photo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 300, height: 300)
+                                .foregroundColor(.gray)
+                        @unknown default:
+                            EmptyView()
+                        }
+                    }
                     
                     // Share + Upload icons
                     HStack(spacing: 20) {
@@ -132,7 +149,7 @@ struct PurpleButton: View {
 
 struct DownloadPopupView_Previews: PreviewProvider {
     static var previews: some View {
-        DownloadPopupView(hideScreen: {})
+        DownloadPopupView(imageURL: "", hideScreen: {})
             .previewLayout(.sizeThatFits)
     }
 }

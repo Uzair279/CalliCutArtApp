@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct PromptInputCard: View {
-    @State private var promptText: String = ""
+    @Binding var promptText: String
     @StateObject private var speechManager = SpeechManager()
     @State private var showSettingsAlert = false
-    @State var selectedImage: NSImage?
+    @Binding var selectedImage: NSImage?
     let generateAction: () -> Void
 
     var body: some View {
