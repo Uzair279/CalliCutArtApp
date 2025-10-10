@@ -9,6 +9,8 @@ struct AISVGGeneratorView : View {
     @State private var generatedSVGURL: URL? = nil
     @State var showLoader : Bool = false
     @State var showHistory: Bool = false
+    @State private var showErrorAlert = false
+      @State private var errorMessage = ""
     var body: some View {
         ZStack {
             VStack(spacing: 24) {
@@ -60,6 +62,8 @@ struct AISVGGeneratorView : View {
                             showSaveSheet = true
                            case .failure(let error):
                             showLoader = false
+                            errorMessage = error.localizedDescription
+                            showErrorAlert = true
                            }
                     }
                 }
@@ -101,5 +105,10 @@ struct AISVGGeneratorView : View {
                     .edgesIgnoringSafeArea(.all)
             }
         }
+        .alert("Error", isPresented: $showErrorAlert) {
+                    Button("OK", role: .cancel) {}
+                } message: {
+                    Text(errorMessage)
+                }
     }
 }

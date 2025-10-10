@@ -8,6 +8,8 @@ struct DownloadPopupView: View {
     let hideScreen:() -> Void
     @State var showPremiumScreen:  Bool = false
     @State var showLoader: Bool = false
+    @State private var showErrorAlert = false
+    @State private var errorMessage = ""
     var body: some View {
         ZStack(alignment: .topTrailing) {
             
@@ -68,7 +70,7 @@ struct DownloadPopupView: View {
                             saveToUserLocation(svgURL)
                         }
                         PurpleButton(icon: "arrow.trianglehead.clockwise.rotate.90", text: "Regenrate") {
-                            
+                            regenerateSVG()
                         }
                     }
                     
@@ -123,6 +125,11 @@ struct DownloadPopupView: View {
         .cornerRadius(16)
         .sheet(isPresented: $showPremiumScreen) {
             SubscriptionView(showPremium: $showPremiumScreen)
+        }
+        .alert("Error", isPresented: $showErrorAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage)
         }
     }
 }
@@ -193,7 +200,8 @@ extension DownloadPopupView {
                 svgURL = response.svgURL
                 imageURL = response.pngURL
             case .failure(let error):
-               break
+                errorMessage = error.localizedDescription
+                showErrorAlert = true
             }
         }
     }

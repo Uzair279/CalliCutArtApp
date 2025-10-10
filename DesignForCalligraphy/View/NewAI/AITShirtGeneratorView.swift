@@ -7,6 +7,8 @@ struct AITShirtGeneratorView: View {
     @State private var generatedImageURL: URL? = nil
     @State private var generatedSVGURL: URL? = nil
     @State var showLoader: Bool = false
+    @State private var showErrorAlert = false
+      @State private var errorMessage = ""
     let columns = [
         GridItem(.adaptive(minimum: 180), spacing: 20)
     ]
@@ -61,7 +63,9 @@ struct AITShirtGeneratorView: View {
                             showSaveSheet = true
                            case .failure(let error):
                             showLoader = false
-                           }
+                            errorMessage = error.localizedDescription
+                            showErrorAlert = true
+                        }
                     }
                 }
                 // MARK: - Generated T-shirts Grid
@@ -109,5 +113,10 @@ struct AITShirtGeneratorView: View {
                     .edgesIgnoringSafeArea(.all)
             }
         }
+        .alert("Error", isPresented: $showErrorAlert) {
+                    Button("OK", role: .cancel) {}
+                } message: {
+                    Text(errorMessage)
+                }
     }
 }

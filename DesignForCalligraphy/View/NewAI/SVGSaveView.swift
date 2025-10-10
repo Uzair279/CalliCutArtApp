@@ -112,8 +112,11 @@ struct SmallIconButton: View {
     var body: some View {
         Button(action: {action()}) {
             Image("share")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
                 .font(.system(size: 16))
                 .foregroundColor(Color("purple"))
+                .frame(width: 29.8, height: 29.8)
                 .padding(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
