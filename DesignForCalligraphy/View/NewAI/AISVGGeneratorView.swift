@@ -7,12 +7,15 @@ struct AISVGGeneratorView : View {
     @State var selectedIMG: NSImage?
     @State private var generatedImageURL: URL? = nil
     @State var showLoader : Bool = false
+    @State var showHistory: Bool = false
     var body: some View {
         ZStack {
             VStack(spacing: 24) {
                 HStack {
                     Spacer()
-                    Button(action: {}) {
+                    Button(action: {
+                        showHistory = true
+                    }) {
                         Image("historyIcon")
                             .padding(.trailing, 48)
                             .padding(.top, 22)
@@ -76,6 +79,15 @@ struct AISVGGeneratorView : View {
                             DownloadPopupView(imageURL: url) {
                                 showSaveSheet = false
                             }
+                        }
+                    }
+                }
+                if showHistory {
+                    ZStack {
+                        Color.black.opacity(0.25)
+                            .ignoresSafeArea(.all)
+                        SVGHistoryView() {
+                            showHistory = false
                         }
                     }
                 }

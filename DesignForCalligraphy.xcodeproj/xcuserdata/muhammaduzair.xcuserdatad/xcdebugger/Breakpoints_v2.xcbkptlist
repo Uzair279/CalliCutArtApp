@@ -34,36 +34,6 @@
             endingLineNumber = "128"
             landmarkName = "handleMicTapped()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "2314C553-3C8B-4A21-9EC9-62835CF9BC59 - eac34eda8477205"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for closure #1 () async -&gt; () in DesignForCalligraphy.PromptInputCard.handleMicTapped() -&gt; ()"
-                  moduleName = "DesignForCalligraphy.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/muhammaduzair/Downloads/DesignForCalligraphy/DesignForCalligraphy/View/NewAI/PromptView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "128"
-                  endingLineNumber = "128">
-               </Location>
-               <Location
-                  uuid = "2314C553-3C8B-4A21-9EC9-62835CF9BC59 - eac34eda8477205"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for closure #1 () async -&gt; () in DesignForCalligraphy.PromptInputCard.handleMicTapped() -&gt; ()"
-                  moduleName = "DesignForCalligraphy.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/muhammaduzair/Downloads/DesignForCalligraphy/DesignForCalligraphy/View/NewAI/PromptView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "128"
-                  endingLineNumber = "128">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

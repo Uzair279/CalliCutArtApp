@@ -2,33 +2,53 @@ import SwiftUI
 
 struct SVGHistoryView: View {
     @StateObject private var viewModel = SVGHistoryViewModel()
-    
+    let action: () -> Void
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             // Header
             HStack {
                 Text("History")
                     .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(.black)
                 Spacer()
-                Button(action: { viewModel.loadHistory() }) {
-                    Image(systemName: "arrow.clockwise")
-                        .foregroundColor(.gray)
+                Button(action: { action() }) {
+                    Image(systemName: "xmark")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 14, height: 14)
+                        .foregroundColor(.black)
                 }
                 .buttonStyle(.plain)
             }
             
             // List
             ScrollView {
-                LazyVStack(spacing: 8) {
+                LazyVStack(spacing: 18) {
                     ForEach(viewModel.items) { item in
                         HStack(spacing: 12) {
                             // Thumbnail Icon
-                            Image(systemName: "doc.text.image")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 40, height: 40)
-                                .foregroundColor(Color("purple"))
-                                .padding(.leading, 8)
+                            
+                            if let imageURL = item.imageURL,
+                               let nsImage = NSImage(contentsOf: imageURL) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color("grey"))
+                                        .frame(width: 52, height: 49.27)
+                                    Image(nsImage: nsImage)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 33.21, height: 33.21)
+                                        
+                                }
+                                .padding(.leading, 12)
+                            } else {
+                                Image(systemName: "photo")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 52, height: 49.27)
+                                    .foregroundColor(.gray)
+                                    .padding(.leading, 12)
+                            }
                             
                             // Name and date
                             VStack(alignment: .leading, spacing: 4) {
@@ -47,6 +67,9 @@ struct SVGHistoryView: View {
                                     NSWorkspace.shared.open(item.fileURL)
                                 } label: {
                                     Image(systemName: "square.and.pencil")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 20, height: 20)
                                 }
                                 Button {
                                     let pasteboard = NSPasteboard.general
@@ -54,30 +77,38 @@ struct SVGHistoryView: View {
                                     pasteboard.setString(item.fileURL.path, forType: .string)
                                 } label: {
                                     Image(systemName: "square.and.arrow.up")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 20, height: 20)
                                 }
                                 Button {
                                     viewModel.delete(item)
                                 } label: {
                                     Image(systemName: "trash")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 20, height: 20)
                                 }
                             }
                             .buttonStyle(.plain)
-                            .foregroundColor(.gray)
-                            .padding(.trailing, 8)
+                            .foregroundColor(.black)
+                            .padding(.trailing, 12)
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.white)
-                                .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+                        .background(.white)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color("grey"), lineWidth: 1)
                         )
                     }
                 }
             }
         }
         .padding(20)
-        .background(Color(NSColor.windowBackgroundColor))
-        .frame(width: 700, height: 500)
+        .frame(width: 800, height: 552)
+        .background(Color(.sRGB, red: 247/255, green: 245/255, blue: 248/255))
+        .cornerRadius(16)
     }
 }

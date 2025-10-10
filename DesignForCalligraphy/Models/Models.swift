@@ -82,9 +82,11 @@ struct SVGImageData: Decodable {
 }
 
 
+
 struct SVGHistoryItem: Identifiable {
     let id = UUID()
     let name: String
     let date: Date
     let fileURL: URL
+    let imageURL: URL?
 }

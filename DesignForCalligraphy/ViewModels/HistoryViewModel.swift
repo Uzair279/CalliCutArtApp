@@ -18,25 +18,45 @@ class SVGHistoryViewModel: ObservableObject {
             
             items = fileURLs
                 .filter { $0.pathExtension.lowercased() == "svg" }
-                .compactMap { url in
-                    let attributes = try? FileManager.default.attributesOfItem(atPath: url.path)
+                .compactMap { svgURL in
+                    let attributes = try? FileManager.default.attributesOfItem(atPath: svgURL.path)
                     let date = attributes?[.modificationDate] as? Date ?? Date()
-                    return SVGHistoryItem(name: url.lastPathComponent, date: date, fileURL: url)
+                    
+                    // Extract matching PNG name based on shared ID
+                    let baseName = svgURL.deletingPathExtension().lastPathComponent
+                    let pngName = baseName.replacingOccurrences(of: "svg_", with: "image_") + ".png"
+                    let pngURL = folderURL.appendingPathComponent(pngName)
+                    
+                    return SVGHistoryItem(
+                        name: svgURL.lastPathComponent,
+                        date: date,
+                        fileURL: svgURL,
+                        imageURL: FileManager.default.fileExists(atPath: pngURL.path) ? pngURL : nil
+                    )
                 }
                 .sorted(by: { $0.date > $1.date })
             
         } catch {
-            print("❌ Error loading AISvgs folder:", error)
+
         }
     }
+
     
     func delete(_ item: SVGHistoryItem) {
         do {
+            // Remove SVG
             try FileManager.default.removeItem(at: item.fileURL)
+            
+            // Remove PNG (if exists)
+            if let imageURL = item.imageURL, FileManager.default.fileExists(atPath: imageURL.path) {
+                try FileManager.default.removeItem(at: imageURL)
+            }
+            
+            // Update UI
             items.removeAll { $0.id == item.id }
         } catch {
-            print("❌ Delete failed:", error)
         }
     }
+
 }
 

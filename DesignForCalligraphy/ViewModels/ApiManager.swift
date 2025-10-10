@@ -75,14 +75,14 @@ class ApiManager {
         var savedSVG: URL?
         var savedPNG: URL?
         var downloadError: Error?
-        
+        let id = UUID().uuidString
         // Download SVG
         group.enter()
         AF.download(svgURL).responseData { response in
             if case .success(let data) = response.result {
                 do {
                     let folderURL = try self.ensureAISvgsFolder()
-                    let svgFile = folderURL.appendingPathComponent("image_\(UUID().uuidString).svg")
+                    let svgFile = folderURL.appendingPathComponent("svg_\(id).svg")
                     try data.write(to: svgFile)
                     savedSVG = svgFile
                 } catch {
@@ -100,7 +100,7 @@ class ApiManager {
             if case .success(let data) = response.result {
                 do {
                     let folderURL = try self.ensureAISvgsFolder()
-                    let pngFile = folderURL.appendingPathComponent("image_\(UUID().uuidString).png")
+                    let pngFile = folderURL.appendingPathComponent("image_\(id).png")
                     try data.write(to: pngFile)
                     savedPNG = pngFile
                 } catch {
