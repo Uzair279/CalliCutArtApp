@@ -64,23 +64,15 @@ struct SVGHistoryView: View {
                             // Action Buttons
                             HStack(spacing: 16) {
                                 Button {
-                                    NSWorkspace.shared.open(item.fileURL)
+                                    viewModel.saveSVGToUserLocation(item)
                                 } label: {
-                                    Image(systemName: "square.and.pencil")
+                                    Image(systemName: "square.and.arrow.down")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 20, height: 20)
                                 }
-                                Button {
-                                    let pasteboard = NSPasteboard.general
-                                    pasteboard.clearContents()
-                                    pasteboard.setString(item.fileURL.path, forType: .string)
-                                } label: {
-                                    Image(systemName: "square.and.arrow.up")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 20, height: 20)
-                                }
+
+                                ShareButton(fileURL: item.fileURL)
                                 Button {
                                     viewModel.delete(item)
                                 } label: {
@@ -110,5 +102,29 @@ struct SVGHistoryView: View {
         .frame(width: 800, height: 552)
         .background(Color(.sRGB, red: 247/255, green: 245/255, blue: 248/255))
         .cornerRadius(16)
+    }
+}
+struct ShareButton: View {
+    let fileURL: URL
+
+    var body: some View {
+        Button {
+            shareFile(fileURL)
+        } label: {
+            Image(systemName: "square.and.arrow.up")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 20, height: 20)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func shareFile(_ url: URL) {
+        let picker = NSSharingServicePicker(items: [url])
+        // Find the current NSView to attach the picker
+        if let window = NSApp.keyWindow,
+           let contentView = window.contentView {
+            picker.show(relativeTo: .zero, of: contentView, preferredEdge: .minY)
+        }
     }
 }

@@ -1,4 +1,7 @@
 import Foundation
+import AppKit
+import UniformTypeIdentifiers
+
 
 class SVGHistoryViewModel: ObservableObject {
     @Published var items: [SVGHistoryItem] = []
@@ -60,3 +63,37 @@ class SVGHistoryViewModel: ObservableObject {
 
 }
 
+
+extension SVGHistoryViewModel {
+    func saveSVGToUserLocation(_ item: SVGHistoryItem) {
+        let panel = NSSavePanel()
+        panel.allowedContentTypes = [.svg]
+        panel.nameFieldStringValue = item.fileURL.lastPathComponent
+        panel.canCreateDirectories = true
+        panel.title = "Save SVG File"
+
+        // Find the active window to attach the sheet
+        if let window = NSApp.keyWindow ?? NSApp.mainWindow {
+            panel.beginSheetModal(for: window) { response in
+                guard response == .OK, let destinationURL = panel.url else { return }
+                do {
+                    try FileManager.default.copyItem(at: item.fileURL, to: destinationURL)
+                    print("✅ SVG saved to:", destinationURL.path)
+                } catch {
+                    print("❌ Failed to save SVG:", error)
+                }
+            }
+        } else {
+            // fallback if no window is active
+            panel.begin { response in
+                guard response == .OK, let destinationURL = panel.url else { return }
+                do {
+                    try FileManager.default.copyItem(at: item.fileURL, to: destinationURL)
+                    print("✅ SVG saved to:", destinationURL.path)
+                } catch {
+                    print("❌ Failed to save SVG:", error)
+                }
+            }
+        }
+    }
+}
