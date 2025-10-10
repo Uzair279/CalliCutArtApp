@@ -6,6 +6,7 @@ struct AISVGGeneratorView : View {
     @State var promptText = ""
     @State var selectedIMG: NSImage?
     @State private var generatedImageURL: URL? = nil
+    @State private var generatedSVGURL: URL? = nil
     @State var showLoader : Bool = false
     @State var showHistory: Bool = false
     var body: some View {
@@ -55,6 +56,7 @@ struct AISVGGeneratorView : View {
                            case .success(let localURL):
                             showLoader = false
                             generatedImageURL = localURL.pngURL
+                            generatedSVGURL = localURL.svgURL
                             showSaveSheet = true
                            case .failure(let error):
                             showLoader = false
@@ -75,11 +77,11 @@ struct AISVGGeneratorView : View {
                     ZStack {
                         Color.black.opacity(0.25)
                             .ignoresSafeArea(.all)
-                        if let url = generatedImageURL {
-                            DownloadPopupView(imageURL: url) {
-                                showSaveSheet = false
-                            }
+                        if let url = generatedImageURL, let svgURL = generatedSVGURL {
+                        DownloadPopupView(svgURL: .constant(svgURL), imageURL: .constant(url), prompt: promptText, selectedImage: selectedIMG) {
+                            showSaveSheet = false
                         }
+                    }
                     }
                 }
                 if showHistory {

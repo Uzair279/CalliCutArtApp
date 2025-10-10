@@ -5,6 +5,7 @@ struct AITShirtGeneratorView: View {
     @State var promptText = ""
     @State var selectedIMG: NSImage?
     @State private var generatedImageURL: URL? = nil
+    @State private var generatedSVGURL: URL? = nil
     @State var showLoader: Bool = false
     let columns = [
         GridItem(.adaptive(minimum: 180), spacing: 20)
@@ -56,6 +57,7 @@ struct AITShirtGeneratorView: View {
                            case .success(let localURL):
                             showLoader = false
                             generatedImageURL = localURL.pngURL
+                            generatedSVGURL = localURL.svgURL
                             showSaveSheet = true
                            case .failure(let error):
                             showLoader = false
@@ -92,8 +94,8 @@ struct AITShirtGeneratorView: View {
                     ZStack {
                         Color.black.opacity(0.25)
                             .ignoresSafeArea(.all)
-                        if let url = generatedImageURL {
-                            DownloadPopupView(imageURL: url) {
+                        if let url = generatedImageURL, let svgURL = generatedSVGURL {
+                            DownloadPopupView(svgURL: .constant(svgURL), imageURL: .constant(url), prompt: promptText, selectedImage: selectedIMG) {
                                 showSaveSheet = false
                             }
                         }

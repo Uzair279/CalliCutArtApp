@@ -69,9 +69,8 @@ struct SVGHistoryView: View {
                                     Image(systemName: "square.and.arrow.down")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
-                                        .frame(width: 20, height: 20)
+                                        .frame(width: 24, height: 24)
                                 }
-
                                 ShareButton(fileURL: item.fileURL)
                                 Button {
                                     viewModel.delete(item)
@@ -81,6 +80,8 @@ struct SVGHistoryView: View {
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 20, height: 20)
                                 }
+                                
+                               
                             }
                             .buttonStyle(.plain)
                             .foregroundColor(.black)
@@ -111,10 +112,11 @@ struct ShareButton: View {
         Button {
             shareFile(fileURL)
         } label: {
-            Image(systemName: "square.and.arrow.up")
+            Image("share")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 20, height: 20)
+                .foregroundStyle(.black)
         }
         .buttonStyle(.plain)
     }

@@ -18,8 +18,12 @@ struct SVGDetailsView: View {
 
                     // Share + Upload icons
                     HStack(spacing: 20) {
-                        SmallIconButton(systemName: "square.and.arrow.up")
-                        SmallIconButton(systemName: "arrow.up.doc")
+                        SmallIconButton(systemName: "square.and.arrow.up") {
+                            
+                        }
+                        SmallIconButton(systemName: "arrow.up.doc") {
+                            
+                        }
                     }
                 }
 
@@ -104,10 +108,10 @@ struct PurpleOutlineButton1: View {
 }
 struct SmallIconButton: View {
     let systemName: String
-
+    let action: () -> Void
     var body: some View {
-        Button(action: {}) {
-            Image(systemName: systemName)
+        Button(action: {action()}) {
+            Image("share")
                 .font(.system(size: 16))
                 .foregroundColor(Color("purple"))
                 .padding(10)
