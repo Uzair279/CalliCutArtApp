@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DownloadPopupView: View {
-    let imageURL: String
+    let imageURL: URL
     let hideScreen:() -> Void
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -10,31 +10,16 @@ struct DownloadPopupView: View {
                 
                 // MARK: - Left: SVG Image + Share/Upload
                 VStack(spacing: 24) {
-                    AsyncImage(url: URL(string: imageURL)) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                                .frame(width: 300, height: 300)
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 300, height: 300)
-                                .background(Color.white)
-                                .cornerRadius(24)
-                                .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-                        case .failure:
-                            Image(systemName: "photo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 300, height: 300)
-                                .foregroundColor(.gray)
-                        @unknown default:
-                            EmptyView()
-                        }
+                    if let nsImage = NSImage(contentsOf: imageURL) {
+                        Image(nsImage: nsImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 300, height: 300)
+                            .background(Color.white)
+                            .cornerRadius(24)
+                            .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
                     }
                     
-                    // Share + Upload icons
                     HStack(spacing: 20) {
                         SmallIconButton(systemName: "square.and.arrow.up")
                         SmallIconButton(systemName: "arrow.up.doc")
@@ -149,7 +134,7 @@ struct PurpleButton: View {
 
 struct DownloadPopupView_Previews: PreviewProvider {
     static var previews: some View {
-        DownloadPopupView(imageURL: "", hideScreen: {})
+        DownloadPopupView(imageURL: URL(fileURLWithPath: ""), hideScreen: {})
             .previewLayout(.sizeThatFits)
     }
 }

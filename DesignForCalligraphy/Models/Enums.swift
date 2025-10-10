@@ -237,3 +237,7 @@ enum SidebarItemType: String, CaseIterable, Identifiable {
         }
     }
 }
+
+enum ApiError: Error {
+    case invalidResponse
+}

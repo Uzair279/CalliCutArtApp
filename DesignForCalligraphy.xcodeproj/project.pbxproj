@@ -45,6 +45,8 @@
 		700F89BB2E981B8500D9E5DA /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89BA2E981B8200D9E5DA /* SpeechRecognizer.swift */; };
 		700F89BE2E98246300D9E5DA /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 700F89BD2E98246300D9E5DA /* Alamofire */; };
 		700F89C02E9824F700D9E5DA /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89BF2E9824E700D9E5DA /* ApiManager.swift */; };
+		700F89C22E99696B00D9E5DA /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89C12E99696A00D9E5DA /* HistoryViewModel.swift */; };
+		700F89C42E9969A200D9E5DA /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700F89C32E9969A100D9E5DA /* HistoryView.swift */; };
 		704ECD432E58D3D80065B093 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704ECD422E58D3D30065B093 /* AppDelegate.swift */; };
 		70C33F762E4DE5C2002C1EBA /* StorageData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 70C33F742E4DE5C2002C1EBA /* StorageData.xcdatamodeld */; };
 /* End PBXBuildFile section */
@@ -88,6 +90,8 @@
 		700F89B82E92C00A00D9E5DA /* MainAIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAIView.swift; sourceTree = "<group>"; };
 		700F89BA2E981B8200D9E5DA /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 		700F89BF2E9824E700D9E5DA /* ApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
+		700F89C12E99696A00D9E5DA /* HistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
+		700F89C32E9969A100D9E5DA /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		704ECD422E58D3D30065B093 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70C33F752E4DE5C2002C1EBA /* StorageData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StorageData.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -194,6 +198,7 @@
 		4DF4A7992E0F08F100C269C4 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				700F89C12E99696A00D9E5DA /* HistoryViewModel.swift */,
 				700F89BF2E9824E700D9E5DA /* ApiManager.swift */,
 				700F89BA2E981B8200D9E5DA /* SpeechRecognizer.swift */,
 				4DF4A7A22E0F0C5600C269C4 /* SidebarMenuViewModel.swift */,
@@ -205,6 +210,7 @@
 		700F89AB2E90E13500D9E5DA /* NewAI */ = {
 			isa = PBXGroup;
 			children = (
+				700F89C32E9969A100D9E5DA /* HistoryView.swift */,
 				700F89B82E92C00A00D9E5DA /* MainAIView.swift */,
 				700F89B62E90E47600D9E5DA /* TShirtDownload.swift */,
 				700F89B42E90E1C000D9E5DA /* SVGSaveView.swift */,
@@ -316,8 +322,10 @@
 				4DF4A79F2E0F09D600C269C4 /* SubSidemenu.swift in Sources */,
 				4DF4A7862E0EFF1C00C269C4 /* ContentView.swift in Sources */,
 				700F89B92E92C01000D9E5DA /* MainAIView.swift in Sources */,
+				700F89C22E99696B00D9E5DA /* HistoryViewModel.swift in Sources */,
 				4DCD495D2E10105D009F4986 /* HomeView.swift in Sources */,
 				4D7187AC2E4508DB0050799B /* SettingView.swift in Sources */,
+				700F89C42E9969A200D9E5DA /* HistoryView.swift in Sources */,
 				4DED96882E1126FB00A68B86 /* SVGView.swift in Sources */,
 				4DF4A79B2E0F090700C269C4 /* Enums.swift in Sources */,
 				4DF4A7A12E0F0C3900C269C4 /* Models.swift in Sources */,

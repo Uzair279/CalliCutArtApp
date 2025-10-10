@@ -4,7 +4,7 @@ struct AITShirtGeneratorView: View {
     @State var showSaveSheet : Bool = false
     @State var promptText = ""
     @State var selectedIMG: NSImage?
-    @State private var generatedImageURL: String? = nil
+    @State private var generatedImageURL: URL? = nil
     @State var showLoader: Bool = false
     let columns = [
         GridItem(.adaptive(minimum: 180), spacing: 20)
@@ -47,22 +47,19 @@ struct AITShirtGeneratorView: View {
                 // MARK: - Input Card
                 PromptInputCard(promptText: $promptText, selectedImage: $selectedIMG) {
                     showLoader = true
-                    ApiManager().generateSVGImage(
+                    ApiManager.shared.generateSVGImage(
                         prompt: promptText,
                         style: "FLAT_VECTOR",
                         image: selectedIMG
                     ) { result in
                         switch result {
-                        case .success(let response):
-                            if let imageData = response.data.first {
-                                showLoader = false
-                                generatedImageURL = imageData.pngUrl  // or .svgUrl if you prefer
-                                showSaveSheet = true
-                            }
-                        case .failure(let error):
+                           case .success(let localURL):
                             showLoader = false
-                            break
-                        }
+                            generatedImageURL = localURL.pngURL
+                            showSaveSheet = true
+                           case .failure(let error):
+                            showLoader = false
+                           }
                     }
                 }
                 // MARK: - Generated T-shirts Grid

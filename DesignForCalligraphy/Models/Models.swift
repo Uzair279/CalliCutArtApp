@@ -74,3 +74,17 @@ struct GeneratedImage: Decodable {
     let negativePrompt: String
     let style: String
 }
+
+struct SVGImageData: Decodable {
+    let id: String
+    let svgUrl: String?
+    let pngUrl: String?
+}
+
+
+struct SVGHistoryItem: Identifiable {
+    let id = UUID()
+    let name: String
+    let date: Date
+    let fileURL: URL
+}
