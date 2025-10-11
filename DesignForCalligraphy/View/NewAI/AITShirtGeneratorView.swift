@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct AITShirtGeneratorView: View {
+    @EnvironmentObject var premiumVM : SubscriptionViewModel
+    @EnvironmentObject var network: NetworkMonitor
     @State var showSaveSheet : Bool = false
     @State var promptText = ""
     @State var selectedIMG: NSImage?
@@ -8,7 +10,10 @@ struct AITShirtGeneratorView: View {
     @State private var generatedSVGURL: URL? = nil
     @State var showLoader: Bool = false
     @State private var showErrorAlert = false
-      @State private var errorMessage = ""
+    @State private var errorMessage = ""
+    @State var showPremium : Bool = false
+    @State var noInternet : Bool = false
+    @State var selectedStyle = "FLAT_VECTOR"
     let columns = [
         GridItem(.adaptive(minimum: 180), spacing: 20)
     ]
@@ -48,24 +53,39 @@ struct AITShirtGeneratorView: View {
                     )
                 
                 // MARK: - Input Card
-                PromptInputCard(promptText: $promptText, selectedImage: $selectedIMG) {
-                    showLoader = true
-                    ApiManager.shared.generateSVGImage(
-                        prompt: promptText,
-                        style: "FLAT_VECTOR",
-                        image: selectedIMG
-                    ) { result in
-                        switch result {
-                           case .success(let localURL):
-                            showLoader = false
-                            generatedImageURL = localURL.pngURL
-                            generatedSVGURL = localURL.svgURL
-                            showSaveSheet = true
-                           case .failure(let error):
-                            showLoader = false
-                            errorMessage = error.localizedDescription
-                            showErrorAlert = true
+                PromptInputCard(promptText: $promptText, selectedImage: $selectedIMG, selectedStyle: $selectedStyle) {
+                    if network.isConnected {
+                        let currentCount = CoreDataManager.shared.getCurrentPageCount()
+                        if  premiumVM.isProductPurchased || isProuctPro || currentCount < totalFreeGeneration {
+                            showLoader = true
+                            ApiManager.shared.generateSVGImage(
+                                prompt: promptText,
+                                style: selectedStyle,
+                                image: selectedIMG
+                            ) { result in
+                                switch result {
+                                case .success(let localURL):
+                                    showLoader = false
+                                    generatedImageURL = localURL.pngURL
+                                    generatedSVGURL = localURL.svgURL
+                                    showSaveSheet = true
+                                    let manager = CoreDataManager.shared
+                                    let current = manager.getCurrentPageCount()
+                                    manager.updateOrCreatePageCount(newValue: current + 1)
+                                    
+                                case .failure(let error):
+                                    showLoader = false
+                                    errorMessage = error.localizedDescription
+                                    showErrorAlert = true
+                                }
+                            }
                         }
+                        else {
+                            showPremium = true
+                        }
+                    }
+                    else {
+                        noInternet = true
                     }
                 }
                 // MARK: - Generated T-shirts Grid
@@ -99,7 +119,7 @@ struct AITShirtGeneratorView: View {
                         Color.black.opacity(0.25)
                             .ignoresSafeArea(.all)
                         if let url = generatedImageURL, let svgURL = generatedSVGURL {
-                            DownloadPopupView(svgURL: .constant(svgURL), imageURL: .constant(url), prompt: promptText, selectedImage: selectedIMG) {
+                            DownloadPopupView(svgURL: .constant(svgURL), imageURL: .constant(url), prompt: promptText, selectedImage: selectedIMG, selectedStyle: selectedStyle) {
                                 showSaveSheet = false
                             }
                         }
@@ -114,9 +134,16 @@ struct AITShirtGeneratorView: View {
             }
         }
         .alert("Error", isPresented: $showErrorAlert) {
-                    Button("OK", role: .cancel) {}
-                } message: {
-                    Text(errorMessage)
-                }
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage)
+        }
+        .sheet(isPresented: $showPremium) {
+            SubscriptionView(showPremium: $showPremium)
+        }
+        .customAlert(isPresented: $noInternet) {
+            NoInternetAlert { noInternet = false }
+        }
+
     }
 }

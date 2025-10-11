@@ -111,3 +111,66 @@ final class CoreDataManager {
         }
     }
 }
+extension CoreDataManager {
+    
+    // MARK: Save page count model
+    func saveUserSettings(_ model: UserSettings) {
+        let user = User(context: context)
+        user.page = String(model.count)
+        saveContext()
+    }
+    
+    // MARK: Fetch page count model
+    func fetchUserSettings() -> [UserSettings] {
+        let request: NSFetchRequest<User> = User.fetchRequest()
+        do {
+            let users = try context.fetch(request)
+            return users.compactMap {
+                guard let pageString = $0.page, let count = Int(pageString) else { return nil }
+                return UserSettings(count: count)
+            }
+        } catch {
+            print("❌ Failed to fetch user settings:", error)
+            return []
+        }
+    }
+
+
+        func updateOrCreatePageCount(newValue: Int) {
+            let request: NSFetchRequest<User> = User.fetchRequest()
+            do {
+                let users = try context.fetch(request)
+
+                if let user = users.first {
+                    // ✅ Only update the page attribute
+                    user.page = String(newValue)
+                } else {
+                    // ✅ Create a new record if none exists
+                    let newUser = User(context: context)
+                    newUser.page = String(newValue)
+                    // Keep other attributes nil or initialize as needed
+                }
+
+                saveContext()
+                print("✅ Page count saved/updated to \(newValue)")
+            } catch {
+                print("❌ Failed to update page count:", error)
+            }
+        }
+
+
+
+    // MARK: Fetch current page count (returns Int)
+    func getCurrentPageCount() -> Int {
+            let request: NSFetchRequest<User> = User.fetchRequest()
+            do {
+                let users = try context.fetch(request)
+                if let user = users.first, let pageStr = user.page, let page = Int(pageStr) {
+                    return page
+                }
+            } catch {
+                print("❌ Failed to fetch page count:", error)
+            }
+            return 0
+        }
+}

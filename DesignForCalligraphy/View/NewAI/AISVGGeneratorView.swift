@@ -2,6 +2,8 @@
 import SwiftUI
 
 struct AISVGGeneratorView : View {
+    @EnvironmentObject var network: NetworkMonitor
+    @EnvironmentObject var premiumVM : SubscriptionViewModel
     @State var showSaveSheet: Bool = false
     @State var promptText = ""
     @State var selectedIMG: NSImage?
@@ -10,7 +12,10 @@ struct AISVGGeneratorView : View {
     @State var showLoader : Bool = false
     @State var showHistory: Bool = false
     @State private var showErrorAlert = false
-      @State private var errorMessage = ""
+    @State private var errorMessage = ""
+    @State var showPremium : Bool = false
+    @State var noInternet : Bool = false
+    @State var selectedStyle = "FLAT_VECTOR"
     var body: some View {
         ZStack {
             VStack(spacing: 24) {
@@ -47,24 +52,38 @@ struct AISVGGeneratorView : View {
                         .foregroundStyle(Color.white)
                         
                     }
-                PromptInputCard(promptText: $promptText, selectedImage: $selectedIMG) {
-                    showLoader = true
-                    ApiManager.shared.generateSVGImage(
-                        prompt: promptText,
-                        style: "FLAT_VECTOR",
-                        image: selectedIMG
-                    ) { result in
-                        switch result {
-                           case .success(let localURL):
-                            showLoader = false
-                            generatedImageURL = localURL.pngURL
-                            generatedSVGURL = localURL.svgURL
-                            showSaveSheet = true
-                           case .failure(let error):
-                            showLoader = false
-                            errorMessage = error.localizedDescription
-                            showErrorAlert = true
-                           }
+                PromptInputCard(promptText: $promptText, selectedImage: $selectedIMG, selectedStyle: $selectedStyle) {
+                    if network.isConnected {
+                        let currentCount = CoreDataManager.shared.getCurrentPageCount()
+                        if  premiumVM.isProductPurchased || isProuctPro || currentCount < totalFreeGeneration {
+                            showLoader = true
+                            ApiManager.shared.generateSVGImage(
+                                prompt: promptText,
+                                style: selectedStyle,
+                                image: selectedIMG
+                            ) { result in
+                                switch result {
+                                case .success(let localURL):
+                                    showLoader = false
+                                    generatedImageURL = localURL.pngURL
+                                    generatedSVGURL = localURL.svgURL
+                                    showSaveSheet = true
+                                    let manager = CoreDataManager.shared
+                                    let current = manager.getCurrentPageCount()
+                                    manager.updateOrCreatePageCount(newValue: current + 1)
+                                case .failure(let error):
+                                    showLoader = false
+                                    errorMessage = error.localizedDescription
+                                    showErrorAlert = true
+                                }
+                            }
+                        }
+                        else {
+                            showPremium = true
+                        }
+                    }
+                    else {
+                        noInternet = true
                     }
                 }
                 Image("promptImagePreview")
@@ -82,7 +101,7 @@ struct AISVGGeneratorView : View {
                         Color.black.opacity(0.25)
                             .ignoresSafeArea(.all)
                         if let url = generatedImageURL, let svgURL = generatedSVGURL {
-                        DownloadPopupView(svgURL: .constant(svgURL), imageURL: .constant(url), prompt: promptText, selectedImage: selectedIMG) {
+                        DownloadPopupView(svgURL: .constant(svgURL), imageURL: .constant(url), prompt: promptText, selectedImage: selectedIMG, selectedStyle: selectedStyle) {
                             showSaveSheet = false
                         }
                     }
@@ -106,9 +125,15 @@ struct AISVGGeneratorView : View {
             }
         }
         .alert("Error", isPresented: $showErrorAlert) {
-                    Button("OK", role: .cancel) {}
-                } message: {
-                    Text(errorMessage)
-                }
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage)
+        }
+        .sheet(isPresented: $showPremium) {
+            SubscriptionView(showPremium: $showPremium)
+        }
+        .customAlert(isPresented: $noInternet) {
+            NoInternetAlert { noInternet = false }
+        }
     }
 }

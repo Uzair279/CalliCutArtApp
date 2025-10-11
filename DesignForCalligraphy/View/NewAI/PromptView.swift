@@ -1,10 +1,16 @@
 import SwiftUI
 
 struct PromptInputCard: View {
+    @EnvironmentObject var premiumVM : SubscriptionViewModel
     @Binding var promptText: String
     @StateObject private var speechManager = SpeechManager()
     @State private var showSettingsAlert = false
     @Binding var selectedImage: NSImage?
+    @Binding var selectedStyle : String
+   
+    let styleOptions = [
+        "FLAT_VECTOR", "FLAT_VECTOR_OUTLINE", "FLAT_VECTOR_SILHOUETTE", "FLAT_VECTOR_ONE_LINE_ART", "FLAT_VECTOR_LINE_ART"
+    ]
     let generateAction: () -> Void
 
     var body: some View {
@@ -13,7 +19,7 @@ struct PromptInputCard: View {
 
                 ClearTextEditor(text: $promptText)
                     .disabled(speechManager.isRecording)
-                    .frame(minHeight: 80, maxHeight: 100)
+                    .frame(minHeight: 35, maxHeight: 100)
                     .padding(6)
                     .background(Color.white)
                     .cornerRadius(10)
@@ -33,6 +39,31 @@ struct PromptInputCard: View {
                     .onChange(of: speechManager.transcript) { newValue in
                         promptText = newValue
                     }
+                HStack {
+                    if let selectedImage = selectedImage {
+                        ZStack(alignment: .topTrailing) {
+                            Image(nsImage: selectedImage)
+                                .resizable()
+                                .frame(width: 45, height: 45)
+                                .cornerRadius(6)
+                            Button(action: {
+                                withAnimation {
+                                    self.selectedImage = nil
+                                }
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .background(Color.black.opacity(0.6))
+                                    .clipShape(Circle())
+                            }
+                            .buttonStyle(.plain)
+                            .offset(x: 6, y: -6)
+                        }
+                    }
+                    
+                    Spacer()
+                }
 
                 HStack(spacing: 12) {
                     Button(action: { openImageFromFinder() }) {
@@ -64,9 +95,9 @@ struct PromptInputCard: View {
                     }.buttonStyle(.plain)
 
                     // Dropdown Buttons
-                    DropdownTagView(label: "Style")
-                    DropdownTagView(label: "Color Mode")
-                    DropdownTagView(label: "Image Complexity")
+                    DropdownTagView(label: "Style",
+                                    options: styleOptions,
+                                    selectedOption: $selectedStyle)
 
 
                     Spacer()
@@ -83,6 +114,7 @@ struct PromptInputCard: View {
                         .background(Color("purple"))
                         .cornerRadius(8)
                     }
+                    .disabled(promptText.isEmpty)
                     .buttonStyle(.plain)
                 }
             }
@@ -91,21 +123,29 @@ struct PromptInputCard: View {
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color.white)
                     .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
-//                    .overlay(content: {
-//                        RoundedRectangle(cornerRadius: 16)
-//                            .stroke(Color("purple"), lineWidth: 1)
-//                    })
             )
 
             // MARK: "1/2" Badge
-            Text("1/2")
-                .font(.system(size: 12, weight: .bold))
-                .foregroundColor(.white)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 2)
-                .background(Color("purple"))
-                .cornerRadius(6)
-                .offset(x: -12, y: -10)
+            let current = CoreDataManager.shared.getCurrentPageCount()
+            HStack(spacing: 0) {
+                Text("\(current)/")
+                    .foregroundColor(.white)
+                if premiumVM.isProductPurchased || isProuctPro {
+                    Image(systemName: "infinity")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(.white)
+                } else {
+                    Text("\(totalFreeGeneration)")
+                        .foregroundColor(.white)
+                }
+            }
+            .font(.system(size: 12, weight: .bold))
+            .padding(.horizontal, 8)
+            .padding(.vertical, 2)
+            .background(Color("purple"))
+            .cornerRadius(6)
+            .offset(x: -12, y: -10)
+
         }
         .padding(.horizontal, 48)
         .padding(.vertical)
@@ -155,29 +195,66 @@ struct PromptInputCard: View {
 
 struct DropdownTagView: View {
     let label: String
+    let options: [String]
+    @Binding var selectedOption: String
+    @State private var showPopover = false
 
     var body: some View {
-        HStack(spacing: 4) {
-            Text(label)
-                .font(.system(size: 13))
-                .foregroundColor(.black)
+        Button(action: {
+            showPopover.toggle()
+        }) {
+            HStack(spacing: 4) {
+                Text(selectedOption)
+                    .font(.system(size: 13))
+                    .foregroundColor(.black)
 
-            Image(systemName: "chevron.down")
-                .font(.system(size: 10, weight: .medium))
-                .foregroundColor(.gray)
-                .padding(.top, 1)
+                Image(systemName: "chevron.down")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundColor(.gray)
+                    .padding(.top, 1)
+            }
+            .cornerRadius(100)
+            .padding(.horizontal, 12)
+            .frame(height: 48)
+            .overlay(
+                RoundedRectangle(cornerRadius: 100)
+                    .stroke(Color.gray, lineWidth: 1)
+            )
         }
-        .cornerRadius(100)
-        .padding(.horizontal, 12)
-        .frame(height: 48)
-        .background(Color.white)
-        .overlay(
-            RoundedRectangle(cornerRadius: 100)
-                .stroke(Color.gray, lineWidth: 1)
-        )
-    
+        .buttonStyle(.plain)
+        .popover(isPresented: $showPopover, arrowEdge: .bottom) {
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(options, id: \.self) { option in
+                    Button {
+                        selectedOption = option
+                        showPopover = false
+                    } label: {
+                        HStack {
+                            Text(option)
+                                .foregroundColor(.primary)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 12)
+                            Spacer()
+                            if option == selectedOption {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.blue)
+                                    .padding(.trailing, 8)
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
+
+                    if option != options.last {
+                        Divider()
+                    }
+                }
+            }
+            .cornerRadius(10)
+            .padding(4)
+        }
     }
 }
+
 
 
 struct ClearTextEditor: NSViewRepresentable {

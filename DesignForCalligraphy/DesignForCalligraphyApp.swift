@@ -5,6 +5,7 @@ import SwiftUI
 struct DesignForCalligraphyApp: App {
 //    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var viewModel = SubscriptionViewModel()
+    @StateObject private var network = NetworkMonitor.shared
     @State var isFirstTime: Bool = false
     
     var body: some Scene {
@@ -12,6 +13,7 @@ struct DesignForCalligraphyApp: App {
             VStack {
                 HomeViewNew()
                     .environmentObject(viewModel)
+                    .environmentObject(network)
                     .onAppear() {
                         let model = CoreDataManager.shared.fetchFirstTimeModel()
                         let isFirst =  model.first

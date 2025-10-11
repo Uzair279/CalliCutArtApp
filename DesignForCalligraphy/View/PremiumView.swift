@@ -102,9 +102,11 @@ struct FeatureRow: View {
 }
 
 struct SubscriptionOptionsView: View {
+    @EnvironmentObject var newtwork : NetworkMonitor
     @ObservedObject var viewModel: SubscriptionViewModel
     @Binding var selectedPlanID: String
     @Binding var showLoader: Bool
+    @State var noInternet : Bool = false
     let options: [SubscriptionOption] = [
         .init(title: "Weekly", price: "$___", label: "Basic"),
         .init(title: "Monthly", price: "$___", label: "Free trial"),
@@ -165,14 +167,19 @@ struct SubscriptionOptionsView: View {
             }
 
             Button(action: {
-                if viewModel.products.isEmpty {
-                    showAlert(title: "Error!", message: "There is some issue with the product please try again")
+                if newtwork.isConnected {
+                    if viewModel.products.isEmpty {
+                        showAlert(title: "Error!", message: "There is some issue with the product please try again")
+                    }
+                    else {
+                        showLoader = true
+                        viewModel.purchaseSelected() {
+                            showLoader = false
+                        }
+                    }
                 }
                 else {
-                    showLoader = true
-                    viewModel.purchaseSelected() {
-                        showLoader = false
-                    }
+                    noInternet = true
                 }
             }) {
                 Text("Continue")
@@ -205,7 +212,12 @@ struct SubscriptionOptionsView: View {
                 Text("|")
                 Text("Restore")
                     .onTapGesture {
-                        viewModel.restorePurchases()
+                        if newtwork.isConnected {
+                            viewModel.restorePurchases()
+                        }
+                        else {
+                            noInternet = true
+                        }
                     }
                 Text("|")
                 if let url = URL(string: privacyPolicyLink) {
@@ -215,7 +227,9 @@ struct SubscriptionOptionsView: View {
             .padding(.top, 13)
             .foregroundStyle(Color("premiumgrey"))
             .font(.custom(Fonts.regular.rawValue, size: 12))
-            
+            .customAlert(isPresented: $noInternet) {
+                NoInternetAlert { noInternet = false }
+            }
         }
     }
 }

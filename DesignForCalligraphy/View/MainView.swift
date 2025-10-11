@@ -84,6 +84,7 @@ struct MainView: View {
 
 
 struct GridView: View {
+    @EnvironmentObject var newtwork : NetworkMonitor
     @EnvironmentObject var premiumVM : SubscriptionViewModel
     let itemCount: Int
     let categoryID: String
@@ -91,6 +92,7 @@ struct GridView: View {
     let action: (String) -> Void
     let downloadAction: (String) -> Void
     @State private var showSubscriptionSheet = false
+    @State var noInternet : Bool = false
     let columns = [
         GridItem(.adaptive(minimum: 148, maximum: 148), spacing: 27)
     ]
@@ -100,17 +102,21 @@ struct GridView: View {
             LazyVGrid(columns: columns, spacing: 32) {
                 ForEach(0..<itemCount, id: \.self) { index in
                     Button(action: {
-                        
-                        if index > 2 && !isProuctPro {
-                            if !premiumVM.isProductPurchased {
-                                showSubscriptionSheet = true
+                        if newtwork.isConnected {
+                            if index > 2 && !isProuctPro {
+                                if !premiumVM.isProductPurchased {
+                                    showSubscriptionSheet = true
+                                }
+                                else{
+                                    action("\(index)")
+                                }
                             }
-                            else{
+                            else {
                                 action("\(index)")
                             }
                         }
                         else {
-                            action("\(index)")
+                            noInternet = true
                         }
                     }) {
                         ZStack (alignment: .center){
@@ -182,6 +188,9 @@ struct GridView: View {
                     // Present your SubscriptionView
                     SubscriptionView(showPremium: $showSubscriptionSheet)
                         .frame(width: 819, height: 622)
+                }
+        .customAlert(isPresented: $noInternet) {
+                    NoInternetAlert { noInternet = false }
                 }
     }
 

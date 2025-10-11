@@ -194,3 +194,4 @@ func showAlert(title: String, message: String, style: NSAlert.Style = .informati
         alert.runModal()
     }
 }
+let totalFreeGeneration: Int = 2

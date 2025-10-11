@@ -1,15 +1,19 @@
 import SwiftUI
 
 struct DownloadPopupView: View {
+    @EnvironmentObject var network: NetworkMonitor
+    @EnvironmentObject var premiumVM : SubscriptionViewModel
     @Binding var svgURL: URL
     @Binding var imageURL: URL
     let prompt: String
     let selectedImage: NSImage?
+    let selectedStyle: String
     let hideScreen:() -> Void
     @State var showPremiumScreen:  Bool = false
     @State var showLoader: Bool = false
     @State private var showErrorAlert = false
     @State private var errorMessage = ""
+    @State var noInternet: Bool = false
     var body: some View {
         ZStack(alignment: .topTrailing) {
             
@@ -51,9 +55,15 @@ struct DownloadPopupView: View {
                         Text("Free Credits Remaining :")
                             .font(.system(size: 14, weight: .medium))
                             .foregroundColor(.black)
+                        
                         Spacer()
-                        Text("1")
-                            .font(.system(size: 14, weight: .semibold))
+                        
+                        let currentCount = CoreDataManager.shared.getCurrentPageCount()
+                        let remaining = totalFreeGeneration - currentCount
+                        let displayText = (premiumVM.isProductPurchased || isProuctPro) ? "∞" : "\(remaining)"
+                        
+                        Text(displayText)
+                            .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.black)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 6)
@@ -63,6 +73,7 @@ struct DownloadPopupView: View {
                     .padding()
                     .background(Color.white)
                     .cornerRadius(8)
+
                     
                     // Download + Print
                     HStack(spacing: 16) {
@@ -70,28 +81,42 @@ struct DownloadPopupView: View {
                             saveToUserLocation(svgURL)
                         }
                         PurpleButton(icon: "arrow.trianglehead.clockwise.rotate.90", text: "Regenrate") {
-                            regenerateSVG()
+                            if network.isConnected {
+                                let currentCount = CoreDataManager.shared.getCurrentPageCount()
+                                if  premiumVM.isProductPurchased || isProuctPro || currentCount < totalFreeGeneration  {
+                                    regenerateSVG()
+                                }
+                                else {
+                                    showPremiumScreen = true
+                                }
+                            }
+                            else {
+                                noInternet = true
+                            }
                         }
                     }
                     
                     // Upgrade Button
-                    Button(action: {
-                        showPremiumScreen = true
-                    }) {
-                        HStack {
-                            Image(systemName: "crown.fill")
-                            Text("Upgrade Now")
+                    if !premiumVM.isProductPurchased {
+                        if !isProuctPro {
+                            Button(action: {
+                                showPremiumScreen = true
+                            }) {
+                                HStack {
+                                    Image(systemName: "crown.fill")
+                                    Text("Upgrade Now")
+                                }
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color("purple"))
+                                .cornerRadius(8)
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.top, 10)
                         }
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color("purple"))
-                        .cornerRadius(8)
                     }
-                    .buttonStyle(.plain)
-                    .padding(.top, 10)
-                    
                     Spacer()
                 }
                 .frame(maxHeight: .infinity)
@@ -130,6 +155,9 @@ struct DownloadPopupView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(errorMessage)
+        }
+        .customAlert(isPresented: $noInternet) {
+            NoInternetAlert { noInternet = false }
         }
     }
 }
@@ -190,7 +218,7 @@ extension DownloadPopupView {
     showLoader = true
     ApiManager.shared.generateSVGImage(
         prompt: prompt,
-        style: "FLAT_VECTOR",
+        style: selectedStyle,
         image: selectedImage
     ) { result in
         DispatchQueue.main.async {
@@ -199,6 +227,9 @@ extension DownloadPopupView {
             case .success(let response):
                 svgURL = response.svgURL
                 imageURL = response.pngURL
+                let manager = CoreDataManager.shared
+                let current = manager.getCurrentPageCount()
+                manager.updateOrCreatePageCount(newValue: current + 1)
             case .failure(let error):
                 errorMessage = error.localizedDescription
                 showErrorAlert = true
